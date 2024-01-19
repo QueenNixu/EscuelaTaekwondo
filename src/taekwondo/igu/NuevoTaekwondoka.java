@@ -1,6 +1,16 @@
 package taekwondo.igu;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
+
+import taekwondo.logica.Taekwondoka;
+import taekwondo.logica.TaekwondokaController;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,13 +18,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NuevoTaekwondoka extends JFrame {
-    private JTextField textField;
-    private JTextField textField_1;
-    private JTextField textField_2;
-    private JTextField textField_3;
-    private JTextField textField_4;
-    private JTextField textField_5;
+	
+    private JTextField tfNombre;
+    private JTextField tfApellido;
+    private JTextField tfCelular;
+    private JTextField tfDireccion;
+    private JTextField tfEmail;
+    private JTextField tfEdad;
+    private JComboBox<Color> cbCinturon;
+    private JComboBox<Color> cbPunta;
+    
     private Menu menu;
+    
+    private TaekwondokaController controller = new TaekwondokaController();
 
     public NuevoTaekwondoka(Menu menu) {
         this.menu = menu;
@@ -29,11 +45,11 @@ public class NuevoTaekwondoka extends JFrame {
         panel.setBounds(0, 0, 595, 377);
         getContentPane().add(panel);
 
-        JLabel lblNuevoDueo = new JLabel("Nuevo Taekwondoka");
-        lblNuevoDueo.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNuevoDueo.setFont(new Font("Arial Black", Font.PLAIN, 20));
-        lblNuevoDueo.setBounds(184, 11, 229, 51);
-        panel.add(lblNuevoDueo);
+        JLabel lblTitulo = new JLabel("Nuevo Taekwondoka");
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTitulo.setFont(new Font("Arial Black", Font.PLAIN, 20));
+        lblTitulo.setBounds(184, 11, 229, 51);
+        panel.add(lblTitulo);
 
         JPanel panel_1 = new JPanel();
         panel_1.setLayout(null);
@@ -41,138 +57,193 @@ public class NuevoTaekwondoka extends JFrame {
         panel.add(panel_1);
 
         JButton btnGuardar = new JButton("Guardar");
+        btnGuardar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		btnGuardarActionListener();
+        	}
+        });
         btnGuardar.setFont(new Font("Arial", Font.PLAIN, 16));
-        btnGuardar.setBounds(10, 257, 170, 35);
+        btnGuardar.setBounds(108, 256, 170, 35);
         panel_1.add(btnGuardar);
 
         JButton btnLimpiar = new JButton("Limpiar");
+        btnLimpiar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                btnLimpiarActionListener();
+            }
+        });
         btnLimpiar.setFont(new Font("Arial", Font.PLAIN, 16));
-        btnLimpiar.setBounds(200, 257, 170, 35);
+        btnLimpiar.setBounds(298, 256, 170, 35);
         panel_1.add(btnLimpiar);
 
-        JButton btnSalir = new JButton("Atras");
-        btnSalir.addActionListener(new ActionListener() {
+        JLabel lblNombre = new JLabel("Nombre:");
+        lblNombre.setFont(new Font("Arial", Font.PLAIN, 15));
+        lblNombre.setBounds(10, 10, 126, 16);
+        panel_1.add(lblNombre);
+
+        tfNombre = new JTextField();
+        tfNombre.setBounds(146, 9, 419, 20);
+        panel_1.add(tfNombre);
+        tfNombre.setColumns(10);
+
+        tfApellido = new JTextField();
+        tfApellido.setColumns(10);
+        tfApellido.setBounds(146, 37, 419, 20);
+        panel_1.add(tfApellido);
+
+        JLabel lblApellido = new JLabel("Apellido:");
+        lblApellido.setFont(new Font("Arial", Font.PLAIN, 15));
+        lblApellido.setBounds(10, 38, 126, 16);
+        panel_1.add(lblApellido);
+
+        tfCelular = new JTextField();
+        tfCelular.setColumns(10);
+        tfCelular.setBounds(146, 161, 419, 20);
+        panel_1.add(tfCelular);
+
+        JLabel lblCelular = new JLabel("Celular:");
+        lblCelular.setToolTipText("asd");
+        lblCelular.setFont(new Font("Arial", Font.PLAIN, 15));
+        lblCelular.setBounds(10, 162, 126, 16);
+        panel_1.add(lblCelular);
+
+        tfDireccion = new JTextField();
+        tfDireccion.setColumns(10);
+        tfDireccion.setBounds(146, 99, 419, 20);
+        panel_1.add(tfDireccion);
+
+        JLabel lblDireccion = new JLabel("Direccion:");
+        lblDireccion.setFont(new Font("Arial", Font.PLAIN, 15));
+        lblDireccion.setBounds(10, 100, 126, 16);
+        panel_1.add(lblDireccion);
+
+        tfEmail = new JTextField();
+        tfEmail.setColumns(10);
+        tfEmail.setBounds(146, 130, 419, 20);
+        panel_1.add(tfEmail);
+
+        JLabel lblEmail = new JLabel("E-mail:");
+        lblEmail.setFont(new Font("Arial", Font.PLAIN, 15));
+        lblEmail.setBounds(10, 131, 126, 16);
+        panel_1.add(lblEmail);
+
+        tfEdad = new JTextField();
+        tfEdad.setColumns(10);
+        tfEdad.setBounds(146, 68, 419, 20);
+        panel_1.add(tfEdad);
+
+        JLabel lblEdad = new JLabel("Edad:");
+        lblEdad.setFont(new Font("Arial", Font.PLAIN, 15));
+        lblEdad.setBounds(10, 69, 126, 16);
+        panel_1.add(lblEdad);
+
+        JLabel lblCinturon = new JLabel("Cinturon:");
+        lblCinturon.setFont(new Font("Arial", Font.PLAIN, 15));
+        lblCinturon.setBounds(10, 193, 134, 16);
+        panel_1.add(lblCinturon);
+
+        JLabel lblPunta = new JLabel("Punta:");
+        lblPunta.setFont(new Font("Arial", Font.PLAIN, 15));
+        lblPunta.setBounds(10, 224, 134, 16);
+        panel_1.add(lblPunta);
+
+        cbCinturon = new JComboBox<>();
+        cbCinturon.setBounds(146, 192, 419, 22);
+        populateComboBox(cbCinturon);
+        cbCinturon.setRenderer(new ColorComboBoxRenderer(cbCinturon));
+        panel_1.add(cbCinturon);
+
+        cbPunta = new JComboBox<>();
+        cbPunta.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                btnAtrasActionListener();
+                cbPunta.setBackground((Color) cbPunta.getSelectedItem());
+                // Cambia el color del texto basándose en la luminancia del color seleccionado
+                if ((Color) cbPunta.getSelectedItem() != null) {
+                    if (isBrightColor((Color) cbPunta.getSelectedItem())) {
+                        cbPunta.setForeground(Color.BLACK);
+                    } else {
+                        cbPunta.setForeground(Color.WHITE);
+                    }
+                }
             }
         });
-        btnSalir.setFont(new Font("Arial", Font.PLAIN, 16));
-        btnSalir.setBounds(395, 257, 170, 35);
-        panel_1.add(btnSalir);
-
-        JLabel lblNewLabel = new JLabel("Nombre:");
-        lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 15));
-        lblNewLabel.setBounds(10, 10, 126, 16);
-        panel_1.add(lblNewLabel);
-
-        textField = new JTextField();
-        textField.setBounds(146, 9, 419, 20);
-        panel_1.add(textField);
-        textField.setColumns(10);
-
-        textField_1 = new JTextField();
-        textField_1.setColumns(10);
-        textField_1.setBounds(146, 37, 419, 20);
-        panel_1.add(textField_1);
-
-        JLabel lblNewLabel_6 = new JLabel("Apellido:");
-        lblNewLabel_6.setFont(new Font("Arial", Font.PLAIN, 15));
-        lblNewLabel_6.setBounds(10, 38, 126, 16);
-        panel_1.add(lblNewLabel_6);
-
-        textField_2 = new JTextField();
-        textField_2.setColumns(10);
-        textField_2.setBounds(146, 68, 419, 20);
-        panel_1.add(textField_2);
-
-        JLabel lblNewLabel_6_1 = new JLabel("Celular:");
-        lblNewLabel_6_1.setToolTipText("asd");
-        lblNewLabel_6_1.setFont(new Font("Arial", Font.PLAIN, 15));
-        lblNewLabel_6_1.setBounds(10, 69, 126, 16);
-        panel_1.add(lblNewLabel_6_1);
-
-        textField_3 = new JTextField();
-        textField_3.setColumns(10);
-        textField_3.setBounds(146, 99, 419, 20);
-        panel_1.add(textField_3);
-
-        JLabel lblNewLabel_6_2 = new JLabel("Direccion:");
-        lblNewLabel_6_2.setFont(new Font("Arial", Font.PLAIN, 15));
-        lblNewLabel_6_2.setBounds(10, 100, 126, 16);
-        panel_1.add(lblNewLabel_6_2);
-
-        textField_4 = new JTextField();
-        textField_4.setColumns(10);
-        textField_4.setBounds(146, 130, 419, 20);
-        panel_1.add(textField_4);
-
-        JLabel lblNewLabel_6_3 = new JLabel("E-mail:");
-        lblNewLabel_6_3.setFont(new Font("Arial", Font.PLAIN, 15));
-        lblNewLabel_6_3.setBounds(10, 131, 126, 16);
-        panel_1.add(lblNewLabel_6_3);
-
-        textField_5 = new JTextField();
-        textField_5.setColumns(10);
-        textField_5.setBounds(146, 161, 419, 20);
-        panel_1.add(textField_5);
-
-        JLabel lblNewLabel_6_4 = new JLabel("Raza:");
-        lblNewLabel_6_4.setFont(new Font("Arial", Font.PLAIN, 15));
-        lblNewLabel_6_4.setBounds(10, 162, 126, 16);
-        panel_1.add(lblNewLabel_6_4);
-
-        JLabel lblNewLabel_6_5 = new JLabel("Cinturon:");
-        lblNewLabel_6_5.setFont(new Font("Arial", Font.PLAIN, 15));
-        lblNewLabel_6_5.setBounds(10, 193, 134, 16);
-        panel_1.add(lblNewLabel_6_5);
-
-        JLabel lblNewLabel_6_6 = new JLabel("Punta:");
-        lblNewLabel_6_6.setFont(new Font("Arial", Font.PLAIN, 15));
-        lblNewLabel_6_6.setBounds(10, 224, 134, 16);
-        panel_1.add(lblNewLabel_6_6);
-
-        JComboBox<Color> comboBox = new JComboBox<>();
-        comboBox.setBounds(146, 192, 419, 22);
-        populateComboBox(comboBox);
-        comboBox.setRenderer(new ColorComboBoxRenderer(comboBox));
-        panel_1.add(comboBox);
-
-        JComboBox<Color> comboBox_1 = new JComboBox<>();
-        comboBox_1.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		comboBox_1.setBackground((Color)comboBox_1.getSelectedItem());
-        		// Cambia el color del texto basándose en la luminancia del color seleccionado
-        		if((Color)comboBox_1.getSelectedItem() != null) {
-        			if (isBrightColor((Color)comboBox_1.getSelectedItem())) {
-        				comboBox_1.setForeground(Color.BLACK);
-                    } else {
-                    	comboBox_1.setForeground(Color.WHITE);
-                    }
-        		}
-                
-        	}
-        });
-        comboBox_1.setBounds(146, 223, 419, 22);
-        comboBox_1.setRenderer(new ColorComboBoxRenderer(comboBox_1));
-        panel_1.add(comboBox_1);
+        cbPunta.setBounds(146, 223, 419, 22);
+        cbPunta.setRenderer(new ColorComboBoxRenderer(cbPunta));
+        panel_1.add(cbPunta);
 
         // Agrega un ActionListener al primer JComboBox
-        comboBox.addActionListener(new ActionListener() {
+        cbCinturon.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Color selectedColor = (Color) comboBox.getSelectedItem();
-                updateSecondComboBoxOptions(selectedColor, comboBox_1);
-                comboBox.setBackground(selectedColor);
+                Color selectedColor = (Color) cbCinturon.getSelectedItem();
+                updateSecondComboBoxOptions(selectedColor, cbPunta);
+                cbCinturon.setBackground(selectedColor);
 
-                if((Color)comboBox_1.getSelectedItem() != null) {
-        			if (isBrightColor((Color)comboBox_1.getSelectedItem())) {
-                        comboBox.setForeground(Color.BLACK);
+                if ((Color) cbPunta.getSelectedItem() != null) {
+                    if (isBrightColor((Color) cbPunta.getSelectedItem())) {
+                        cbPunta.setForeground(Color.BLACK);
                     } else {
-                        comboBox.setForeground(Color.WHITE);
+                        cbPunta.setForeground(Color.WHITE);
                     }
-        		}
+                }
             }
         });
+        
+     // Establecer el DocumentFilter para los JTextFields que solo permita letras
+        setupTextFieldDocumentFilter(tfNombre);
+        setupTextFieldDocumentFilter(tfApellido);
+        setupTextFieldDocumentFilter(tfEdad);
+        setupTextFieldDocumentFilterForNumbers(tfCelular);
+        setupTextFieldDocumentFilterForNumbers(tfEdad);
+        setupTextFieldDocumentFilterForEmail(tfEmail);
+        
+                JButton btnSalir = new JButton("Atras");
+                btnSalir.setBounds(10, 11, 89, 23);
+                panel.add(btnSalir);
+                btnSalir.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        btnAtrasActionListener();
+                    }
+                });
+                btnSalir.setFont(new Font("Arial", Font.PLAIN, 13));
+    }
+    
+    private void btnGuardarActionListener() {
+    	// Obtén los datos de la interfaz gráfica y crea un objeto Taekwondoka
+    	String nombre = tfNombre.getText();
+    	String apellido = tfApellido.getText();
+    	String edad = tfEdad.getText();
+    	String direccion = tfDireccion.getText();
+    	String email = tfEmail.getText();
+    	String celular = tfCelular.getText();
+    	String cinturon = obtenerNombreColor( (Color) cbCinturon.getSelectedItem());
+    	String punta = obtenerNombreColor( (Color) cbPunta.getSelectedItem());
+    	
+        Taekwondoka nuevoTaekwondoka = new Taekwondoka(nombre, apellido, edad, direccion, email, celular,
+		cinturon, punta);
+        /*
+        System.out.println("Nombre: " + nuevoTaekwondoka.getNombre());
+        System.out.println("Apellido: " + nuevoTaekwondoka.getApellido());
+        System.out.println("Edad: " + nuevoTaekwondoka.getEdad());
+        System.out.println("Dirección: " + nuevoTaekwondoka.getDireccion());
+        System.out.println("Email: " + nuevoTaekwondoka.getEmail());
+        System.out.println("Celular: " + nuevoTaekwondoka.getCelular());
+        System.out.println("Cinturon: " + nuevoTaekwondoka.getCinturon());
+        System.out.println("Punta: " + nuevoTaekwondoka.getPunta());
+        */
+
+        // Llama al controlador para guardar el nuevo Taekwondoka
+        controller.guardarNuevoTaekwondoka(nuevoTaekwondoka);
+    }
+
+    private void btnLimpiarActionListener() {
+        tfNombre.setText("");
+        tfApellido.setText("");
+        tfCelular.setText("");
+        tfDireccion.setText("");
+        tfEmail.setText("");
+        tfEdad.setText("");
+        cbCinturon.setSelectedIndex(0);
     }
 
     private void btnAtrasActionListener() {
@@ -180,7 +251,7 @@ public class NuevoTaekwondoka extends JFrame {
         menu.setLocation(this.getX(), this.getY());
         menu.setVisible(true);
     }
-    
+
     // Método para llenar los colores en el JComboBox
     private void populateComboBox(JComboBox<Color> comboBox) {
         comboBox.addItem(null);
@@ -191,7 +262,7 @@ public class NuevoTaekwondoka extends JFrame {
         comboBox.addItem(Color.RED);
         comboBox.addItem(Color.BLACK);
     }
-    
+
     // Método para actualizar dinámicamente las opciones del segundo JComboBox
     private void updateSecondComboBoxOptions(Object selectedColor, JComboBox<Color> comboBox_1) {
         comboBox_1.removeAllItems();  // Elimina todas las opciones actuales
@@ -219,25 +290,11 @@ public class NuevoTaekwondoka extends JFrame {
         comboBox_1.setSelectedItem(options != null && options.length > 0 ? options[0] : null);
     }
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Menu menu = new Menu();
-                    NuevoTaekwondoka frame = new NuevoTaekwondoka(menu);
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
     private class ColorComboBoxRenderer extends DefaultListCellRenderer {
-        private JComboBox<Color> comboBox;
+        private JComboBox<Color> cbCinturon;
 
         public ColorComboBoxRenderer(JComboBox<Color> comboBox) {
-            this.comboBox = comboBox;
+            this.cbCinturon = comboBox;
         }
 
         @Override
@@ -291,11 +348,104 @@ public class NuevoTaekwondoka extends JFrame {
             return luminance > brightnessThreshold;
         }
     }
-    
+
     private boolean isBrightColor(Color color) {
         // Cambiado el umbral de brillo
         int brightnessThreshold = 200;
         double luminance = 0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue();
         return luminance > brightnessThreshold;
     }
+    
+    private void setupTextFieldDocumentFilter(JTextField textField) {
+        Document doc = textField.getDocument();
+        if (doc instanceof AbstractDocument) {
+            AbstractDocument abstractDoc = (AbstractDocument) doc;
+            abstractDoc.setDocumentFilter(new DocumentFilter() {
+                @Override
+                public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                    if (text.matches("^[a-zA-Z]*$")) {
+                        super.replace(fb, offset, length, text, attrs);
+                    }
+                }
+            });
+        }
+    }
+    
+    private void setupTextFieldDocumentFilterForNumbers(JTextField textField) {
+        Document doc = textField.getDocument();
+        if (doc instanceof AbstractDocument) {
+            AbstractDocument abstractDoc = (AbstractDocument) doc;
+            abstractDoc.setDocumentFilter(new DocumentFilter() {
+                @Override
+                public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                    if (text.matches("^[0-9]*$")) {
+                        super.replace(fb, offset, length, text, attrs);
+                    }
+                }
+            });
+        }
+    }
+    
+    private void setupTextFieldDocumentFilterForEmail(JTextField textField) {
+        Document doc = textField.getDocument();
+        if (doc instanceof AbstractDocument) {
+            AbstractDocument abstractDoc = (AbstractDocument) doc;
+            abstractDoc.setDocumentFilter(new DocumentFilter() {
+                @Override
+                public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                        throws BadLocationException {
+                    // Permite los caracteres válidos para un correo electrónico
+                    if (isValidEmailCharacter(text)) {
+                        super.replace(fb, offset, length, text, attrs);
+                    }
+                }
+            });
+        }
+    }
+
+    private boolean isValidEmailCharacter(String text) {
+        // Utiliza una expresión regular para permitir caracteres válidos en un correo electrónico
+        return text.matches("^[a-zA-Z0-9._@]*$");
+    }
+
+    private String obtenerNombreColor(Color color) {
+    	if(color != null) {
+    		if (color.equals(Color.WHITE)) {
+                return "Blanco";
+            } else if (color.equals(Color.YELLOW)) {
+                return "Amarillo";
+            } else if (color.equals(Color.GREEN)) {
+                return "Verde";
+            } else if (color.equals(Color.BLUE)) {
+                return "Azul";
+            } else if (color.equals(Color.RED)) {
+                return "Rojo";
+            } else if (color.equals(Color.BLACK)) {
+                return "Negro";
+            } else {
+                // Puedes manejar otros colores según sea necesario.
+                return "Desconocido";
+            }
+    	} else return "Desconocido";
+    }
+    
+    public class JTextFieldLimit extends PlainDocument {
+        private int limit;
+
+        JTextFieldLimit(int limit) {
+            super();
+            this.limit = limit;
+        }
+
+        public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+            if (str == null)
+                return;
+
+            if ((getLength() + str.length()) <= limit) {
+                super.insertString(offset, str, attr);
+            }
+        }
+    }
+    
+
 }

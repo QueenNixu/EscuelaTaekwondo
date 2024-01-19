@@ -47,17 +47,22 @@ public class Menu extends JFrame {
 		JButton btnNuevoDuenio = new JButton("Nuevo Taekwondoka");
 		btnNuevoDuenio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnNuevoTaekwondoka();
+				btnNuevoTaekwondokaActionListener();
 			}
 		});
 		btnNuevoDuenio.setFont(new Font("Arial", Font.PLAIN, 16));
 		btnNuevoDuenio.setBounds(10, 11, 180, 35);
 		panel_1.add(btnNuevoDuenio);
 		
-		JButton btnVerDatos = new JButton("Ver Datos");
-		btnVerDatos.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnVerDatos.setBounds(10, 60, 180, 35);
-		panel_1.add(btnVerDatos);
+		JButton btnVerTaekwondokas = new JButton("Ver Taekwondokas");
+		btnVerTaekwondokas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnVerTaekwondokaActionListener();
+			}
+		});
+		btnVerTaekwondokas.setFont(new Font("Arial", Font.PLAIN, 16));
+		btnVerTaekwondokas.setBounds(10, 60, 180, 35);
+		panel_1.add(btnVerTaekwondokas);
 		
 		JButton btnSalir = new JButton("Salir");
 		btnSalir.addActionListener(new ActionListener() {
@@ -80,10 +85,17 @@ public class Menu extends JFrame {
 		panel.add(lblNewLabel_1);
 	}
 	
-	private void btnNuevoTaekwondoka() {
+	private void btnNuevoTaekwondokaActionListener() {
 		NuevoTaekwondoka nt = new NuevoTaekwondoka(this);
 		nt.setLocation(this.getX(), this.getY());
 		dispose();
 		nt.setVisible(true);
+	}
+	
+	private void btnVerTaekwondokaActionListener() {
+		VerTaekwondokas VVT = new VerTaekwondokas(this);
+		VVT.setLocation(this.getX(), this.getY());
+		dispose();
+		VVT.setVisible(true);
 	}
 }
