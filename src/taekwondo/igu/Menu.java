@@ -8,6 +8,10 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
+
+import taekwondo.persistencia.ConexionMySQL;
+import taekwondo.util.Ventanas;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -86,16 +90,25 @@ public class Menu extends JFrame {
 	}
 	
 	private void btnNuevoTaekwondokaActionListener() {
-		NuevoTaekwondoka nt = new NuevoTaekwondoka(this);
-		nt.setLocation(this.getX(), this.getY());
-		dispose();
-		nt.setVisible(true);
+		if(ConexionMySQL.obtenerConexion() != null) {
+			NuevoTaekwondoka nt = new NuevoTaekwondoka(this);
+			nt.setLocation(this.getX(), this.getY());
+			dispose();
+			nt.setVisible(true);
+		} else {
+			Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+		}
 	}
 	
 	private void btnVerTaekwondokaActionListener() {
-		VerTaekwondokas VVT = new VerTaekwondokas(this);
-		VVT.setLocation(this.getX(), this.getY());
-		dispose();
-		VVT.setVisible(true);
+		if (ConexionMySQL.obtenerConexion() != null) {
+            VerTaekwondokas VVT = new VerTaekwondokas(this);
+            VVT.setLocation(this.getX(), this.getY());
+            dispose();
+            VVT.setVisible(true);
+        } else {
+            Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+        }
 	}
+
 }

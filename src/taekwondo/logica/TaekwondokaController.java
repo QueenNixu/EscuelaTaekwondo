@@ -9,7 +9,7 @@ public class TaekwondokaController {
 	
 	private TaekwondokaDAO taekwondokaDAO = new TaekwondokaDAO();
 
-    public void guardarNuevoTaekwondoka(Taekwondoka nuevoTaekwondoka) {
+    public boolean guardarNuevoTaekwondoka(Taekwondoka nuevoTaekwondoka) {
     	// Realizar validaciones
         StringBuilder errores = new StringBuilder();
 
@@ -34,6 +34,10 @@ public class TaekwondokaController {
         } else {
         	if(nuevoTaekwondoka.getEdad().length() >= 4) {
         		errores.append("Ingrese no mas de 4 caracteres.\n");
+        	} else {
+        		if(Integer.parseInt(nuevoTaekwondoka.getEdad()) >= 150) {
+        			errores.append("Ingrese una edad menor a 150.\n");
+        		}
         	}
         }
         
@@ -78,9 +82,10 @@ public class TaekwondokaController {
         if (errores.length() > 0) {
             // Mostrar mensaje de error en una ventana en lugar de imprimirlo en consola
             Ventanas.mostrarError("ERROR:\n" + errores.toString());
+            return false;
         } else {
             // Si no hay errores, proceder con la persistencia
-            taekwondokaDAO.insertarTaekwondoka(nuevoTaekwondoka);
+            return taekwondokaDAO.insertarTaekwondoka(nuevoTaekwondoka);
         }
     }
 

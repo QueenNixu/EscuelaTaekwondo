@@ -13,10 +13,11 @@ import taekwondo.util.Ventanas;
 
 public class TaekwondokaDAO {
 	
-	public void insertarTaekwondoka(Taekwondoka taekwondoka) {
+	public boolean insertarTaekwondoka(Taekwondoka taekwondoka) {
 	    String query = "INSERT INTO taekwondoka (nombre, apellido, edad, direccion, email, celular, cinturon, punta) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-	    try (PreparedStatement pstmt = ConexionMySQL.obtenerConexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+	    try (Connection con = ConexionMySQL.obtenerConexion();
+	         PreparedStatement pstmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 	        // Configurar los parámetros y ejecutar la consulta
 	        pstmt.setString(1, taekwondoka.getNombre());
 	        pstmt.setString(2, taekwondoka.getApellido());
@@ -29,11 +30,14 @@ public class TaekwondokaDAO {
 
 	        pstmt.executeUpdate();
 	        Ventanas.mostrarExito("Se ha agregado un nuevo Taekwondista.");
+	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        // Manejar la excepción de alguna manera adecuada
+	        return false;
 	    }
 	}
+
 
 	public List<Taekwondoka> traerTaekwondokas() {
 	    List<Taekwondoka> taekwondokas = new ArrayList<>();
@@ -54,7 +58,7 @@ public class TaekwondokaDAO {
 	            taekwondoka.setEdad(rs.getInt("edad") + ""); // +"" para convertirlo en un String sencillamente
 	            taekwondoka.setDireccion(rs.getString("direccion"));
 	            taekwondoka.setEmail(rs.getString("email"));
-	            taekwondoka.setCelular(rs.getInt("celular") + ""); // +"" para convertirlo en un String sencillamente
+	            taekwondoka.setCelular(rs.getString("celular")); // +"" para convertirlo en un String sencillamente
 	            taekwondoka.setCinturon(rs.getString("cinturon"));
 	            taekwondoka.setPunta(rs.getString("punta"));
 

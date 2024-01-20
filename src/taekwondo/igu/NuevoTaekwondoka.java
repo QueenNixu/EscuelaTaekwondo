@@ -10,6 +10,8 @@ import javax.swing.text.PlainDocument;
 
 import taekwondo.logica.Taekwondoka;
 import taekwondo.logica.TaekwondokaController;
+import taekwondo.persistencia.ConexionMySQL;
+import taekwondo.util.Ventanas;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -209,31 +211,32 @@ public class NuevoTaekwondoka extends JFrame {
     }
     
     private void btnGuardarActionListener() {
-    	// Obtén los datos de la interfaz gráfica y crea un objeto Taekwondoka
-    	String nombre = tfNombre.getText();
-    	String apellido = tfApellido.getText();
-    	String edad = tfEdad.getText();
-    	String direccion = tfDireccion.getText();
-    	String email = tfEmail.getText();
-    	String celular = tfCelular.getText();
-    	String cinturon = obtenerNombreColor( (Color) cbCinturon.getSelectedItem());
-    	String punta = obtenerNombreColor( (Color) cbPunta.getSelectedItem());
-    	
-        Taekwondoka nuevoTaekwondoka = new Taekwondoka(nombre, apellido, edad, direccion, email, celular,
-		cinturon, punta);
-        /*
-        System.out.println("Nombre: " + nuevoTaekwondoka.getNombre());
-        System.out.println("Apellido: " + nuevoTaekwondoka.getApellido());
-        System.out.println("Edad: " + nuevoTaekwondoka.getEdad());
-        System.out.println("Dirección: " + nuevoTaekwondoka.getDireccion());
-        System.out.println("Email: " + nuevoTaekwondoka.getEmail());
-        System.out.println("Celular: " + nuevoTaekwondoka.getCelular());
-        System.out.println("Cinturon: " + nuevoTaekwondoka.getCinturon());
-        System.out.println("Punta: " + nuevoTaekwondoka.getPunta());
-        */
 
         // Llama al controlador para guardar el nuevo Taekwondoka
-        controller.guardarNuevoTaekwondoka(nuevoTaekwondoka);
+        if(ConexionMySQL.obtenerConexion() != null) {
+        	
+        	// Obtén los datos de la interfaz gráfica y crea un objeto Taekwondoka
+        	String nombre = tfNombre.getText();
+        	String apellido = tfApellido.getText();
+        	String edad = tfEdad.getText();
+        	String direccion = tfDireccion.getText();
+        	String email = tfEmail.getText();
+        	String celular = tfCelular.getText();
+        	String cinturon = obtenerNombreColor( (Color) cbCinturon.getSelectedItem());
+        	String punta = obtenerNombreColor( (Color) cbPunta.getSelectedItem());
+        	
+            Taekwondoka nuevoTaekwondoka = new Taekwondoka(nombre, apellido, edad, direccion, email, celular,
+    		cinturon, punta);
+        	
+        	if(controller.guardarNuevoTaekwondoka(nuevoTaekwondoka)) {
+        		btnLimpiarActionListener();
+        	}
+        	else {
+        		Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+        	}
+		} else {
+			Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+		}
     }
 
     private void btnLimpiarActionListener() {
