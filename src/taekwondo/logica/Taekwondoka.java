@@ -2,6 +2,7 @@ package taekwondo.logica;
 
 public class Taekwondoka {
 	
+	private int id;
 	private String nombre;
 	private String apellido;
 	private String edad;
@@ -17,9 +18,10 @@ public class Taekwondoka {
 	
 	
 
-	public Taekwondoka(String nombre, String apellido, String edad, String direccion, String email, String celular,
+	public Taekwondoka(int id, String nombre, String apellido, String edad, String direccion, String email, String celular,
 			String cinturon, String punta) {
 		super();
+		this.id = id;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.edad = edad;
@@ -94,6 +96,18 @@ public class Taekwondoka {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+
+
+	public int getId() {
+		return id;
+	}
+
+
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	

@@ -1,6 +1,8 @@
 package taekwondo.igu;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -16,6 +18,8 @@ import java.util.Vector;
 import taekwondo.logica.Taekwondoka;
 import taekwondo.logica.TaekwondokaController;
 import taekwondo.persistencia.ConexionMySQL;
+import taekwondo.util.PintarPanel;
+import taekwondo.util.Ventanas;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -25,6 +29,8 @@ public class VerTaekwondokas extends JFrame {
 	private TaekwondokaController taekwondokaController = null;
 	private JTable tablaTaekwondokas;
 	private Menu menu;
+	private JTextField tfBuscar;
+	private List<Taekwondoka> listaTaekwondokas;
 
 	public VerTaekwondokas(Menu menu) {
 
@@ -56,7 +62,7 @@ public class VerTaekwondokas extends JFrame {
 		panel.add(lblListaDeTaekwondokas);
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(7, 84, 580, 282);
+		panel_1.setBounds(7, 74, 580, 243);
 		panel.add(panel_1);
 
 		tablaTaekwondokas = new JTable();
@@ -73,42 +79,104 @@ public class VerTaekwondokas extends JFrame {
 		JScrollPane scrollPane = new JScrollPane(tablaTaekwondokas);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(0, 0, 580, 282);
+		scrollPane.setBounds(0, 0, 580, 243);
 		panel_1.add(scrollPane);
 
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(7, 34, 578, 45);
-		panel.add(panel_2);
-		panel_2.setLayout(null);
+		JPanel pnlBotones = new JPanel();
+		pnlBotones.setBounds(65, 326, 464, 40);
+		panel.add(pnlBotones);
+		pnlBotones.setLayout(null);
 
-		JButton btnVerDetalles = new JButton("Ver Detalles de Taekwondoka");
-		btnVerDetalles.setFont(new Font("Arial", Font.PLAIN, 13));
-		btnVerDetalles.setBounds(5, 11, 210, 23);
-		panel_2.add(btnVerDetalles);
+		JButton btnVerDetalles = new JButton("Ver Detalles");
+		btnVerDetalles.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnVerDetallesActionListener();
+			}
+		});
+		btnVerDetalles.setFont(new Font("Arial", Font.PLAIN, 16));
+		btnVerDetalles.setBounds(10, 5, 140, 30);
+		pnlBotones.add(btnVerDetalles);
 
-		JButton btnNewButton_1 = new JButton("Eliminar Taekwondoka");
-		btnNewButton_1.setFont(new Font("Arial", Font.PLAIN, 13));
-		btnNewButton_1.setBounds(225, 11, 170, 23);
-		panel_2.add(btnNewButton_1);
+		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.setFont(new Font("Arial", Font.PLAIN, 16));
+		btnEliminar.setBounds(310, 5, 140, 30);
+		pnlBotones.add(btnEliminar);
 
-		JButton btnNewButton_1_1 = new JButton("Editar Taekwondoka");
-		btnNewButton_1_1.setFont(new Font("Arial", Font.PLAIN, 13));
-		btnNewButton_1_1.setBounds(405, 11, 163, 23);
-		panel_2.add(btnNewButton_1_1);
+		JButton btnEditar = new JButton("Editar");
+		btnEditar.setFont(new Font("Arial", Font.PLAIN, 16));
+		btnEditar.setBounds(160, 5, 140, 30);
+		pnlBotones.add(btnEditar);
 
-		JButton btnNewButton_1_1_1 = new JButton("Atras");
-		btnNewButton_1_1_1.addActionListener(new ActionListener() {
+		JButton btnAtras = new JButton("Atras");
+		btnAtras.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnAtrasActionListener();
 			}
 		});
-		btnNewButton_1_1_1.setFont(new Font("Arial", Font.PLAIN, 13));
-		btnNewButton_1_1_1.setBounds(7, 5, 89, 23);
-		panel.add(btnNewButton_1_1_1);
+		btnAtras.setFont(new Font("Arial", Font.PLAIN, 13));
+		btnAtras.setBounds(7, 5, 89, 23);
+		panel.add(btnAtras);
+		
+		JPanel pnlBuscador = new JPanel();
+		pnlBuscador.setBounds(7, 39, 580, 24);
+		panel.add(pnlBuscador);
+		pnlBuscador.setLayout(null);
+		
+		JLabel lblBuscar = new JLabel("Buscar:");
+		lblBuscar.setFont(new Font("Arial", Font.PLAIN, 15));
+		lblBuscar.setBounds(10, 5, 57, 14);
+		pnlBuscador.add(lblBuscar);
+		
+		tfBuscar = new JTextField();
+		tfBuscar.setBounds(77, 3, 493, 18);
+		pnlBuscador.add(tfBuscar);
+		tfBuscar.setColumns(10);
+		
+		// Agregar un DocumentListener al JTextField para manejar cambios en el texto
+        tfBuscar.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filtrarTabla();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filtrarTabla();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Este método es menos relevante para campos de texto simples
+            }
+        });
 
 	}
 
-	private void cargarTabla() {
+	protected void filtrarTabla() {
+		
+		String textoBusqueda = tfBuscar.getText().toLowerCase();
+        DefaultTableModel modelo = (DefaultTableModel) tablaTaekwondokas.getModel();
+        modelo.setRowCount(0); // Limpiar la tabla
+
+        for (Taekwondoka tae : listaTaekwondokas) {
+            // Filtrar por nombre, apellido o email (puedes ajustar según tus necesidades)
+            if (tae.getNombre().toLowerCase().contains(textoBusqueda) ||
+                tae.getApellido().toLowerCase().contains(textoBusqueda) ||
+                tae.getEmail().toLowerCase().contains(textoBusqueda) ||
+                tae.getCinturon().toLowerCase().contains(textoBusqueda) ||
+                tae.getPunta().toLowerCase().contains(textoBusqueda)
+                ) {
+            	
+            	System.out.println("Cinturon: "+tae.getCinturon().toLowerCase());
+            	System.out.println("Punta: "+tae.getPunta().toLowerCase());
+                Object[] objeto = { tae.getApellido(), tae.getNombre(), tae.getEmail(), tae.getCinturon() + "," + tae.getPunta() };
+                modelo.addRow(objeto);
+            }
+        }
+		
+	}
+
+	public void cargarTabla() {
 		DefaultTableModel tablaModelo = new DefaultTableModel() {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -121,7 +189,7 @@ public class VerTaekwondokas extends JFrame {
 		
 		if(ConexionMySQL.obtenerConexion() != null) {
 			
-			List<Taekwondoka> listaTaekwondokas = taekwondokaController.traerTaekwondokas();
+			listaTaekwondokas = taekwondokaController.traerTaekwondokas();
 			
 			if (listaTaekwondokas != null) {
 				for (Taekwondoka tae : listaTaekwondokas) {
@@ -166,8 +234,6 @@ public class VerTaekwondokas extends JFrame {
 				String[] colores = ((String) value).split(",");
 
 				if (colores.length == 2) {
-					int anchoPrimero = 80; // Ancho del primer color
-					int anchoSegundo = 18; // Ancho del segundo color
 
 					// Obtén el modelo de la tabla
 					DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -181,31 +247,9 @@ public class VerTaekwondokas extends JFrame {
 					// Suponiendo que los colores están en la última columna de tu modelo
 					String[] colors = rowData[model.getColumnCount() - 1].toString().split(",");
 
-					// Mapea los nombres de colores a valores de Color
-					Color mappedColor1 = mapColor(colors[0].trim());
-					Color mappedColor2 = mapColor(colors[1].trim());
+					
 
-					// Crea un panel para personalizar la representación visual
-					JPanel colorPanel = new JPanel();
-					colorPanel.setLayout(new BorderLayout());
-
-					// Crea un rectángulo para el primer color
-					JPanel firstColorPanel = new JPanel();
-					firstColorPanel.setBackground(mappedColor1);
-					// System.out.println("mappedColor1: " + mappedColor1);
-					firstColorPanel.setPreferredSize(new Dimension(anchoPrimero, cellComponent.getHeight()));
-
-					// Crea un rectángulo para el segundo color
-					JPanel secondColorPanel = new JPanel();
-					secondColorPanel.setBackground(mappedColor2);
-					// System.out.println("mappedColor2: " + mappedColor2);
-					secondColorPanel.setPreferredSize(new Dimension(anchoSegundo, cellComponent.getHeight()));
-
-					// Agrega los rectángulos al panel principal
-					colorPanel.add(firstColorPanel, BorderLayout.WEST);
-					colorPanel.add(secondColorPanel, BorderLayout.EAST);
-
-					return colorPanel;
+					return PintarPanel.crearColorPanel(colors[0], colors[1], 80, 18);
 				}
 			}
 
@@ -214,28 +258,35 @@ public class VerTaekwondokas extends JFrame {
 			return cellComponent;
 		}
 
-		private Color mapColor(String colorName) {
-			switch (colorName.toLowerCase()) {
-			case "blanco":
-				return Color.WHITE;
-			case "amarillo":
-				return Color.YELLOW;
-			case "verde":
-				return Color.GREEN;
-			case "azul":
-				return Color.BLUE;
-			case "rojo":
-				return Color.RED;
-			// Agrega más casos según necesites
-			default:
-				return Color.BLACK; // Color por defecto en caso de no coincidir
-			}
-		}
 	}
 
 	private void btnAtrasActionListener() {
 		dispose();
 		menu.setLocation(this.getX(), this.getY());
 		menu.setVisible(true);
+	}
+	
+	private void btnVerDetallesActionListener() {
+		if (ConexionMySQL.obtenerConexion() != null) {
+			int filaSeleccionada = tablaTaekwondokas.getSelectedRow();
+			DefaultTableModel modelo = (DefaultTableModel) tablaTaekwondokas.getModel();
+			if(filaSeleccionada != -1) {
+				String TaekwondokaMail = modelo.getValueAt(filaSeleccionada, 2).toString();
+				System.out.println(TaekwondokaMail);
+				
+				// buscar todos los datos del Taekwondoka (mail e id son unicos)
+				Taekwondoka tae = taekwondokaController.traerTaekwondokaByMail(TaekwondokaMail);
+				if(tae != null) {
+					VerDetallesTaekwondoka VVDT = new VerDetallesTaekwondoka(this, tae);
+		            VVDT.setLocation(this.getX(), this.getY());
+		            dispose();
+		            VVDT.setVisible(true);
+				} else {
+					Ventanas.mostrarError("Hubo un problema y no se encontro el Taekwondoka.");
+				}
+			}
+        } else {
+            Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+        }
 	}
 }

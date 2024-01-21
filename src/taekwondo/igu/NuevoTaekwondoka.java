@@ -50,7 +50,7 @@ public class NuevoTaekwondoka extends JFrame {
         JLabel lblTitulo = new JLabel("Nuevo Taekwondoka");
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Arial Black", Font.PLAIN, 20));
-        lblTitulo.setBounds(184, 11, 229, 51);
+        lblTitulo.setBounds(160, 5, 274, 29);
         panel.add(lblTitulo);
 
         JPanel panel_1 = new JPanel();
@@ -200,7 +200,7 @@ public class NuevoTaekwondoka extends JFrame {
         setupTextFieldDocumentFilterForEmail(tfEmail);
         
                 JButton btnSalir = new JButton("Atras");
-                btnSalir.setBounds(10, 11, 89, 23);
+                btnSalir.setBounds(5, 5, 89, 23);
                 panel.add(btnSalir);
                 btnSalir.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -225,7 +225,7 @@ public class NuevoTaekwondoka extends JFrame {
         	String cinturon = obtenerNombreColor( (Color) cbCinturon.getSelectedItem());
         	String punta = obtenerNombreColor( (Color) cbPunta.getSelectedItem());
         	
-            Taekwondoka nuevoTaekwondoka = new Taekwondoka(nombre, apellido, edad, direccion, email, celular,
+            Taekwondoka nuevoTaekwondoka = new Taekwondoka(-1, nombre, apellido, edad, direccion, email, celular,
     		cinturon, punta);
         	
         	if(controller.guardarNuevoTaekwondoka(nuevoTaekwondoka)) {
