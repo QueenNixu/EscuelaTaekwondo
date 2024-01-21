@@ -231,9 +231,6 @@ public class NuevoTaekwondoka extends JFrame {
         	if(controller.guardarNuevoTaekwondoka(nuevoTaekwondoka)) {
         		btnLimpiarActionListener();
         	}
-        	else {
-        		Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
-        	}
 		} else {
 			Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
 		}

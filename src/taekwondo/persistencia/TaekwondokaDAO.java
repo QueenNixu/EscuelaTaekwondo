@@ -33,7 +33,7 @@ public class TaekwondokaDAO {
 	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        // Manejar la excepción de alguna manera adecuada
+	        Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
 	        return false;
 	    }
 	}
