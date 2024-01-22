@@ -140,7 +140,7 @@ public class TaekwondokaDAO {
 
 	public boolean editarTaekwondoka(Taekwondoka taeEditado) {
         // Query para actualizar el registro en la base de datos
-        String sql = "UPDATE taekwondoka SET nombre=?, apellido=?, edad=?, direccion=?, email=?, celular=? WHERE id=?";
+        String sql = "UPDATE taekwondoka SET nombre=?, apellido=?, edad=?, direccion=?, email=?, celular=?, cinturon=?, punta=? WHERE id=?";
         
         Connection con = ConexionMySQL.obtenerConexion();
 
@@ -152,7 +152,9 @@ public class TaekwondokaDAO {
             statement.setString(4, taeEditado.getDireccion());
             statement.setString(5, taeEditado.getEmail());
             statement.setString(6, taeEditado.getCelular());
-            statement.setInt(7, taeEditado.getId()); // Asumiendo que hay un campo id en tu tabla
+            statement.setString(7, taeEditado.getCinturon());
+            statement.setString(8, taeEditado.getPunta());
+            statement.setInt(9, taeEditado.getId());
 
             // Ejecutar la actualización
             int filasActualizadas = statement.executeUpdate();

@@ -272,7 +272,7 @@ public class VerTaekwondokas extends JFrame {
 			DefaultTableModel modelo = (DefaultTableModel) tablaTaekwondokas.getModel();
 			if(filaSeleccionada != -1) {
 				String TaekwondokaMail = modelo.getValueAt(filaSeleccionada, 2).toString();
-				System.out.println(TaekwondokaMail);
+				//System.out.println(TaekwondokaMail);
 				
 				// buscar todos los datos del Taekwondoka (mail e id son unicos)
 				Taekwondoka tae = taekwondokaController.traerTaekwondokaByMail(TaekwondokaMail);

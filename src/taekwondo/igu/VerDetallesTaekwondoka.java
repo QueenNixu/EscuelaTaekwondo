@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -37,14 +38,16 @@ public class VerDetallesTaekwondoka extends JFrame {
 	private JButton btnEditar;
 	private JButton btnArrowUp;
 	
-	
-	private String colorNuevoCinturon;
-	private String colorNuevaPunta;
+	private JPanel pnlCinturonPunta;
+	private JPanel panel_1;
 	
 	private TaekwondokaController controller = new TaekwondokaController();
 	
+	private String nuevoColorPunta;
+	private String nuevoColorCinturon;
+	
 	public VerDetallesTaekwondoka(VerTaekwondokas verTaekwondokas, Taekwondoka tae) {
-		
+		/*
 		System.out.println("ID: "+tae.getId());
 		System.out.println(tae.getNombre());
 		System.out.println(tae.getApellido());
@@ -54,14 +57,12 @@ public class VerDetallesTaekwondoka extends JFrame {
 		System.out.println(tae.getCelular());
 		System.out.println(tae.getCinturon());
 		System.out.println(tae.getPunta());
-		
+		*/
 		this.verTaekwondokas = verTaekwondokas;
 		this.tae = tae;
 		
-		
-		
-		colorNuevoCinturon = tae.getCinturon();
-		colorNuevaPunta = tae.getPunta();
+		nuevoColorCinturon = tae.getCinturon();
+		nuevoColorPunta = tae.getPunta();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 611, 416);
@@ -89,7 +90,7 @@ public class VerDetallesTaekwondoka extends JFrame {
 		btnAtras.setBounds(7, 5, 89, 23);
 		panel.add(btnAtras);
 		
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		panel_1.setLayout(null);
 		panel_1.setBounds(10, 76, 575, 177);
 		panel.add(panel_1);
@@ -190,9 +191,10 @@ public class VerDetallesTaekwondoka extends JFrame {
 		tfCelular.setBounds(395, 72, 170, 20);
 		panel_1.add(tfCelular);
 		
-		JPanel pnlCinturonPunta = PintarPanel.crearColorPanel(tae.getCinturon(), tae.getPunta(), 285, 95);
+		pnlCinturonPunta = PintarPanel.crearColorPanel(tae.getCinturon(), tae.getPunta(), 285, 95);
 		pnlCinturonPunta.setBounds(150, 100, 380, 16);
 		panel_1.add(pnlCinturonPunta);
+		
 		
 		btnArrowUp = new JButton("");
 		btnArrowUp.addActionListener(new ActionListener() {
@@ -215,9 +217,158 @@ public class VerDetallesTaekwondoka extends JFrame {
 	}
 
 	private void btnLevelUpActionListener() {
+
+	        levelUp(tae.getCinturon(), tae.getPunta());
+	        
+	        // Elimina el antiguo pnlCinturonPunta del panel_1
+	        panel_1.remove(pnlCinturonPunta);
+
+	        // Crea un nuevo pnlCinturonPunta con los nuevos colores y posición
+	        pnlCinturonPunta = PintarPanel.crearColorPanel(nuevoColorCinturon, nuevoColorPunta, 285, 95);
+	        pnlCinturonPunta.setBounds(150, 100, 380, 16);
+
+	        // Añade el nuevo pnlCinturonPunta al panel_1
+	        panel_1.add(pnlCinturonPunta);
+
+	        // Revalida y repinta el panel para que los cambios sean visibles
+	        panel_1.revalidate();
+	        panel_1.repaint();
+	        
+	}
+
+	private void levelUp(String colorCinturon, String colorPunta) {
 		
-		System.out.println("Level Up!");
-		
+		switch (colorCinturon.toLowerCase()) {
+	    case "blanco":
+	        // Código para el caso "Rojo"
+	    	switch (colorPunta.toLowerCase()) {
+		    case "blanco":
+		        // Código para el caso "Rojo"
+		        System.out.println("Cinturon blanco");
+
+				nuevoColorCinturon = "blanco";
+				nuevoColorPunta = "amarillo";
+		        break;
+		    case "amarillo":
+		        // Código para el caso "Azul"
+		        System.out.println("Cinturon blanco punta amarilla");
+
+				nuevoColorCinturon = "amarillo";
+				nuevoColorPunta = "amarillo";
+		        break;
+		    default:
+		        // Código para el caso por defecto si no coincide con ningún caso anterior
+		        System.out.println("Hubo un problema al reconocer los colores del cinturon");
+		        break;
+	    	}
+	        
+	        break;
+	    case "amarillo":
+	        // Código para el caso "Azul"
+	    	switch (colorPunta.toLowerCase()) {
+		    case "amarillo":
+		        // Código para el caso "Rojo"
+		        System.out.println("Cinturon amarillo");
+
+				nuevoColorCinturon = "amarillo";
+				nuevoColorPunta = "verde";
+		        break;
+		    case "verde":
+		        // Código para el caso "Azul"
+		        System.out.println("Cinturon amarillo punta verde");
+
+				nuevoColorCinturon = "verde";
+				nuevoColorPunta = "verde";
+		        break;
+		    default:
+		        // Código para el caso por defecto si no coincide con ningún caso anterior
+		        System.out.println("Color de la punta no reconocido");
+		        break;
+	    	}
+	    	
+	        break;
+	    case "verde":
+	        // Código para el caso "Verde"
+	    	switch (colorPunta.toLowerCase()) {
+		    case "verde":
+		        // Código para el caso "Rojo"
+		        System.out.println("Cinturon verde");
+
+				nuevoColorCinturon = "verde";
+				nuevoColorPunta = "azul";
+		        break;
+		    case "azul":
+		        // Código para el caso "Azul"
+		        System.out.println("Cinturon verde punta azul");
+
+				nuevoColorCinturon = "azul";
+				nuevoColorPunta = "azul";
+		        break;
+		    default:
+		        // Código para el caso por defecto si no coincide con ningún caso anterior
+		        System.out.println("Color de la punta no reconocido");
+		        break;
+	    	}
+
+	        break;
+	    case "azul":
+	        // Código para el caso "Verde"
+	    	switch (colorPunta.toLowerCase()) {
+		    case "azul":
+		        // Código para el caso "Rojo"
+		        System.out.println("Cinturon azul");
+
+				nuevoColorCinturon = "azul";
+				nuevoColorPunta = "rojo";
+		        break;
+		    case "rojo":
+		        // Código para el caso "Azul"
+		        System.out.println("Cinturon azul punta roja");
+		        
+				nuevoColorCinturon = "rojo";
+				nuevoColorPunta = "rojo";
+		        break;
+		    default:
+		        // Código para el caso por defecto si no coincide con ningún caso anterior
+		        System.out.println("Color de la punta no reconocido");
+		        break;
+	    	}
+
+	        break;
+	    case "rojo":
+	        // Código para el caso "Verde"
+	    	switch (colorPunta.toLowerCase()) {
+		    case "rojo":
+		        // Código para el caso "Rojo"
+		        System.out.println("Cinturon rojo");
+
+				nuevoColorCinturon = "rojo";
+				nuevoColorPunta = "negro";
+		        break;
+		    case "negro":
+		        // Código para el caso "Azul"
+		        System.out.println("Cinturon rojo punta negra");
+				nuevoColorCinturon = "negro";
+				nuevoColorPunta = "negro";
+		        break;
+		    default:
+		        // Código para el caso por defecto si no coincide con ningún caso anterior
+		        System.out.println("Color de la punta no reconocido");
+		        break;
+	    	}
+
+	        break;
+	    case "negro":
+	        // Código para el caso "Verde"
+	    	System.out.println("Cinturon negro.\nProximamente se agregaran los Dan.");
+	        break;
+	    default:
+	        // Código para el caso por defecto si no coincide con ningún caso anterior
+	        System.out.println("Color de la punta no reconocido");
+	        break;
+	}
+		//codigo despues de levelup
+		System.out.println("UWU");
 	}
 
 	private void btnGuardarActionListener() {
@@ -234,13 +385,33 @@ public class VerDetallesTaekwondoka extends JFrame {
 			nuevoTae.setDireccion(tfDireccion.getText());
 			nuevoTae.setEmail(tfEmail.getText());
 			nuevoTae.setCelular(tfCelular.getText());
-			nuevoTae.setCinturon(colorNuevoCinturon);
-			nuevoTae.setPunta(colorNuevaPunta);
+			nuevoTae.setCinturon(nuevoColorCinturon);
+			nuevoTae.setPunta(nuevoColorPunta);
+			
+			
         	
         	if(controller.editarTaekwondoka(nuevoTae)) {
         		Ventanas.mostrarExito("Exito");
         		
-        		btnCancelarActionListener();
+        		tae = nuevoTae;
+        		
+        		tfNombre.setText(tae.getNombre());
+        		tfApellido.setText(tae.getApellido());
+        		tfEdad.setText(tae.getEdad());
+        		tfDireccion.setText(tae.getDireccion());
+        		tfEmail.setText(tae.getEmail());
+        		tfCelular.setText(tae.getCelular());
+        		
+        		tfNombre.setEditable(false);
+        		tfApellido.setEditable(false);
+        		tfEdad.setEditable(false);
+        		tfDireccion.setEditable(false);
+        		tfEmail.setEditable(false);
+        		tfCelular.setEditable(false);
+        		
+        		btnArrowUp.setEnabled(false);
+        		
+        		btnEditar.setText("Editar");
         		
         	}
 		} else {
@@ -274,6 +445,22 @@ public class VerDetallesTaekwondoka extends JFrame {
 		tfEmail.setText(tae.getEmail());
 		tfCelular.setText(tae.getCelular());
 		
+		System.out.println(tae.getCinturon().toString());
+		System.out.println(tae.getPunta().toString());
+
+		panel_1.remove(pnlCinturonPunta);
+
+        // Crea un nuevo pnlCinturonPunta con los nuevos colores y posición
+        pnlCinturonPunta = PintarPanel.crearColorPanel(tae.getCinturon(), tae.getPunta(), 285, 95);
+        pnlCinturonPunta.setBounds(150, 100, 380, 16);
+
+        // Añade el nuevo pnlCinturonPunta al panel_1
+        panel_1.add(pnlCinturonPunta);
+
+        // Revalida y repinta el panel para que los cambios sean visibles
+        panel_1.revalidate();
+        panel_1.repaint();
+        
 		tfNombre.setEditable(false);
 		tfApellido.setEditable(false);
 		tfEdad.setEditable(false);
