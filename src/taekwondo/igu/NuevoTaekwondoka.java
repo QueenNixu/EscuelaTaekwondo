@@ -11,6 +11,7 @@ import javax.swing.text.PlainDocument;
 import taekwondo.logica.Taekwondoka;
 import taekwondo.logica.TaekwondokaController;
 import taekwondo.persistencia.ConexionMySQL;
+import taekwondo.util.FiltrosParaTextField;
 import taekwondo.util.Ventanas;
 
 import java.awt.*;
@@ -55,7 +56,7 @@ public class NuevoTaekwondoka extends JFrame {
 
         JPanel panel_1 = new JPanel();
         panel_1.setLayout(null);
-        panel_1.setBounds(10, 63, 575, 303);
+        panel_1.setBounds(10, 45, 575, 321);
         panel.add(panel_1);
 
         JButton btnGuardar = new JButton("Guardar");
@@ -65,7 +66,7 @@ public class NuevoTaekwondoka extends JFrame {
         	}
         });
         btnGuardar.setFont(new Font("Arial", Font.PLAIN, 16));
-        btnGuardar.setBounds(108, 256, 170, 35);
+        btnGuardar.setBounds(109, 275, 170, 35);
         panel_1.add(btnGuardar);
 
         JButton btnLimpiar = new JButton("Limpiar");
@@ -75,7 +76,7 @@ public class NuevoTaekwondoka extends JFrame {
             }
         });
         btnLimpiar.setFont(new Font("Arial", Font.PLAIN, 16));
-        btnLimpiar.setBounds(298, 256, 170, 35);
+        btnLimpiar.setBounds(299, 275, 170, 35);
         panel_1.add(btnLimpiar);
 
         JLabel lblNombre = new JLabel("Nombre:");
@@ -192,22 +193,21 @@ public class NuevoTaekwondoka extends JFrame {
         });
         
      // Establecer el DocumentFilter para los JTextFields que solo permita letras
-        setupTextFieldDocumentFilter(tfNombre);
-        setupTextFieldDocumentFilter(tfApellido);
-        setupTextFieldDocumentFilter(tfEdad);
-        setupTextFieldDocumentFilterForNumbers(tfCelular);
-        setupTextFieldDocumentFilterForNumbers(tfEdad);
-        setupTextFieldDocumentFilterForEmail(tfEmail);
+        FiltrosParaTextField.setupTextFieldDocumentFilter(tfNombre);
+        FiltrosParaTextField.setupTextFieldDocumentFilter(tfApellido);
+        FiltrosParaTextField.setupTextFieldDocumentFilterForNumbers(tfCelular);
+        FiltrosParaTextField.setupTextFieldDocumentFilterForNumbers(tfEdad);
+        FiltrosParaTextField.setupTextFieldDocumentFilterForEmail(tfEmail);
         
-                JButton btnSalir = new JButton("Atras");
-                btnSalir.setBounds(5, 5, 89, 23);
-                panel.add(btnSalir);
-                btnSalir.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        btnAtrasActionListener();
-                    }
-                });
-                btnSalir.setFont(new Font("Arial", Font.PLAIN, 13));
+        JButton btnSalir = new JButton("Atras");
+        btnSalir.setBounds(5, 5, 89, 23);
+        panel.add(btnSalir);
+        btnSalir.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                btnAtrasActionListener();
+            }
+        });
+        btnSalir.setFont(new Font("Arial", Font.PLAIN, 13));
     }
     
     private void btnGuardarActionListener() {
@@ -354,58 +354,6 @@ public class NuevoTaekwondoka extends JFrame {
         int brightnessThreshold = 200;
         double luminance = 0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue();
         return luminance > brightnessThreshold;
-    }
-    
-    private void setupTextFieldDocumentFilter(JTextField textField) {
-        Document doc = textField.getDocument();
-        if (doc instanceof AbstractDocument) {
-            AbstractDocument abstractDoc = (AbstractDocument) doc;
-            abstractDoc.setDocumentFilter(new DocumentFilter() {
-                @Override
-                public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-                    if (text.matches("^[a-zA-Z]*$")) {
-                        super.replace(fb, offset, length, text, attrs);
-                    }
-                }
-            });
-        }
-    }
-    
-    private void setupTextFieldDocumentFilterForNumbers(JTextField textField) {
-        Document doc = textField.getDocument();
-        if (doc instanceof AbstractDocument) {
-            AbstractDocument abstractDoc = (AbstractDocument) doc;
-            abstractDoc.setDocumentFilter(new DocumentFilter() {
-                @Override
-                public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-                    if (text.matches("^[0-9]*$")) {
-                        super.replace(fb, offset, length, text, attrs);
-                    }
-                }
-            });
-        }
-    }
-    
-    private void setupTextFieldDocumentFilterForEmail(JTextField textField) {
-        Document doc = textField.getDocument();
-        if (doc instanceof AbstractDocument) {
-            AbstractDocument abstractDoc = (AbstractDocument) doc;
-            abstractDoc.setDocumentFilter(new DocumentFilter() {
-                @Override
-                public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
-                        throws BadLocationException {
-                    // Permite los caracteres válidos para un correo electrónico
-                    if (isValidEmailCharacter(text)) {
-                        super.replace(fb, offset, length, text, attrs);
-                    }
-                }
-            });
-        }
-    }
-
-    private boolean isValidEmailCharacter(String text) {
-        // Utiliza una expresión regular para permitir caracteres válidos en un correo electrónico
-        return text.matches("^[a-zA-Z0-9._@]*$");
     }
 
     private String obtenerNombreColor(Color color) {

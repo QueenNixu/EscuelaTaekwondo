@@ -166,6 +166,56 @@ public class TaekwondokaDAO {
             return false;
         }
     }
+	
+	public boolean isMailUnique(String mail, int id) {
+		
+		String query = "SELECT * FROM taekwondoka WHERE email = ? AND id !=?";
+		
+		Connection conexion = ConexionMySQL.obtenerConexion();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    
+	    try {
+	        pstmt = conexion.prepareStatement(query);
+	        pstmt.setString(1, mail); // Establecer el valor del parámetro
+	        pstmt.setInt(2, id); // Establecer el valor del parámetro
+	        rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	        	
+	            return false;
+	        }
+	        
+	        return true;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        // Manejar la excepción de alguna manera adecuada
+	    }
+	    
+		return false;
+	}
+
+
+	public static boolean eliminarTaekwondoka(int id) {
+		
+		String sql = "DELETE FROM taekwondoka WHERE id = ?";
+		
+		Connection con = ConexionMySQL.obtenerConexion();
+		
+		try (PreparedStatement statement = con.prepareStatement(sql)) {
+            // Establecer los parámetros en la consulta
+			statement.setInt(1, id);
+
+            // Ejecutar la actualización
+			statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
+            return false;
+        }
+		
+	}
 
 
 

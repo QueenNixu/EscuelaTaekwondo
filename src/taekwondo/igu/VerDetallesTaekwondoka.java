@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import taekwondo.logica.Taekwondoka;
 import taekwondo.persistencia.ConexionMySQL;
 import taekwondo.persistencia.TaekwondokaDAO;
+import taekwondo.util.FiltrosParaTextField;
 import taekwondo.util.PintarPanel;
 import taekwondo.util.Ventanas;
 import taekwondo.logica.TaekwondokaController;
@@ -34,6 +35,8 @@ public class VerDetallesTaekwondoka extends JFrame {
 	private JTextField tfDireccion;
 	private JTextField tfEmail;
 	private JTextField tfCelular;
+	private JButton btnGuardar;
+	private JButton btnCancelar;
 	
 	private JButton btnEditar;
 	private JButton btnArrowUp;
@@ -74,11 +77,11 @@ public class VerDetallesTaekwondoka extends JFrame {
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblDetalles = new JLabel("Detalles de ");
-		lblDetalles.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDetalles.setFont(new Font("Arial Black", Font.PLAIN, 20));
-		lblDetalles.setBounds(160, 5, 274, 29);
-		panel.add(lblDetalles);
+		JLabel lblDetallesDe = new JLabel("Detalles de ");
+		lblDetallesDe.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDetallesDe.setFont(new Font("Arial Black", Font.PLAIN, 20));
+		lblDetallesDe.setBounds(160, 5, 274, 29);
+		panel.add(lblDetallesDe);
 		
 		JButton btnAtras = new JButton("Atras");
 		btnAtras.addActionListener(new ActionListener() {
@@ -95,7 +98,7 @@ public class VerDetallesTaekwondoka extends JFrame {
 		panel_1.setBounds(10, 76, 575, 177);
 		panel.add(panel_1);
 		
-		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar = new JButton("Guardar");
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnGuardarActionListener();
@@ -103,20 +106,29 @@ public class VerDetallesTaekwondoka extends JFrame {
 		});
 		btnGuardar.setFont(new Font("Arial", Font.PLAIN, 16));
 		btnGuardar.setBounds(110, 127, 170, 35);
+		btnGuardar.setVisible(false);
 		panel_1.add(btnGuardar);
+		
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnCancelarActionListener();
+			}
+		});
+		btnCancelar.setFont(new Font("Arial", Font.PLAIN, 16));
+		btnCancelar.setBounds(290, 127, 170, 35);
+		btnCancelar.setVisible(false);
+		panel_1.add(btnCancelar);
+		
 		
 		btnEditar = new JButton("Editar");
 		btnEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(btnEditar.getText().equals("Editar")) {
 					btnEditarActionListener();
-				} else {
-					btnCancelarActionListener();
-				}
 			}
 		});
 		btnEditar.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnEditar.setBounds(300, 127, 170, 35);
+		btnEditar.setBounds(200, 127, 170, 35);
 		panel_1.add(btnEditar);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
@@ -152,10 +164,10 @@ public class VerDetallesTaekwondoka extends JFrame {
 		lblEdad.setBounds(10, 69, 77, 16);
 		panel_1.add(lblEdad);
 		
-		JLabel lblCinturonpunta = new JLabel("Cinturon/Punta:");
-		lblCinturonpunta.setFont(new Font("Arial", Font.PLAIN, 15));
-		lblCinturonpunta.setBounds(30, 100, 126, 16);
-		panel_1.add(lblCinturonpunta);
+		JLabel lblCinturonPunta = new JLabel("Cinturon/Punta:");
+		lblCinturonPunta.setFont(new Font("Arial", Font.PLAIN, 15));
+		lblCinturonPunta.setBounds(30, 100, 126, 16);
+		panel_1.add(lblCinturonPunta);
 		
 		JLabel lblDireccion = new JLabel("Direccion:");
 		lblDireccion.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -202,7 +214,7 @@ public class VerDetallesTaekwondoka extends JFrame {
 				btnLevelUpActionListener();
 			}
 		});
-		btnArrowUp.setToolTipText("Aumentar el rango de este Taekwondoka");
+		btnArrowUp.setToolTipText("Aumentar el rango de este Taekwondoka (una sola vez por edicion)");
 		btnArrowUp.setIcon(new ImageIcon("D:\\eclipse workspace 01\\escuelataekwondo\\images\\arrow up 1.png"));
 		btnArrowUp.setEnabled(false);
 		btnArrowUp.setBounds(530, 100, 16, 16);
@@ -214,6 +226,13 @@ public class VerDetallesTaekwondoka extends JFrame {
 		lblApellidoNombre.setFont(new Font("Arial Black", Font.PLAIN, 20));
 		lblApellidoNombre.setBounds(7, 36, 578, 29);
 		panel.add(lblApellidoNombre);
+		
+		FiltrosParaTextField.setupTextFieldDocumentFilter(tfNombre);
+		FiltrosParaTextField.setupTextFieldDocumentFilter(tfApellido);
+		FiltrosParaTextField.setupTextFieldDocumentFilter(tfEdad);
+		FiltrosParaTextField.setupTextFieldDocumentFilterForNumbers(tfCelular);
+		FiltrosParaTextField.setupTextFieldDocumentFilterForNumbers(tfEdad);
+		FiltrosParaTextField.setupTextFieldDocumentFilterForEmail(tfEmail);
 	}
 
 	private void btnLevelUpActionListener() {
@@ -390,7 +409,7 @@ public class VerDetallesTaekwondoka extends JFrame {
 			
 			
         	
-        	if(controller.editarTaekwondoka(nuevoTae)) {
+        	if(controller.editarTaekwondoka(nuevoTae, tae.getEmail())) {
         		Ventanas.mostrarExito("Exito");
         		
         		tae = nuevoTae;
@@ -411,7 +430,9 @@ public class VerDetallesTaekwondoka extends JFrame {
         		
         		btnArrowUp.setEnabled(false);
         		
-        		btnEditar.setText("Editar");
+        		btnEditar.setVisible(true);
+        		btnCancelar.setVisible(false);
+        		btnGuardar.setVisible(false);
         		
         	}
 		} else {
@@ -432,8 +453,9 @@ public class VerDetallesTaekwondoka extends JFrame {
 		
 		btnArrowUp.setEnabled(true);
 		
-		btnEditar.setText("Cancelar");
-		
+		btnEditar.setVisible(false);
+		btnGuardar.setVisible(true);
+		btnCancelar.setVisible(true);
 	}
 	
 	private void btnCancelarActionListener() {
@@ -458,8 +480,8 @@ public class VerDetallesTaekwondoka extends JFrame {
         panel_1.add(pnlCinturonPunta);
 
         // Revalida y repinta el panel para que los cambios sean visibles
-        panel_1.revalidate();
-        panel_1.repaint();
+        //panel_1.revalidate();
+        //panel_1.repaint();
         
 		tfNombre.setEditable(false);
 		tfApellido.setEditable(false);
@@ -471,6 +493,10 @@ public class VerDetallesTaekwondoka extends JFrame {
 		btnArrowUp.setEnabled(false);
 		
 		btnEditar.setText("Editar");
+		
+		btnEditar.setVisible(true);
+		btnCancelar.setVisible(false);
+		btnGuardar.setVisible(false);
 		
 	}
 

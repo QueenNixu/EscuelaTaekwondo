@@ -4,9 +4,9 @@ import java.sql.Date;
 
 public class Torneo {
 	
+	private int id;
 	private String nombre;
-	private Date fechaInicio;
-	private Date fechaFin;
+	private Date fecha;
 	private int participantes;
 	private int idGanadorOro;
 	private int idGanadorPlata;
@@ -17,19 +17,32 @@ public class Torneo {
 		
 	}
 	
-	public Torneo(String nombre, Date fechaInicio, Date fechaFin, int participantes, int idGanadorOro,
+	public Torneo(int id, String nombre, Date fecha, int participantes, int idGanadorOro,
 			int idGanadorPlata, int idGanadorBronce3, int idGanadorBronce4) {
 		super();
+		this.id = id;
 		this.nombre = nombre;
-		this.fechaInicio = fechaInicio;
-		this.fechaFin = fechaFin;
+		this.fecha = fecha;
 		this.participantes = participantes;
 		this.idGanadorOro = idGanadorOro;
 		this.idGanadorPlata = idGanadorPlata;
 		this.idGanadorBronce3 = idGanadorBronce3;
 		this.idGanadorBronce4 = idGanadorBronce4;
 	}
+	
+	public Torneo(String nombre, java.sql.Date fecha2) {
+		super();
+		this.nombre = nombre;
+		this.fecha = fecha2;
+	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getNombre() {
 		return nombre;
@@ -39,20 +52,12 @@ public class Torneo {
 		this.nombre = nombre;
 	}
 
-	public Date getFechaInicio() {
-		return fechaInicio;
+	public java.sql.Date getFecha() {
+		return (java.sql.Date) fecha;
 	}
 
-	public void setFechaInicio(Date fechaInicio) {
-		this.fechaInicio = fechaInicio;
-	}
-
-	public Date getFechaFin() {
-		return fechaFin;
-	}
-
-	public void setFechaFin(Date fechaFin) {
-		this.fechaFin = fechaFin;
+	public void setFecha(java.sql.Date fecha) {
+		this.fecha = fecha;
 	}
 
 	public int getParticipantes() {

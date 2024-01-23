@@ -101,7 +101,7 @@ public class TaekwondokaController {
 		return taekwondokaDAO.traerTaekwondokaByMail(mail);
     }
 
-	public boolean editarTaekwondoka(Taekwondoka taeEditado) {
+	public boolean editarTaekwondoka(Taekwondoka taeEditado, String mail) {
 		StringBuilder errores = new StringBuilder();
 
         if (taeEditado.getNombre().trim().isEmpty() || taeEditado.getNombre().matches("\\s+")) {
@@ -145,7 +145,7 @@ public class TaekwondokaController {
         if (!taeEditado.getEmail().matches(emailPattern)) {
         	errores.append("Ingrese una dirección de correo electrónico válida.\n");
         } else {
-        	if(taekwondokaDAO.isMailUnique(taeEditado.getEmail())) {
+        	if(taekwondokaDAO.isMailUnique(taeEditado.getEmail(), taekwondokaDAO.traerTaekwondokaByMail(mail).getId())) {
         		if(taeEditado.getEmail().length() >= 100) {
             		errores.append("Ingrese menos de 100 caracteres para la dirección de correo electrónico.\n");
             	}
@@ -182,5 +182,11 @@ public class TaekwondokaController {
             // Si no hay errores, proceder con la persistencia
             return taekwondokaDAO.editarTaekwondoka(taeEditado);
         }
+	}
+
+	public boolean eliminarTaekwondoka(int id) {
+		
+		return TaekwondokaDAO.eliminarTaekwondoka(id);
+		
 	}
 }

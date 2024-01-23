@@ -35,18 +35,18 @@ public class Menu extends JFrame {
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Escuela de Taekwondo");
-		lblNewLabel.setBounds(159, 11, 274, 51);
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("Arial Black", Font.PLAIN, 20));
-		panel.add(lblNewLabel);
+		JLabel lblTitulo = new JLabel("Escuela de Taekwondo");
+		lblTitulo.setBounds(159, 11, 274, 51);
+		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitulo.setFont(new Font("Arial Black", Font.PLAIN, 20));
+		panel.add(lblTitulo);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(10, 64, 203, 302);
+		JPanel pnlBotones = new JPanel();
+		pnlBotones.setBounds(10, 64, 203, 302);
 		// Crea un borde para el JLabel (bordes son opcionales)
         Border borde_3 = BorderFactory.createLineBorder(Color.BLACK, 2);
-		panel.add(panel_1);
-		panel_1.setLayout(null);
+		panel.add(pnlBotones);
+		pnlBotones.setLayout(null);
 		
 		JButton btnNuevoDuenio = new JButton("Nuevo Taekwondoka");
 		btnNuevoDuenio.addActionListener(new ActionListener() {
@@ -56,7 +56,7 @@ public class Menu extends JFrame {
 		});
 		btnNuevoDuenio.setFont(new Font("Arial", Font.PLAIN, 16));
 		btnNuevoDuenio.setBounds(10, 11, 180, 35);
-		panel_1.add(btnNuevoDuenio);
+		pnlBotones.add(btnNuevoDuenio);
 		
 		JButton btnVerTaekwondokas = new JButton("Ver Taekwondokas");
 		btnVerTaekwondokas.addActionListener(new ActionListener() {
@@ -65,8 +65,8 @@ public class Menu extends JFrame {
 			}
 		});
 		btnVerTaekwondokas.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnVerTaekwondokas.setBounds(10, 60, 180, 35);
-		panel_1.add(btnVerTaekwondokas);
+		btnVerTaekwondokas.setBounds(10, 57, 180, 35);
+		pnlBotones.add(btnVerTaekwondokas);
 		
 		JButton btnSalir = new JButton("Salir");
 		btnSalir.addActionListener(new ActionListener() {
@@ -75,20 +75,66 @@ public class Menu extends JFrame {
 			}
 		});
 		btnSalir.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnSalir.setBounds(10, 154, 180, 35);
-		panel_1.add(btnSalir);
+		btnSalir.setBounds(10, 211, 180, 35);
+		pnlBotones.add(btnSalir);
+		
+		JButton btnNuevoTorneo = new JButton("Nuevo Torneo");
+		btnNuevoTorneo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnNuevoTorneoActionListener();
+			}
+		});
+		btnNuevoTorneo.setFont(new Font("Arial", Font.PLAIN, 16));
+		btnNuevoTorneo.setBounds(10, 103, 180, 35);
+		pnlBotones.add(btnNuevoTorneo);
+		
+		JButton btnVerTorneos = new JButton("Ver Torneos");
+		btnVerTorneos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnVerTorneosActionListener();
+			}
+		});
+		btnVerTorneos.setFont(new Font("Arial", Font.PLAIN, 16));
+		btnVerTorneos.setBounds(10, 149, 180, 35);
+		pnlBotones.add(btnVerTorneos);
 		// Crea un borde para el JLabel (bordes son opcionales)
         Border borde_1 = BorderFactory.createLineBorder(Color.BLACK, 2);
 		
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setBounds(223, 64, 362, 302);
-		lblNewLabel_1.setIcon(new ImageIcon("D:\\eclipse workspace 01\\escuelataekwondo\\images\\taekwondo-1.1.png"));
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel lblImagen = new JLabel("");
+		lblImagen.setBounds(223, 64, 362, 302);
+		lblImagen.setIcon(new ImageIcon("D:\\eclipse workspace 01\\escuelataekwondo\\images\\taekwondo-1.1.png"));
+		lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
 		// Crea un borde para el JLabel (bordes son opcionales)
         Border borde_2 = BorderFactory.createLineBorder(Color.BLACK, 2);
-		panel.add(lblNewLabel_1);
+		panel.add(lblImagen);
 	}
 	
+	private void btnVerTorneosActionListener() {
+		
+		if(ConexionMySQL.obtenerConexion() != null) {
+			VerTorneos vt = new VerTorneos(this);
+			vt.setLocation(this.getX(), this.getY());
+			dispose();
+			vt.setVisible(true);
+		} else {
+			Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+		}
+		
+	}
+
+	protected void btnNuevoTorneoActionListener() {
+		
+		if(ConexionMySQL.obtenerConexion() != null) {
+			NuevoTorneo nt = new NuevoTorneo(this);
+			nt.setLocation(this.getX(), this.getY());
+			dispose();
+			nt.setVisible(true);
+		} else {
+			Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+		}
+		
+	}
+
 	private void btnNuevoTaekwondokaActionListener() {
 		if(ConexionMySQL.obtenerConexion() != null) {
 			NuevoTaekwondoka nt = new NuevoTaekwondoka(this);

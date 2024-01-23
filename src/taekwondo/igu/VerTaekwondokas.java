@@ -83,7 +83,7 @@ public class VerTaekwondokas extends JFrame {
 		panel_1.add(scrollPane);
 
 		JPanel pnlBotones = new JPanel();
-		pnlBotones.setBounds(65, 326, 464, 40);
+		pnlBotones.setBounds(141, 326, 313, 40);
 		panel.add(pnlBotones);
 		pnlBotones.setLayout(null);
 
@@ -98,14 +98,14 @@ public class VerTaekwondokas extends JFrame {
 		pnlBotones.add(btnVerDetalles);
 
 		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnEliminarActinListener();
+			}
+		});
 		btnEliminar.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnEliminar.setBounds(310, 5, 140, 30);
+		btnEliminar.setBounds(160, 5, 140, 30);
 		pnlBotones.add(btnEliminar);
-
-		JButton btnEditar = new JButton("Editar");
-		btnEditar.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnEditar.setBounds(160, 5, 140, 30);
-		pnlBotones.add(btnEditar);
 
 		JButton btnAtras = new JButton("Atras");
 		btnAtras.addActionListener(new ActionListener() {
@@ -114,7 +114,7 @@ public class VerTaekwondokas extends JFrame {
 			}
 		});
 		btnAtras.setFont(new Font("Arial", Font.PLAIN, 13));
-		btnAtras.setBounds(7, 5, 89, 23);
+		btnAtras.setBounds(5, 5, 89, 23);
 		panel.add(btnAtras);
 		
 		JPanel pnlBuscador = new JPanel();
@@ -150,6 +150,34 @@ public class VerTaekwondokas extends JFrame {
             }
         });
 
+	}
+
+	protected void btnEliminarActinListener() {
+		
+		if (ConexionMySQL.obtenerConexion() != null) {
+			int filaSeleccionada = tablaTaekwondokas.getSelectedRow();
+			DefaultTableModel modelo = (DefaultTableModel) tablaTaekwondokas.getModel();
+			if(filaSeleccionada != -1) {
+				String TaekwondokaMail = modelo.getValueAt(filaSeleccionada, 2).toString();
+				
+				// buscar todos los datos del Taekwondoka (mail e id son unicos)
+				Taekwondoka tae = taekwondokaController.traerTaekwondokaByMail(TaekwondokaMail);
+				if(tae != null) {
+					//elimianr taekwondoka
+					if(taekwondokaController.eliminarTaekwondoka(tae.getId())) {
+						Ventanas.mostrarExito("Taekwondoka eliminado con exito.");
+						cargarTabla();
+					}
+				} else {
+					Ventanas.mostrarError("Hubo un problema y no se encontro el Taekwondoka.");
+				}
+			} else {
+				Ventanas.mostrarError("Seleccione una fila.");
+			}
+        } else {
+            Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+        }
+		
 	}
 
 	protected void filtrarTabla() {
@@ -217,6 +245,7 @@ public class VerTaekwondokas extends JFrame {
 		}
 
 		tablaTaekwondokas.setDefaultRenderer(Object.class, new ColorCellRenderer());
+		
 
 	}
 
@@ -268,6 +297,7 @@ public class VerTaekwondokas extends JFrame {
 	
 	private void btnVerDetallesActionListener() {
 		if (ConexionMySQL.obtenerConexion() != null) {
+			
 			int filaSeleccionada = tablaTaekwondokas.getSelectedRow();
 			DefaultTableModel modelo = (DefaultTableModel) tablaTaekwondokas.getModel();
 			if(filaSeleccionada != -1) {
@@ -284,6 +314,8 @@ public class VerTaekwondokas extends JFrame {
 				} else {
 					Ventanas.mostrarError("Hubo un problema y no se encontro el Taekwondoka.");
 				}
+			} else {
+				Ventanas.mostrarError("Seleccione una fila.");
 			}
         } else {
             Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
