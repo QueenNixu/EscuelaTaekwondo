@@ -7,6 +7,7 @@ import taekwondo.persistencia.ConexionMySQL;
 import taekwondo.persistencia.TaekwondokaDAO;
 import taekwondo.util.FiltrosParaTextField;
 import taekwondo.util.PintarPanel;
+import taekwondo.util.VentanaGenerica;
 import taekwondo.util.Ventanas;
 import taekwondo.logica.TaekwondokaController;
 
@@ -26,7 +27,7 @@ import javax.swing.ImageIcon;
 
 public class VerDetallesTaekwondoka extends JFrame {
 	
-	private VerTaekwondokas verTaekwondokas;
+	private VentanaGenerica ventanaOrigen;
 	private Taekwondoka tae;
 	private Taekwondoka nuevoTae;
 	private JTextField tfNombre;
@@ -49,19 +50,9 @@ public class VerDetallesTaekwondoka extends JFrame {
 	private String nuevoColorPunta;
 	private String nuevoColorCinturon;
 	
-	public VerDetallesTaekwondoka(VerTaekwondokas verTaekwondokas, Taekwondoka tae) {
-		/*
-		System.out.println("ID: "+tae.getId());
-		System.out.println(tae.getNombre());
-		System.out.println(tae.getApellido());
-		System.out.println(tae.getEdad());
-		System.out.println(tae.getDireccion());
-		System.out.println(tae.getEmail());
-		System.out.println(tae.getCelular());
-		System.out.println(tae.getCinturon());
-		System.out.println(tae.getPunta());
-		*/
-		this.verTaekwondokas = verTaekwondokas;
+	public VerDetallesTaekwondoka(VentanaGenerica ventanaOrigen, Taekwondoka tae) {
+
+		this.ventanaOrigen = ventanaOrigen;
 		this.tae = tae;
 		
 		nuevoColorCinturon = tae.getCinturon();
@@ -502,8 +493,14 @@ public class VerDetallesTaekwondoka extends JFrame {
 
 	private void btnAtrasActionListener() {
 		dispose();
-		verTaekwondokas.setLocation(this.getX(), this.getY());
-		verTaekwondokas.setVisible(true);
-		verTaekwondokas.cargarTabla();
+		if (ventanaOrigen instanceof VerTaekwondokas) {
+			((VerTaekwondokas) ventanaOrigen).setLocation(this.getX(), this.getY());
+			((VerTaekwondokas) ventanaOrigen).setVisible(true);
+            ((VerTaekwondokas) ventanaOrigen).cargarTabla();
+        } else if (ventanaOrigen instanceof InscribirTaekwondokaTorneo) {
+        	((InscribirTaekwondokaTorneo) ventanaOrigen).setLocation(this.getX(), this.getY());
+			((InscribirTaekwondokaTorneo) ventanaOrigen).setVisible(true);
+        	((InscribirTaekwondokaTorneo) ventanaOrigen).cargarTabla();
+        }
 	}
 }

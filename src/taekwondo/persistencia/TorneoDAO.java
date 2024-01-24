@@ -70,7 +70,142 @@ public class TorneoDAO {
 
 	    return torneos;
 	}
+
+	public static Torneo traerTorneoById(int idTor) {
+		
+		String query = "SELECT * FROM torneo WHERE id =?";
+		
+		Connection conexion = ConexionMySQL.obtenerConexion();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    
+	    try {
+	        pstmt = conexion.prepareStatement(query);
+	        pstmt.setInt(1, idTor); // Establecer el valor del parámetro
+	        rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	        	
+	        	Torneo tor = new Torneo();
+	        	tor.setId(rs.getInt("id"));
+	        	tor.setNombre(rs.getString("nombre"));
+	        	tor.setFecha(rs.getDate("fecha"));
+	        	tor.setParticipantes(rs.getInt("participantes"));
+	        	tor.setIdGanadorOro(rs.getInt("idGanadorOro"));
+	        	tor.setIdGanadorPlata(rs.getInt("idGanadorPlata"));
+	        	tor.setIdGanadorBronce3(rs.getInt("idGanadorBronce3"));
+	        	tor.setIdGanadorBronce4(rs.getInt("idGanadorBronce4"));
+	        	
+	            return tor;
+	        }
+	        
+	        return null;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        // Manejar la excepción de alguna manera adecuada
+	    }
+		
+		return null;
+        
+	}
+
+	public static boolean eliminarTorneo(int id) {
+		
+		String sql = "DELETE FROM torneo_taekwondoka WHERE idTorneo = ?";
+		
+		Connection con = ConexionMySQL.obtenerConexion();
+		
+		try (PreparedStatement statement = con.prepareStatement(sql)) {
+            // Establecer los parámetros en la consulta
+			statement.setInt(1, id);
+
+            // Ejecutar la actualización
+			statement.executeUpdate();
+			
+			sql = "DELETE FROM torneo WHERE id = ?";
+			
+			con = ConexionMySQL.obtenerConexion();
+			
+			try (PreparedStatement statement1 = con.prepareStatement(sql)) {
+	            // Establecer los parámetros en la consulta
+				statement1.setInt(1, id);
+
+	            // Ejecutar la actualización
+				statement1.executeUpdate();
+	            return true;
+	        } catch (SQLException e) {
+	            e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
+	            return false;
+	        }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
+            return false;
+        }
+		
+	}
 	
+	public static void incrementarParticipantes(int idTor) {
+		
+		String sql = "UPDATE torneo SET participantes=? WHERE id=?";
+		
+		Connection con = ConexionMySQL.obtenerConexion();
+
+        try (PreparedStatement statement = con.prepareStatement(sql)) {
+            // Establecer los parámetros en la consulta
+            statement.setInt(1, TorneoDAO.traerTorneoById(idTor).getParticipantes()+1);
+            statement.setInt(2, idTor);
+
+            // Ejecutar la actualización
+            int filasActualizadas = statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
+        }
+		
+	}
+
+	public static boolean eliminarTaeTor(int idTor, int idTae) {
+		
+		String sql = "DELETE FROM torneo_taekwondoka WHERE idTorneo =? AND idTaekwondoka =?";
+		
+		Connection con = ConexionMySQL.obtenerConexion();
+		
+		try (PreparedStatement statement = con.prepareStatement(sql)) {
+            // Establecer los parámetros en la consulta
+			statement.setInt(1, idTor);
+			statement.setInt(2, idTae);
+
+            // Ejecutar la actualización
+			statement.executeUpdate();
+			
+			return true;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
+            return false;
+        }
+
+	}
+	
+public static void decrementarParticipantes(int idTor) {
+		
+		String sql = "UPDATE torneo SET participantes=? WHERE id=?";
+		
+		Connection con = ConexionMySQL.obtenerConexion();
+
+        try (PreparedStatement statement = con.prepareStatement(sql)) {
+            // Establecer los parámetros en la consulta
+            statement.setInt(1, TorneoDAO.traerTorneoById(idTor).getParticipantes()-1);
+            statement.setInt(2, idTor);
+
+            // Ejecutar la actualización
+            int filasActualizadas = statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
+        }
+		
+	}
 	
 
 }

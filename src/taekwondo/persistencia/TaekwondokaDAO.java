@@ -259,5 +259,59 @@ public class TaekwondokaDAO {
 	}
 
 
+	public static List<Taekwondoka> traerInscriptos(int idTor) {
+		
+		List<Taekwondoka> inscriptos = new ArrayList<>();
+	    String query = "SELECT * FROM torneo_taekwondoka WHERE idTorneo=?";
+
+	    Connection conexion = ConexionMySQL.obtenerConexion();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        pstmt = conexion.prepareStatement(query);
+	        pstmt.setInt(1, idTor);
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	        	inscriptos.add(traerTaekwondokaById(rs.getInt("idTaekwondoka")));
+	        }
+	        
+	        return inscriptos;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        // Manejar la excepción de alguna manera adecuada
+	    }
+
+	    return inscriptos;
+	}
+
+
+	public static boolean inscribitTaeTor(int idTae, int idTor) {
+		
+		String query = "INSERT INTO torneo_taekwondoka (idTorneo, idTaekwondoka) VALUES (?, ?)";
+
+	    try (Connection con = ConexionMySQL.obtenerConexion();
+	         PreparedStatement pstmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+	        // Configurar los parámetros y ejecutar la consulta
+	        pstmt.setInt(1, idTor);
+	        pstmt.setInt(2, idTae);
+
+	        pstmt.executeUpdate();
+	        
+	        TorneoDAO.incrementarParticipantes(idTor);
+	        
+	        Ventanas.mostrarExito("Se ha inscripto a "+traerTaekwondokaById(idTae).getNombre()+" al torneo "+TorneoDAO.traerTorneoById(idTor).getNombre());
+	        return true;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+	        return false;
+	    }
+		
+	}
+
+
 
 }

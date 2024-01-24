@@ -194,4 +194,15 @@ public class TaekwondokaController {
 		
 		return TaekwondokaDAO.traerTaekwondokaById(id);
 	}
+
+	public List<Taekwondoka> traerInscriptos(int idTor) {
+		
+		return TaekwondokaDAO.traerInscriptos(idTor);
+	}
+
+	public boolean inscribirTaeTor(int idTae, int idTor) {
+		
+		return TaekwondokaDAO.inscribitTaeTor(idTae, idTor);
+		
+	}
 }

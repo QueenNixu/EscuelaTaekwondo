@@ -14,9 +14,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import taekwondo.logica.Taekwondoka;
 import taekwondo.logica.TaekwondokaController;
+import taekwondo.logica.Torneo;
 import taekwondo.persistencia.ConexionMySQL;
 import taekwondo.util.PintarPanel;
 import taekwondo.util.VentanaGenerica;
@@ -25,17 +27,19 @@ import taekwondo.util.Ventanas;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class VerTaekwondokas extends JFrame implements VentanaGenerica {
+public class InscribirTaekwondokaTorneo extends JFrame implements VentanaGenerica {
 
 	private TaekwondokaController taekwondokaController = null;
 	private JTable tablaTaekwondokas;
-	private Menu menu;
+	private VerDetallesTorneo vvdt;
 	private JTextField tfBuscar;
 	private List<Taekwondoka> listaTaekwondokas;
+	private Torneo tor;
 
-	public VerTaekwondokas(Menu menu) {
+	public InscribirTaekwondokaTorneo(VerDetallesTorneo vvdt, Torneo tor) {
 
-		this.menu = menu;
+		this.vvdt = vvdt;
+		this.tor = tor;
 
 		taekwondokaController = new TaekwondokaController();
 
@@ -56,14 +60,15 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 		getContentPane().add(panel);
 		panel.setLayout(null);
 
-		JLabel lblListaDeTaekwondokas = new JLabel("Lista de Taekwondokas");
+		JLabel lblListaDeTaekwondokas = new JLabel("<html><div style='text-align: center;'>Lista de Taekwondokas<br>no inscriptos<div><html>");
+		lblListaDeTaekwondokas.setVerticalAlignment(SwingConstants.TOP);
 		lblListaDeTaekwondokas.setHorizontalAlignment(SwingConstants.CENTER);
 		lblListaDeTaekwondokas.setFont(new Font("Arial Black", Font.PLAIN, 20));
-		lblListaDeTaekwondokas.setBounds(160, 5, 274, 29);
+		lblListaDeTaekwondokas.setBounds(104, 5, 367, 60);
 		panel.add(lblListaDeTaekwondokas);
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(7, 74, 580, 243);
+		panel_1.setBounds(7, 111, 580, 206);
 		panel.add(panel_1);
 
 		tablaTaekwondokas = new JTable();
@@ -80,7 +85,7 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 		JScrollPane scrollPane = new JScrollPane(tablaTaekwondokas);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(0, 0, 580, 243);
+		scrollPane.setBounds(0, 0, 580, 206);
 		panel_1.add(scrollPane);
 
 		JPanel pnlBotones = new JPanel();
@@ -95,18 +100,18 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 			}
 		});
 		btnVerDetalles.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnVerDetalles.setBounds(10, 5, 140, 30);
+		btnVerDetalles.setBounds(163, 5, 140, 30);
 		pnlBotones.add(btnVerDetalles);
-
-		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.addActionListener(new ActionListener() {
+		
+		JButton btnInscribir = new JButton("Inscribir");
+		btnInscribir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnEliminarActinListener();
+				btnInscribirActionListener();
 			}
 		});
-		btnEliminar.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnEliminar.setBounds(160, 5, 140, 30);
-		pnlBotones.add(btnEliminar);
+		btnInscribir.setFont(new Font("Arial", Font.PLAIN, 16));
+		btnInscribir.setBounds(10, 5, 140, 30);
+		pnlBotones.add(btnInscribir);
 
 		JButton btnAtras = new JButton("Atras");
 		btnAtras.addActionListener(new ActionListener() {
@@ -119,7 +124,7 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 		panel.add(btnAtras);
 		
 		JPanel pnlBuscador = new JPanel();
-		pnlBuscador.setBounds(7, 39, 580, 24);
+		pnlBuscador.setBounds(7, 76, 580, 24);
 		panel.add(pnlBuscador);
 		pnlBuscador.setLayout(null);
 		
@@ -153,20 +158,20 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 
 	}
 
-	protected void btnEliminarActinListener() {
+	protected void btnInscribirActionListener() {
 		
 		if (ConexionMySQL.obtenerConexion() != null) {
+			
 			int filaSeleccionada = tablaTaekwondokas.getSelectedRow();
 			DefaultTableModel modelo = (DefaultTableModel) tablaTaekwondokas.getModel();
 			if(filaSeleccionada != -1) {
-				String TaekwondokaMail = modelo.getValueAt(filaSeleccionada, 2).toString();
+				int taeId = Integer.parseInt(modelo.getValueAt(filaSeleccionada, 0).toString());
+				System.out.println("id del tae: "+taeId);
 				
 				// buscar todos los datos del Taekwondoka (mail e id son unicos)
-				Taekwondoka tae = taekwondokaController.traerTaekwondokaByMail(TaekwondokaMail);
+				Taekwondoka tae = taekwondokaController.traerTaekwondokaById(taeId);
 				if(tae != null) {
-					//elimianr taekwondoka
-					if(taekwondokaController.eliminarTaekwondoka(tae.getId())) {
-						Ventanas.mostrarExito("Taekwondoka eliminado con exito.");
+					if(taekwondokaController.inscribirTaeTor(taeId, tor.getId())){
 						cargarTabla();
 					}
 				} else {
@@ -218,11 +223,16 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 			
 			listaTaekwondokas = taekwondokaController.traerTaekwondokas();
 			
+			List<Taekwondoka> listaInscriptos = taekwondokaController.traerInscriptos(tor.getId());
+			List<Integer> listaInscriptosId = listaInscriptos.stream().map(Taekwondoka::getId).collect(Collectors.toList());
+			
 			if (listaTaekwondokas != null) {
 				for (Taekwondoka tae : listaTaekwondokas) {
-					Object[] objeto = { tae.getId(), tae.getApellido(), tae.getNombre(), tae.getEmail(),
-							tae.getCinturon() + "," + tae.getPunta() };
-					tablaModelo.addRow(objeto);
+					if(!listaInscriptosId.contains(tae.getId())) {
+						Object[] objeto = { tae.getId(), tae.getApellido(), tae.getNombre(), tae.getEmail(),
+								tae.getCinturon() + "," + tae.getPunta() };
+						tablaModelo.addRow(objeto);
+					}
 				}
 			}
 
@@ -292,11 +302,15 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 
 	private void btnAtrasActionListener() {
 		dispose();
-		menu.setLocation(this.getX(), this.getY());
-		menu.setVisible(true);
+		vvdt.cargarTabla();
+		vvdt.actualizarParticipantes();
+		vvdt.setLocation(this.getX(), this.getY());
+		vvdt.setVisible(true);
 	}
 	
 	private void btnVerDetallesActionListener() {
+		
+		System.out.println("UWU");
 		if (ConexionMySQL.obtenerConexion() != null) {
 			
 			int filaSeleccionada = tablaTaekwondokas.getSelectedRow();
@@ -322,4 +336,6 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
             Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
         }
 	}
+	
+	
 }

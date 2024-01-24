@@ -130,6 +130,11 @@ public class VerTorneos extends JFrame {
         pnlBotones.add(btnVerDetalles);
         
         JButton btnEliminar = new JButton("Eliminar");
+        btnEliminar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		btnEliminarActionListener();
+        	}
+        });
         btnEliminar.setFont(new Font("Arial", Font.PLAIN, 16));
         btnEliminar.setBounds(160, 5, 140, 30);
         pnlBotones.add(btnEliminar);
@@ -153,6 +158,34 @@ public class VerTorneos extends JFrame {
         
 	}
 	
+	protected void btnEliminarActionListener() {
+		
+		if (ConexionMySQL.obtenerConexion() != null) {
+			int filaSeleccionada = table.getSelectedRow();
+			DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+			if(filaSeleccionada != -1) {
+				int idTor = (int) modelo.getValueAt(filaSeleccionada, 0);
+				
+				// buscar todos los datos del Taekwondoka (mail e id son unicos)
+				Torneo tor = torneoController.traerTorneoById(idTor);
+				if(tor != null) {
+					//elimianr taekwondoka
+					if(torneoController.eliminarTorneo(tor.getId())) {
+						Ventanas.mostrarExito("Taekwondoka eliminado con exito.");
+						cargarTabla();
+					}
+				} else {
+					Ventanas.mostrarError("Hubo un problema y no se encontro el Taekwondoka.");
+				}
+			} else {
+				Ventanas.mostrarError("Seleccione una fila.");
+			}
+        } else {
+            Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+        }
+		
+	}
+
 	protected void btnVerDeatellesActionListener() {
 		
 		if (ConexionMySQL.obtenerConexion() != null) {
@@ -268,7 +301,7 @@ public class VerTorneos extends JFrame {
 		TableColumnModel columnModel = table.getColumnModel();
 
 		// Ajusta el ancho predeterminado de las columnas
-		int[] anchos = { 0, 60, 55, 65, 100, 100, 100, 100}; // Puedes ajustar los valores según tus necesidades
+		int[] anchos = { 0, 60, 54, 64, 100, 100, 100, 100}; // Puedes ajustar los valores según tus necesidades
 
 		for (int i = 0; i < columnModel.getColumnCount() && i < anchos.length; i++) {
 			TableColumn column = columnModel.getColumn(i);

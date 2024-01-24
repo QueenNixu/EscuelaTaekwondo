@@ -65,4 +65,13 @@ public class TorneoController {
 		return null;
 	}
 
+	public boolean eliminarTorneo(int id) {
+		return TorneoDAO.eliminarTorneo(id);
+	}
+
+	public boolean eliminarTaeTor(int idTor, int idTae) {
+		
+		return TorneoDAO.eliminarTaeTor(idTor, idTae);
+	}
+
 }
