@@ -51,6 +51,7 @@ public class TorneoDAO {
 
 	        while (rs.next()) {
 	            Torneo torneo = new Torneo();
+	            torneo.setId(rs.getInt("id"));
 	            torneo.setNombre(rs.getString("nombre"));
 	            torneo.setFecha(rs.getDate("fecha"));
 	            torneo.setParticipantes(rs.getInt("participantes")); // +"" para convertirlo en un String sencillamente

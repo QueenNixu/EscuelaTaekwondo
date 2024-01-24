@@ -21,7 +21,7 @@ import javax.swing.ImageIcon;
 
 public class Menu extends JFrame {
 	
-	Menu instancia = this;
+	private Menu instancia = this;
 	
 	public Menu() {
 		

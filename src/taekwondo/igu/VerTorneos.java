@@ -12,15 +12,19 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import taekwondo.logica.Taekwondoka;
+import taekwondo.logica.TaekwondokaController;
 import taekwondo.logica.Torneo;
 import taekwondo.logica.TorneoController;
 import taekwondo.persistencia.ConexionMySQL;
+import taekwondo.util.Ventanas;
 
 import javax.swing.JTextField;
 import javax.swing.JTable;
@@ -33,10 +37,12 @@ import javax.swing.ScrollPaneConstants;
 public class VerTorneos extends JFrame {
 	
 	private Menu menu;
-	private JTextField textField;
+	private JTextField tfBuscar;
 	private JTable table;
 	private TorneoController controller = new TorneoController();
 	private List<Torneo> listaTorneos;
+	private TaekwondokaController taekwondokaController = new TaekwondokaController();
+	private TorneoController torneoController = new TorneoController();
 
 	
 	public VerTorneos(Menu menu) {
@@ -50,6 +56,11 @@ public class VerTorneos extends JFrame {
 			}
 		});
 		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 611, 416);
+        setResizable(false);
+        getContentPane().setLayout(null);
+        
 		JPanel panel_1 = new JPanel();
         panel_1.setLayout(null);
         panel_1.setBounds(7, 73, 580, 243);
@@ -71,11 +82,6 @@ public class VerTorneos extends JFrame {
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.setBounds(0, 0, 580, 243);
 		panel_1.add(scrollPane);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 611, 416);
-        setResizable(false);
-        getContentPane().setLayout(null);
         
         JButton btnSalir = new JButton("Atras");
         btnSalir.addActionListener(new ActionListener() {
@@ -103,11 +109,115 @@ public class VerTorneos extends JFrame {
         lblBuscar.setBounds(10, 5, 57, 14);
         pnlBuscador.add(lblBuscar);
         
-        textField = new JTextField();
-        textField.setColumns(10);
-        textField.setBounds(77, 3, 493, 18);
-        pnlBuscador.add(textField);
+        tfBuscar = new JTextField();
+        tfBuscar.setColumns(10);
+        tfBuscar.setBounds(77, 3, 493, 18);
+        pnlBuscador.add(tfBuscar);
         
+        JPanel pnlBotones = new JPanel();
+        pnlBotones.setLayout(null);
+        pnlBotones.setBounds(143, 327, 313, 40);
+        getContentPane().add(pnlBotones);
+        
+        JButton btnVerDetalles = new JButton("Ver Detalles");
+        btnVerDetalles.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		btnVerDeatellesActionListener();
+        	}
+        });
+        btnVerDetalles.setFont(new Font("Arial", Font.PLAIN, 16));
+        btnVerDetalles.setBounds(10, 5, 140, 30);
+        pnlBotones.add(btnVerDetalles);
+        
+        JButton btnEliminar = new JButton("Eliminar");
+        btnEliminar.setFont(new Font("Arial", Font.PLAIN, 16));
+        btnEliminar.setBounds(160, 5, 140, 30);
+        pnlBotones.add(btnEliminar);
+        
+        tfBuscar.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filtrarTabla();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filtrarTabla();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Este método es menos relevante para campos de texto simples
+            }
+        });
+        
+	}
+	
+	protected void btnVerDeatellesActionListener() {
+		
+		if (ConexionMySQL.obtenerConexion() != null) {
+			
+			int filaSeleccionada = table.getSelectedRow();
+			DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+			if(filaSeleccionada != -1) {
+				int torId = Integer.parseInt(modelo.getValueAt(filaSeleccionada, 0).toString());
+				System.out.println("id del tor: "+torId);
+				
+				// buscar todos los datos del Taekwondoka (mail e id son unicos)
+				Torneo tor = torneoController.traerTorneoById(torId);
+				if(tor != null) {
+					VerDetallesTorneo VVDT = new VerDetallesTorneo(this, tor);
+		            VVDT.setLocation(this.getX(), this.getY());
+		            dispose();
+		            VVDT.setVisible(true);
+				} else {
+					Ventanas.mostrarError("Hubo un problema y no se encontro el Taekwondoka.");
+				}
+			} else {
+				Ventanas.mostrarError("Seleccione una fila.");
+			}
+        } else {
+            Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+        }
+		
+	}
+
+	protected void filtrarTabla() {
+		
+		String textoBusqueda = tfBuscar.getText().toLowerCase();
+        DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+        modelo.setRowCount(0); // Limpiar la tabla
+
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy");
+        for (Torneo tor : listaTorneos) {
+        	
+        	String ganadorOro = (tor.getIdGanadorOro() != 0) ? taekwondokaController.traerTaekwondokaById(tor.getIdGanadorOro()).getApellido() + " " + taekwondokaController.traerTaekwondokaById(tor.getIdGanadorOro()).getNombre() : "-";
+        	String ganadorPlata = (tor.getIdGanadorPlata() != 0) ? taekwondokaController.traerTaekwondokaById(tor.getIdGanadorPlata()).getApellido() + " " + taekwondokaController.traerTaekwondokaById(tor.getIdGanadorPlata()).getNombre() : "-";
+        	String ganadorBronce3 = (tor.getIdGanadorBronce3() != 0) ? taekwondokaController.traerTaekwondokaById(tor.getIdGanadorBronce3()).getApellido() + " " + taekwondokaController.traerTaekwondokaById(tor.getIdGanadorBronce3()).getNombre() : "-";
+        	String ganadorBronce4 = (tor.getIdGanadorBronce4() != 0) ? taekwondokaController.traerTaekwondokaById(tor.getIdGanadorBronce4()).getApellido() + " " + taekwondokaController.traerTaekwondokaById(tor.getIdGanadorBronce4()).getNombre() : "-";
+            // Filtrar por nombre, apellido o email (puedes ajustar según tus necesidades)
+            if (tor.getNombre().toLowerCase().contains(textoBusqueda) ||
+            	ganadorOro.toLowerCase().contains(textoBusqueda) ||
+            	ganadorPlata.toLowerCase().contains(textoBusqueda) ||
+           		ganadorBronce3.toLowerCase().contains(textoBusqueda) ||
+           		ganadorBronce4.toLowerCase().contains(textoBusqueda) ||
+            	formato.format(tor.getFecha()).contains(textoBusqueda)
+                ) {
+            	
+                Object[] objeto = {
+                		tor.getId(),
+                		tor.getNombre(),
+						formato.format(tor.getFecha()),
+						tor.getParticipantes(),
+						ganadorOro,
+						ganadorPlata,
+						ganadorBronce3,
+						ganadorBronce4
+						};
+                modelo.addRow(objeto);
+            }
+        }
+		
 	}
 	
 	public void cargarTabla() {
@@ -118,7 +228,7 @@ public class VerTorneos extends JFrame {
 			}
 		};
 
-		String titulos[] = { "Nombre", "Fecha", "Inscritos", "Oro", "Plata","Bronce", "Bronce"};
+		String titulos[] = { "id", "Nombre", "Fecha", "Inscritos", "Oro", "Plata","Bronce", "Bronce"};
 		tablaModelo.setColumnIdentifiers(titulos);
 		
 		if(ConexionMySQL.obtenerConexion() != null) {
@@ -129,13 +239,22 @@ public class VerTorneos extends JFrame {
 			
 			if (listaTorneos != null) {
 				for (Torneo tor : listaTorneos) {
-					Object[] objeto = { tor.getNombre(),
+					
+					 String ganadorOro = (tor.getIdGanadorOro() != 0) ? taekwondokaController.traerTaekwondokaById(tor.getIdGanadorOro()).getApellido() + " " + taekwondokaController.traerTaekwondokaById(tor.getIdGanadorOro()).getNombre() : "-";
+					 String ganadorPlata = (tor.getIdGanadorPlata() != 0) ? taekwondokaController.traerTaekwondokaById(tor.getIdGanadorPlata()).getApellido() + " " + taekwondokaController.traerTaekwondokaById(tor.getIdGanadorPlata()).getNombre() : "-";
+					 String ganadorBronce3 = (tor.getIdGanadorBronce3() != 0) ? taekwondokaController.traerTaekwondokaById(tor.getIdGanadorBronce3()).getApellido() + " " + taekwondokaController.traerTaekwondokaById(tor.getIdGanadorBronce3()).getNombre() : "-";
+					 String ganadorBronce4 = (tor.getIdGanadorBronce4() != 0) ? taekwondokaController.traerTaekwondokaById(tor.getIdGanadorBronce4()).getApellido() + " " + taekwondokaController.traerTaekwondokaById(tor.getIdGanadorBronce4()).getNombre() : "-";
+					    
+					Object[] objeto = {
+							tor.getId(),
+							tor.getNombre(),
 							formato.format(tor.getFecha()),
 							tor.getParticipantes(),
-							"Reategui Agustin",
-							"Reategui Agustin",
-							"Reategui Agustin",
-							"Reategui Agustin"};
+							ganadorOro,
+							ganadorPlata,
+							ganadorBronce3,
+							ganadorBronce4
+							};
 					tablaModelo.addRow(objeto);
 				}
 			}
@@ -149,7 +268,7 @@ public class VerTorneos extends JFrame {
 		TableColumnModel columnModel = table.getColumnModel();
 
 		// Ajusta el ancho predeterminado de las columnas
-		int[] anchos = { 60, 55, 65, 100, 100, 100, 100}; // Puedes ajustar los valores según tus necesidades
+		int[] anchos = { 0, 60, 55, 65, 100, 100, 100, 100}; // Puedes ajustar los valores según tus necesidades
 
 		for (int i = 0; i < columnModel.getColumnCount() && i < anchos.length; i++) {
 			TableColumn column = columnModel.getColumn(i);
@@ -157,7 +276,9 @@ public class VerTorneos extends JFrame {
 			column.setResizable(false);
 		}
 		
-		table.getColumnModel().getColumn(2).setCellRenderer(new DerechaTableCellRenderer());
+		table.getColumnModel().getColumn(3).setCellRenderer(new DerechaTableCellRenderer());
+		TableColumn columna = table.getColumnModel().getColumn(0);
+        table.getColumnModel().removeColumn(columna);
 
 	}
 	
@@ -167,7 +288,7 @@ public class VerTorneos extends JFrame {
 	        Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
 	        // Verifica si la columna es la columna de "Inscritos"
-	        if (column == 2) { // Ajusta el índice de la columna según tu modelo
+	        if (column == 3) { // Ajusta el índice de la columna según tu modelo
 	            setHorizontalAlignment(RIGHT); // Alinea el contenido a la derecha
 	        }
 

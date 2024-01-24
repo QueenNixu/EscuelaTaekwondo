@@ -36,11 +36,7 @@ public class NuevoTorneo extends JFrame {
 	
 	private Menu menu;
 	private JTextField tfNombre;
-	/*
-	private JComboBox cbDay;
-	private JComboBox cbMonth;
-	private JComboBox cbYear;
-*/
+	
 	private JCalendar calendar;
 	
 	private TorneoController controller = new TorneoController();

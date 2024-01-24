@@ -145,7 +145,7 @@ public class TaekwondokaController {
         if (!taeEditado.getEmail().matches(emailPattern)) {
         	errores.append("Ingrese una dirección de correo electrónico válida.\n");
         } else {
-        	if(taekwondokaDAO.isMailUnique(taeEditado.getEmail(), taekwondokaDAO.traerTaekwondokaByMail(mail).getId())) {
+        	if(taekwondokaDAO.isMailUnique(taeEditado.getEmail(), taeEditado.getId())) {
         		if(taeEditado.getEmail().length() >= 100) {
             		errores.append("Ingrese menos de 100 caracteres para la dirección de correo electrónico.\n");
             	}
@@ -188,5 +188,10 @@ public class TaekwondokaController {
 		
 		return TaekwondokaDAO.eliminarTaekwondoka(id);
 		
+	}
+
+	public Taekwondoka traerTaekwondokaById(int id) {
+		
+		return TaekwondokaDAO.traerTaekwondokaById(id);
 	}
 }

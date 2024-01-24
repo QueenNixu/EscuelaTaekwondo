@@ -53,6 +53,7 @@ public class TaekwondokaDAO {
 
 	        while (rs.next()) {
 	            Taekwondoka taekwondoka = new Taekwondoka();
+	            taekwondoka.setId(rs.getInt("id"));
 	            taekwondoka.setNombre(rs.getString("nombre"));
 	            taekwondoka.setApellido(rs.getString("apellido"));
 	            taekwondoka.setEdad(rs.getInt("edad") + ""); // +"" para convertirlo en un String sencillamente
@@ -215,6 +216,46 @@ public class TaekwondokaDAO {
             return false;
         }
 		
+	}
+
+
+	public static Taekwondoka traerTaekwondokaById(int id) {
+		
+		String query = "SELECT * FROM taekwondoka WHERE id =?";
+		
+		Connection conexion = ConexionMySQL.obtenerConexion();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    
+	    try {
+	        pstmt = conexion.prepareStatement(query);
+	        pstmt.setInt(1, id); // Establecer el valor del parámetro
+	        rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	        	
+	        	Taekwondoka tae = new Taekwondoka();
+	            tae.setId(rs.getInt("id"));
+	            tae.setNombre(rs.getString("nombre"));
+	            tae.setApellido(rs.getString("apellido"));
+	            tae.setEdad(rs.getInt("edad") + ""); // +"" para convertirlo en un String sencillamente
+	            tae.setDireccion(rs.getString("direccion"));
+	            tae.setEmail(rs.getString("email"));
+	            tae.setCelular(rs.getString("celular")); // +"" para convertirlo en un String sencillamente
+	            tae.setCinturon(rs.getString("cinturon"));
+	            tae.setPunta(rs.getString("punta"));
+	        	
+	            return tae;
+	        }
+	        
+	        return null;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        // Manejar la excepción de alguna manera adecuada
+	    }
+		
+		return null;
 	}
 
 

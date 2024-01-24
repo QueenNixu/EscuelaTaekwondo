@@ -194,10 +194,7 @@ public class VerTaekwondokas extends JFrame {
                 tae.getCinturon().toLowerCase().contains(textoBusqueda) ||
                 tae.getPunta().toLowerCase().contains(textoBusqueda)
                 ) {
-            	
-            	System.out.println("Cinturon: "+tae.getCinturon().toLowerCase());
-            	System.out.println("Punta: "+tae.getPunta().toLowerCase());
-                Object[] objeto = { tae.getApellido(), tae.getNombre(), tae.getEmail(), tae.getCinturon() + "," + tae.getPunta() };
+                Object[] objeto = { tae.getId(), tae.getApellido(), tae.getNombre(), tae.getEmail(), tae.getCinturon() + "," + tae.getPunta() };
                 modelo.addRow(objeto);
             }
         }
@@ -212,7 +209,7 @@ public class VerTaekwondokas extends JFrame {
 			}
 		};
 
-		String titulos[] = { "Apellido", "Nombre", "E-mail", "Cinturon Punta" };
+		String titulos[] = { "id", "Apellido", "Nombre", "E-mail", "Cinturon Punta" };
 		tablaModelo.setColumnIdentifiers(titulos);
 		
 		if(ConexionMySQL.obtenerConexion() != null) {
@@ -221,7 +218,7 @@ public class VerTaekwondokas extends JFrame {
 			
 			if (listaTaekwondokas != null) {
 				for (Taekwondoka tae : listaTaekwondokas) {
-					Object[] objeto = { tae.getApellido(), tae.getNombre(), tae.getEmail(),
+					Object[] objeto = { tae.getId(), tae.getApellido(), tae.getNombre(), tae.getEmail(),
 							tae.getCinturon() + "," + tae.getPunta() };
 					tablaModelo.addRow(objeto);
 				}
@@ -236,7 +233,7 @@ public class VerTaekwondokas extends JFrame {
 		TableColumnModel columnModel = tablaTaekwondokas.getColumnModel();
 
 		// Ajusta el ancho predeterminado de las columnas
-		int[] anchos = { 150, 150, 180, 98 }; // Puedes ajustar los valores según tus necesidades
+		int[] anchos = { 0, 150, 150, 180, 98 }; // Puedes ajustar los valores según tus necesidades
 
 		for (int i = 0; i < columnModel.getColumnCount() && i < anchos.length; i++) {
 			TableColumn column = columnModel.getColumn(i);
@@ -245,6 +242,8 @@ public class VerTaekwondokas extends JFrame {
 		}
 
 		tablaTaekwondokas.setDefaultRenderer(Object.class, new ColorCellRenderer());
+		TableColumn columna = tablaTaekwondokas.getColumnModel().getColumn(0);
+		tablaTaekwondokas.getColumnModel().removeColumn(columna);
 		
 
 	}
@@ -301,11 +300,11 @@ public class VerTaekwondokas extends JFrame {
 			int filaSeleccionada = tablaTaekwondokas.getSelectedRow();
 			DefaultTableModel modelo = (DefaultTableModel) tablaTaekwondokas.getModel();
 			if(filaSeleccionada != -1) {
-				String TaekwondokaMail = modelo.getValueAt(filaSeleccionada, 2).toString();
-				//System.out.println(TaekwondokaMail);
+				int taeId = Integer.parseInt(modelo.getValueAt(filaSeleccionada, 0).toString());
+				System.out.println("id del tae: "+taeId);
 				
 				// buscar todos los datos del Taekwondoka (mail e id son unicos)
-				Taekwondoka tae = taekwondokaController.traerTaekwondokaByMail(TaekwondokaMail);
+				Taekwondoka tae = taekwondokaController.traerTaekwondokaById(taeId);
 				if(tae != null) {
 					VerDetallesTaekwondoka VVDT = new VerDetallesTaekwondoka(this, tae);
 		            VVDT.setLocation(this.getX(), this.getY());
