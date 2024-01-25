@@ -159,10 +159,11 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 			int filaSeleccionada = tablaTaekwondokas.getSelectedRow();
 			DefaultTableModel modelo = (DefaultTableModel) tablaTaekwondokas.getModel();
 			if(filaSeleccionada != -1) {
-				String TaekwondokaMail = modelo.getValueAt(filaSeleccionada, 2).toString();
+				int idTae = (int) modelo.getValueAt(filaSeleccionada, 0);
+				System.out.println(idTae);
 				
 				// buscar todos los datos del Taekwondoka (mail e id son unicos)
-				Taekwondoka tae = taekwondokaController.traerTaekwondokaByMail(TaekwondokaMail);
+				Taekwondoka tae = taekwondokaController.traerTaekwondokaById(idTae);
 				if(tae != null) {
 					//elimianr taekwondoka
 					if(taekwondokaController.eliminarTaekwondoka(tae.getId())) {

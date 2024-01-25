@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -51,7 +53,7 @@ public class VerDetallesTorneo extends JFrame {
 	private JTable table;
 	private TorneoController torneoController = new TorneoController();
 	private List<Taekwondoka> listaInscriptos;
-	private JTextField textField;
+	private JTextField tfBuscar;
 	private TaekwondokaController taekwondokaController = new TaekwondokaController();
 	
 	private JLabel lblParticipantes;
@@ -176,10 +178,10 @@ public class VerDetallesTorneo extends JFrame {
 		lblBuscar.setBounds(10, 12, 57, 16);
 		panel_1.add(lblBuscar);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(77, 11, 193, 20);
-		panel_1.add(textField);
+		tfBuscar = new JTextField();
+		tfBuscar.setColumns(10);
+		tfBuscar.setBounds(77, 11, 193, 20);
+		panel_1.add(tfBuscar);
 		
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         
@@ -190,6 +192,11 @@ public class VerDetallesTorneo extends JFrame {
 		panel_1.add(scrollPane);
 		
 		btnGuardar = new JButton("Guardar");
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnGuardarActionListener();
+			}
+		});
 		btnGuardar.setBounds(5, 315, 100, 35);
 		getContentPane().add(btnGuardar);
 		btnGuardar.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -262,8 +269,66 @@ public class VerDetallesTorneo extends JFrame {
         	btnEditar.setEnabled(true);
         }
 		
+		tfBuscar.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filtrarTabla();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filtrarTabla();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Este método es menos relevante para campos de texto simples
+            }
+        });
+		
 		
         
+	}
+	
+	protected void btnGuardarActionListener() {
+		
+		if(ConexionMySQL.obtenerConexion() != null) {
+			
+			java.sql.Date fechaSql = new java.sql.Date(calendar.getDate().getTime());
+        	
+            Torneo nuevoTorneo = tor;
+            
+            nuevoTorneo.setNombre(tfNombre.getText().trim());
+            nuevoTorneo.setFecha(fechaSql);
+            
+        	if(torneoController.editarTorneo(nuevoTorneo)) {
+        		Ventanas.mostrarExito("Se ha editado el torneo.");
+        		this.tor = nuevoTorneo;
+        		btnCancelarActionListener();
+        		
+        	}
+		} else {
+			Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+		}
+		
+	}
+
+	protected void filtrarTabla() {
+		
+		String textoBusqueda = tfBuscar.getText().toLowerCase();
+        DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+        modelo.setRowCount(0); // Limpiar la tabla
+
+        for (Taekwondoka tae : listaInscriptos) {
+            // Filtrar por nombre, apellido o email (puedes ajustar según tus necesidades)
+            if (tae.getNombre().toLowerCase().contains(textoBusqueda) ||
+                tae.getApellido().toLowerCase().contains(textoBusqueda)
+                ) {
+                Object[] objeto = { tae.getId(), tae.getApellido(), tae.getNombre()};
+                modelo.addRow(objeto);
+            }
+        }
+		
 	}
 
 	protected void btnMedallasActionListener() {
@@ -286,9 +351,10 @@ public class VerDetallesTorneo extends JFrame {
 				
 				if(tae != null && tor2 != null) {
 					//elimianr relacion torneo taekwondoka
-					if(torneoController.eliminarTaeTor(tor.getId(), tae.getId())) {
+					if(torneoController.eliminarTaeTor(tor2.getId(), tae.getId())) {
 						Ventanas.mostrarExito("Taekwondoka dado de baja con exito.");
 						cargarTabla();
+						actualizarParticipantes();
 					}
 				} else {
 					Ventanas.mostrarError("Hubo un problema y no se encontro el Taekwondoka y/o al torneo.");

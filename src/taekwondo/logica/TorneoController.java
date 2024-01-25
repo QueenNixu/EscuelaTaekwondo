@@ -74,4 +74,9 @@ public class TorneoController {
 		return TorneoDAO.eliminarTaeTor(idTor, idTae);
 	}
 
+	public boolean editarTorneo(Torneo torneoEditado) {
+		
+		return TorneoDAO.editarTorneo(torneoEditado);
+	}
+
 }

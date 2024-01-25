@@ -179,6 +179,8 @@ public class TorneoDAO {
             // Ejecutar la actualización
 			statement.executeUpdate();
 			
+			decrementarParticipantes(idTor);
+			
 			return true;
         } catch (SQLException e) {
             e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
@@ -187,7 +189,7 @@ public class TorneoDAO {
 
 	}
 	
-public static void decrementarParticipantes(int idTor) {
+	public static void decrementarParticipantes(int idTor) {
 		
 		String sql = "UPDATE torneo SET participantes=? WHERE id=?";
 		
@@ -205,6 +207,30 @@ public static void decrementarParticipantes(int idTor) {
             e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
         }
 		
+	}
+
+	public static boolean editarTorneo(Torneo torneoEditado) {
+		
+		String sql = "UPDATE torneo SET nombre=?, fecha=? WHERE id=?";
+        
+        Connection con = ConexionMySQL.obtenerConexion();
+
+        try (PreparedStatement statement = con.prepareStatement(sql)) {
+            // Establecer los parámetros en la consulta
+            statement.setString(1, torneoEditado.getNombre());
+            statement.setDate(2, torneoEditado.getFecha());
+            statement.setInt(3, torneoEditado.getId());
+
+            // Ejecutar la actualización
+            int filasActualizadas = statement.executeUpdate();
+
+            // Comprobar si se actualizaron filas
+            return filasActualizadas > 0;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
+            return false;
+        }
+        
 	}
 	
 
