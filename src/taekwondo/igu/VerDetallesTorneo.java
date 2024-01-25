@@ -335,6 +335,18 @@ public class VerDetallesTorneo extends JFrame {
 		
 		System.out.println("Medallas.");
 		
+		if (ConexionMySQL.obtenerConexion() != null) {
+			
+			MedallasTorneo vmt = new MedallasTorneo(this, listaInscriptos, tor);
+			vmt.setLocation(this.getX(), this.getY());
+            dispose();
+            vmt.setVisible(true);
+            
+        } else {
+            Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+        }
+		
+		
 	}
 
 	protected void btnDarDeBajaActionListener() {
