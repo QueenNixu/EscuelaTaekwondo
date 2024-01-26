@@ -181,6 +181,27 @@ public class TorneoDAO {
 			
 			decrementarParticipantes(idTor);
 			
+			Torneo tor = traerTorneoById(idTor);
+			if(idTae == tor.getIdGanadorOro()) {
+				tor.setIdGanadorOro(0);
+				editarTorneo(tor);
+			} else {
+				if(idTae == tor.getIdGanadorPlata()) {
+					tor.setIdGanadorPlata(0);
+					editarTorneo(tor);
+				} else {
+					if(idTae == tor.getIdGanadorBronce3()) {
+						tor.setIdGanadorBronce3(0);
+						editarTorneo(tor);
+					} else {
+						if(idTae == tor.getIdGanadorBronce4()) {
+							tor.setIdGanadorBronce4(0);
+							editarTorneo(tor);
+						}
+					}
+				}
+			}
+			
 			return true;
         } catch (SQLException e) {
             e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
@@ -210,28 +231,63 @@ public class TorneoDAO {
 	}
 
 	public static boolean editarTorneo(Torneo torneoEditado) {
-		
-		String sql = "UPDATE torneo SET nombre=?, fecha=? WHERE id=?";
-        
-        Connection con = ConexionMySQL.obtenerConexion();
+	    StringBuilder sqlBuilder = new StringBuilder("UPDATE torneo SET nombre=?, fecha=?");
+	    
+	    // Lista para almacenar los valores que se establecerán en el PreparedStatement
+	    List<Object> parametros = new ArrayList<>();
+	    parametros.add(torneoEditado.getNombre());
+	    parametros.add(torneoEditado.getFecha());
 
-        try (PreparedStatement statement = con.prepareStatement(sql)) {
-            // Establecer los parámetros en la consulta
-            statement.setString(1, torneoEditado.getNombre());
-            statement.setDate(2, torneoEditado.getFecha());
-            statement.setInt(3, torneoEditado.getId());
+	    // Verificar y agregar los IDs si son diferentes de 0, de lo contrario, agregar NULL
+	    if (torneoEditado.getIdGanadorOro() != 0) {
+	        sqlBuilder.append(", idGanadorOro=?");
+	        parametros.add(torneoEditado.getIdGanadorOro());
+	    } else {
+	        sqlBuilder.append(", idGanadorOro=NULL");
+	    }
+	    if (torneoEditado.getIdGanadorPlata() != 0) {
+	        sqlBuilder.append(", idGanadorPlata=?");
+	        parametros.add(torneoEditado.getIdGanadorPlata());
+	    } else {
+	        sqlBuilder.append(", idGanadorPlata=NULL");
+	    }
+	    if (torneoEditado.getIdGanadorBronce3() != 0) {
+	        sqlBuilder.append(", idGanadorBronce3=?");
+	        parametros.add(torneoEditado.getIdGanadorBronce3());
+	    } else {
+	        sqlBuilder.append(", idGanadorBronce3=NULL");
+	    }
+	    if (torneoEditado.getIdGanadorBronce4() != 0) {
+	        sqlBuilder.append(", idGanadorBronce4=?");
+	        parametros.add(torneoEditado.getIdGanadorBronce4());
+	    } else {
+	        sqlBuilder.append(", idGanadorBronce4=NULL");
+	    }
+	    
+	    // Agregar la condición WHERE
+	    sqlBuilder.append(" WHERE id=?");
 
-            // Ejecutar la actualización
-            int filasActualizadas = statement.executeUpdate();
+	    Connection con = ConexionMySQL.obtenerConexion();
 
-            // Comprobar si se actualizaron filas
-            return filasActualizadas > 0;
-        } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
-            return false;
-        }
-        
+	    try (PreparedStatement statement = con.prepareStatement(sqlBuilder.toString())) {
+	        // Establecer los parámetros en el PreparedStatement
+	        for (int i = 0; i < parametros.size(); i++) {
+	            statement.setObject(i + 1, parametros.get(i));
+	        }
+	        statement.setInt(parametros.size() + 1, torneoEditado.getId());
+
+	        // Ejecutar la actualización
+	        statement.executeUpdate();
+	        return true;
+	    } catch (SQLException e) {
+	        e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
+	        return false;
+	    }
 	}
+
+
+
+
 	
 
 }

@@ -61,6 +61,16 @@ public class MedallasTorneo extends JFrame {
 		this.listaInscriptos = listaInscriptos;
 		this.tor = tor;
 		this.verDetallesTorneo = verDetallesTorneo;
+		idMedallistaOro = tor.getIdGanadorOro();
+		idMedallistaPlata = tor.getIdGanadorPlata();
+		idMedallistaBronce3 = tor.getIdGanadorBronce3();
+		idMedallistaBronce4 = tor.getIdGanadorBronce4();
+		
+		System.out.println("ID del medallista de oro: " + idMedallistaOro);
+		System.out.println("ID del medallista de plata: " + idMedallistaPlata);
+		System.out.println("ID del medallista de bronce 3: " + idMedallistaBronce3);
+		System.out.println("ID del medallista de bronce 4: " + idMedallistaBronce4);
+
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 611, 416);
@@ -109,6 +119,7 @@ public class MedallasTorneo extends JFrame {
         table = new JTable();
 		table.setBounds(1, 1, 575, 0);
 		table.setBorder(null);
+		table.setAutoResizeMode(0);
 		table.getTableHeader().setResizingAllowed(false);
 		panel_1.add(table.getTableHeader(), BorderLayout.PAGE_START);
 		panel_1.add(table, BorderLayout.CENTER);
@@ -186,22 +197,22 @@ public class MedallasTorneo extends JFrame {
         
         JButton btnOtorgarMedallaOro = new JButton("Otorgar Medalla");
         btnOtorgarMedallaOro.setFont(new Font("Arial", Font.PLAIN, 11));
-        btnOtorgarMedallaOro.setBounds(348, 11, 110, 19);
+        btnOtorgarMedallaOro.setBounds(349, 11, 110, 19);
         panel_2.add(btnOtorgarMedallaOro);
         
         JButton btnOtorgarMedallaPlata = new JButton("Otorgar Medalla");
         btnOtorgarMedallaPlata.setFont(new Font("Arial", Font.PLAIN, 11));
-        btnOtorgarMedallaPlata.setBounds(348, 39, 110, 19);
+        btnOtorgarMedallaPlata.setBounds(349, 39, 110, 19);
         panel_2.add(btnOtorgarMedallaPlata);
         
         JButton btnOtorgarMedallaBronce3 = new JButton("Otorgar Medalla");
         btnOtorgarMedallaBronce3.setFont(new Font("Arial", Font.PLAIN, 11));
-        btnOtorgarMedallaBronce3.setBounds(348, 67, 110, 19);
+        btnOtorgarMedallaBronce3.setBounds(349, 67, 110, 19);
         panel_2.add(btnOtorgarMedallaBronce3);
         
         JButton btnOtorgarMedallaBronce4 = new JButton("Otorgar Medalla");
         btnOtorgarMedallaBronce4.setFont(new Font("Arial", Font.PLAIN, 11));
-        btnOtorgarMedallaBronce4.setBounds(348, 95, 110, 19);
+        btnOtorgarMedallaBronce4.setBounds(349, 95, 110, 19);
         panel_2.add(btnOtorgarMedallaBronce4);
         
         ActionListener botonesOtorgar = new ActionListener() {
@@ -225,11 +236,7 @@ public class MedallasTorneo extends JFrame {
         					
         	                // Dependiendo del botón presionado, cambia el textField correspondiente
         	                if (botonPresionado == btnOtorgarMedallaOro) {
-        	                	if(tfPrimerLugar.getText().equals("-")) {
-        	                		System.out.println("texto = \"-\"");
-        	                	} else {
-        	                		System.out.println("Nombre de alguioen");
-        	                		// agregar row con los datos de idMedallistaOro
+        	                	if(!tfPrimerLugar.getText().equals("-")) {
         	                		Taekwondoka taeRetirado = taekwondokaController.traerTaekwondokaById(idMedallistaOro);
         	                		Object[] objeto = { taeRetirado.getId(), taeRetirado.getApellido(), taeRetirado.getNombre(), taeRetirado.getEmail()};
         	                        modelo.addRow(objeto);
@@ -239,11 +246,7 @@ public class MedallasTorneo extends JFrame {
         	                	
         	                	//remover row con mail = tae.getEmail
         	                } else if (botonPresionado == btnOtorgarMedallaPlata) {
-        	                	if(tfSegundoLugar.getText().equals("-")) {
-        	                		System.out.println("texto = \"-\"");
-        	                	} else {
-        	                		System.out.println("Nombre de alguioen");
-        	                		// agregar row con los datos de idMedallistaOro
+        	                	if(!tfSegundoLugar.getText().equals("-")) {
         	                		Taekwondoka taeRetirado = taekwondokaController.traerTaekwondokaById(idMedallistaPlata);
         	                		Object[] objeto = { taeRetirado.getId(), taeRetirado.getApellido(), taeRetirado.getNombre(), taeRetirado.getEmail()};
         	                        modelo.addRow(objeto);
@@ -251,11 +254,7 @@ public class MedallasTorneo extends JFrame {
         	                	tfSegundoLugar.setText(tae.getApellido()+" "+tae.getNombre());
         	                	idMedallistaPlata = tae.getId();
         	                } else if (botonPresionado == btnOtorgarMedallaBronce3) {
-        	                	if(tfTercerLugar.getText().equals("-")) {
-        	                		System.out.println("texto = \"-\"");
-        	                	} else {
-        	                		System.out.println("Nombre de alguioen");
-        	                		// agregar row con los datos de idMedallistaOro
+        	                	if(!tfTercerLugar.getText().equals("-")) {
         	                		Taekwondoka taeRetirado = taekwondokaController.traerTaekwondokaById(idMedallistaBronce3);
         	                		Object[] objeto = { taeRetirado.getId(), taeRetirado.getApellido(), taeRetirado.getNombre(), taeRetirado.getEmail()};
         	                        modelo.addRow(objeto);
@@ -263,11 +262,7 @@ public class MedallasTorneo extends JFrame {
         	                	tfTercerLugar.setText(tae.getApellido()+" "+tae.getNombre());
         	                	idMedallistaBronce3 = tae.getId();
         	                } else if (botonPresionado == btnOtorgarMedallaBronce4) {
-        	                	if(tfCuartoLugar.getText().equals("-")) {
-        	                		System.out.println("texto = \"-\"");
-        	                	} else {
-        	                		System.out.println("Nombre de alguioen");
-        	                		// agregar row con los datos de idMedallistaOro
+        	                	if(!tfCuartoLugar.getText().equals("-")) {
         	                		Taekwondoka taeRetirado = taekwondokaController.traerTaekwondokaById(idMedallistaBronce4);
         	                		Object[] objeto = { taeRetirado.getId(), taeRetirado.getApellido(), taeRetirado.getNombre(), taeRetirado.getEmail()};
         	                        modelo.addRow(objeto);
@@ -308,25 +303,117 @@ public class MedallasTorneo extends JFrame {
         
         JButton btnRetirarMedallaOro = new JButton("Retirar Medalla");
         btnRetirarMedallaOro.setFont(new Font("Arial", Font.PLAIN, 11));
-        btnRetirarMedallaOro.setBounds(458, 11, 110, 19);
+        btnRetirarMedallaOro.setBounds(459, 11, 110, 19);
         panel_2.add(btnRetirarMedallaOro);
         
         JButton btnRetirarMedallaPlata = new JButton("Retirar Medalla");
         btnRetirarMedallaPlata.setFont(new Font("Arial", Font.PLAIN, 11));
-        btnRetirarMedallaPlata.setBounds(458, 39, 110, 19);
+        btnRetirarMedallaPlata.setBounds(459, 39, 110, 19);
         panel_2.add(btnRetirarMedallaPlata);
         
         JButton btnRetirarMedallaBronce3 = new JButton("Retirar Medalla");
         btnRetirarMedallaBronce3.setFont(new Font("Arial", Font.PLAIN, 11));
-        btnRetirarMedallaBronce3.setBounds(458, 67, 110, 19);
+        btnRetirarMedallaBronce3.setBounds(459, 67, 110, 19);
         panel_2.add(btnRetirarMedallaBronce3);
         
         JButton btnRetirarMedallaBronce4 = new JButton("Retirar Medalla");
         btnRetirarMedallaBronce4.setFont(new Font("Arial", Font.PLAIN, 11));
-        btnRetirarMedallaBronce4.setBounds(458, 95, 110, 19);
+        btnRetirarMedallaBronce4.setBounds(459, 95, 110, 19);
         panel_2.add(btnRetirarMedallaBronce4);
         
+        ActionListener botonesRetirar = new ActionListener() {
+
+			@Override
+            public void actionPerformed(ActionEvent e) {
+            	
+            	if (ConexionMySQL.obtenerConexion() != null) {
+            		
+            		JButton botonPresionado = (JButton) e.getSource();
+
+					DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+					
+	                // Dependiendo del botón presionado, cambia el textField correspondiente
+	                if (botonPresionado == btnRetirarMedallaOro) {
+	                	
+	                	System.out.println("btnOro presionado");
+	                	
+	                	if(!tfPrimerLugar.getText().equals("-")) {
+	                		Taekwondoka taeRetirado = taekwondokaController.traerTaekwondokaById(idMedallistaOro);
+	                		if(taeRetirado != null) {
+	                			Object[] objeto = { taeRetirado.getId(), taeRetirado.getApellido(), taeRetirado.getNombre(), taeRetirado.getEmail()};
+		                        modelo.addRow(objeto);
+		                        tfPrimerLugar.setText("-");
+	    	                	idMedallistaOro = 0;
+	                		} else {
+	        					Ventanas.mostrarError("Hubo un problema y no se encontro el Taekwondoka.Hubo un problema y no se encontro el Taekwondoka.");
+	        				}
+	                	}
+	                	
+	                	//remover row con mail = tae.getEmail
+	                } else if (botonPresionado == btnRetirarMedallaPlata) {
+	                	
+	                	System.out.println("btnPlata presionado");
+	                	
+	                	if(!tfSegundoLugar.getText().equals("-")) {
+	                		Taekwondoka taeRetirado = taekwondokaController.traerTaekwondokaById(idMedallistaPlata);
+	                		if(taeRetirado != null) {
+	                			Object[] objeto = { taeRetirado.getId(), taeRetirado.getApellido(), taeRetirado.getNombre(), taeRetirado.getEmail()};
+		                        modelo.addRow(objeto);
+		                        tfSegundoLugar.setText("-");
+			                	idMedallistaPlata = 0;
+	                		} else {
+	        					Ventanas.mostrarError("Hubo un problema y no se encontro el Taekwondoka.Hubo un problema y no se encontro el Taekwondoka.");
+	        				}
+	                	}
+	                } else if (botonPresionado == btnRetirarMedallaBronce3) {
+	                	
+	                	System.out.println("btnBronce3 presionado");
+	                	
+	                	if(!tfTercerLugar.getText().equals("-")) {
+	                		Taekwondoka taeRetirado = taekwondokaController.traerTaekwondokaById(idMedallistaBronce3);
+	                		if(taeRetirado != null) {
+	                			
+	                			Object[] objeto = { taeRetirado.getId(), taeRetirado.getApellido(), taeRetirado.getNombre(), taeRetirado.getEmail()};
+		                        modelo.addRow(objeto);
+		                        tfTercerLugar.setText("-");
+			                	idMedallistaBronce3 = 0;
+			                } else {
+	        					Ventanas.mostrarError("Hubo un problema y no se encontro el Taekwondoka.Hubo un problema y no se encontro el Taekwondoka.");
+	        				}
+	                	}
+	                } else if (botonPresionado == btnRetirarMedallaBronce4) {
+	                	
+	                	System.out.println("btnBronce4 presionado");
+	                	
+	                	if(!tfCuartoLugar.getText().equals("-")) {
+	                		Taekwondoka taeRetirado = taekwondokaController.traerTaekwondokaById(idMedallistaBronce4);
+	                		if(taeRetirado != null) {
+	                			Object[] objeto = { taeRetirado.getId(), taeRetirado.getApellido(), taeRetirado.getNombre(), taeRetirado.getEmail()};
+		                        modelo.addRow(objeto);
+		                        tfCuartoLugar.setText("-");
+			                	idMedallistaBronce4 = 0;
+	                		} else {
+	        					Ventanas.mostrarError("Hubo un problema y no se encontro el Taekwondoka.Hubo un problema y no se encontro el Taekwondoka.");
+	        				}
+	                	}
+	                }
+            	} else {
+                    Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+                }
+            }
+        };
+        
+        btnRetirarMedallaOro.addActionListener(botonesRetirar);
+        btnRetirarMedallaPlata.addActionListener(botonesRetirar);
+        btnRetirarMedallaBronce3.addActionListener(botonesRetirar);
+        btnRetirarMedallaBronce4.addActionListener(botonesRetirar);
+        
         JButton btnGuardar = new JButton("Guardar");
+        btnGuardar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		btnGuardarActionListener();
+        	}
+        });
         btnGuardar.setFont(new Font("Arial", Font.PLAIN, 16));
         btnGuardar.setBounds(149, 331, 120, 35);
         panel.add(btnGuardar);
@@ -361,6 +448,29 @@ public class MedallasTorneo extends JFrame {
         cargarMedallistas();
 	}
 	
+	protected void btnGuardarActionListener() {
+		
+		if(ConexionMySQL.obtenerConexion() != null) {
+			
+            Torneo nuevoTorneo = tor;
+            
+            nuevoTorneo.setIdGanadorOro(idMedallistaOro);
+            nuevoTorneo.setIdGanadorPlata(idMedallistaPlata);
+            nuevoTorneo.setIdGanadorBronce3(idMedallistaBronce3);
+            nuevoTorneo.setIdGanadorBronce4(idMedallistaBronce4);
+            
+        	if(torneoController.editarTorneo(nuevoTorneo)) {
+        		Ventanas.mostrarExito("Se ha editado el torneo.");
+        		this.tor = nuevoTorneo;
+        		btnCancelarActionListener();
+        		
+        	}
+		} else {
+			Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
+		}
+		
+	}
+
 	protected void btnAtrasActionListener() {
 		
 		dispose();
@@ -425,8 +535,6 @@ public class MedallasTorneo extends JFrame {
 
 	protected void cargarTabla() {
 		
-		System.out.println("UWU_01");
-		
 		DefaultTableModel tablaModelo = new DefaultTableModel() {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -439,25 +547,26 @@ public class MedallasTorneo extends JFrame {
 		
 		if(ConexionMySQL.obtenerConexion() != null) {
 			
-			System.out.println("UWU_02");
 			
 			listaInscriptos = taekwondokaController.traerInscriptos(tor.getId());
 			
 			if (listaInscriptos != null) {
 				
-				System.out.println("UWU_03");
 				
 				for (Taekwondoka ins : listaInscriptos) {
 					
-					System.out.println("UWU_04");
-					    
-					Object[] objeto = {
-							ins.getId(),
-							ins.getApellido(),
-							ins.getNombre(),
-							ins.getEmail()
-							};
-					tablaModelo.addRow(objeto);
+					if(ins.getId() != idMedallistaOro &&
+					   ins.getId() != idMedallistaPlata &&
+					   ins.getId() != idMedallistaBronce3 &&
+					   ins.getId() != idMedallistaBronce4) {
+						Object[] objeto = {
+								ins.getId(),
+								ins.getApellido(),
+								ins.getNombre(),
+								ins.getEmail()
+								};
+						tablaModelo.addRow(objeto);
+		            	}
 				}
 			}
 
@@ -468,7 +577,7 @@ public class MedallasTorneo extends JFrame {
 		TableColumnModel columnModel = table.getColumnModel();
 
 		// Ajusta el ancho predeterminado de las columnas
-		int[] anchos = { 0, 190, 190, 191}; // Puedes ajustar los valores según tus necesidades
+		int[] anchos = { 0, 190, 190, 193}; // Puedes ajustar los valores según tus necesidades
 
 		for (int i = 0; i < columnModel.getColumnCount() && i < anchos.length; i++) {
 			TableColumn column = columnModel.getColumn(i);

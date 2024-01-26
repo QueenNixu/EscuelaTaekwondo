@@ -333,8 +333,6 @@ public class VerDetallesTorneo extends JFrame {
 
 	protected void btnMedallasActionListener() {
 		
-		System.out.println("Medallas.");
-		
 		if (ConexionMySQL.obtenerConexion() != null) {
 			
 			MedallasTorneo vmt = new MedallasTorneo(this, listaInscriptos, tor);
