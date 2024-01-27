@@ -12,6 +12,7 @@ public class ConexionMySQL {
     
     private static Connection conexion;
 
+    //get connection
     public static Connection obtenerConexion() {
         try {
             // Verifica si la conexión existente es válida antes de devolverla

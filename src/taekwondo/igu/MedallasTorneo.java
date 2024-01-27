@@ -1,43 +1,41 @@
 package taekwondo.igu;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-
-import taekwondo.logica.Taekwondoka;
-import taekwondo.logica.TaekwondokaController;
-import taekwondo.logica.Torneo;
-import taekwondo.logica.TorneoController;
-import taekwondo.persistencia.ConexionMySQL;
-import taekwondo.util.Ventanas;
-
 import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.List;
-
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
-import java.awt.Component;
 import javax.swing.ScrollPaneConstants;
 
+import taekwondo.logica.Taekwondoka;
+import taekwondo.logica.TaekwondokaController;
+import taekwondo.logica.Torneo;
+import taekwondo.logica.TorneoController;
+
+import taekwondo.persistencia.ConexionMySQL;
+
+import taekwondo.util.Ventanas;
+
+import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import java.util.List;
+
 public class MedallasTorneo extends JFrame {
+	
 	private JTable table;
 	private JTextField tfBuscar;
 	private VerDetallesTorneo verDetallesTorneo;
@@ -60,23 +58,22 @@ public class MedallasTorneo extends JFrame {
 		
 		this.listaInscriptos = listaInscriptos;
 		this.tor = tor;
+		//Saves window to go back to
 		this.verDetallesTorneo = verDetallesTorneo;
+		
 		idMedallistaOro = tor.getIdGanadorOro();
 		idMedallistaPlata = tor.getIdGanadorPlata();
 		idMedallistaBronce3 = tor.getIdGanadorBronce3();
 		idMedallistaBronce4 = tor.getIdGanadorBronce4();
 		
-		System.out.println("ID del medallista de oro: " + idMedallistaOro);
-		System.out.println("ID del medallista de plata: " + idMedallistaPlata);
-		System.out.println("ID del medallista de bronce 3: " + idMedallistaBronce3);
-		System.out.println("ID del medallista de bronce 4: " + idMedallistaBronce4);
-
-		
+		//load table at window opened
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 611, 416);
         setResizable(false);
         getContentPane().setLayout(null);
+        setUndecorated(true);
         
+        //Default window for this app
         addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
@@ -84,24 +81,17 @@ public class MedallasTorneo extends JFrame {
 			}
 		});
         
-        JPanel panel = new JPanel();
-        panel.setBounds(0, 0, 595, 377);
-        getContentPane().add(panel);
-        panel.setLayout(null);
+        //panel all container
+        JPanel pnlAllContainer = new JPanel();
+        pnlAllContainer.setBackground(new Color(52, 73, 94));
+        pnlAllContainer.setBounds(0, 39, 611, 377);
+        getContentPane().add(pnlAllContainer);
+        pnlAllContainer.setLayout(null);
         
-        JLabel lblTitulo = new JLabel("Medallistas del Torneo:");
-        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial Black", Font.PLAIN, 20));
-        lblTitulo.setBounds(163, 5, 274, 29);
-        panel.add(lblTitulo);
-        
-        JLabel lblNombreTorneo = new JLabel("nombre del torneo");
-        lblNombreTorneo.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNombreTorneo.setFont(new Font("Arial Black", Font.PLAIN, 20));
-        lblNombreTorneo.setBounds(10, 36, 578, 29);
-        panel.add(lblNombreTorneo);
-        
+        //back button
         JButton btnSalir = new JButton("Atras");
+        btnSalir.setBackground(new Color(41, 128, 185));
+        btnSalir.setForeground(new Color(255, 255, 255));
         btnSalir.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		btnAtrasActionListener();
@@ -109,111 +99,112 @@ public class MedallasTorneo extends JFrame {
         });
         btnSalir.setFont(new Font("Arial", Font.PLAIN, 13));
         btnSalir.setBounds(5, 5, 89, 23);
-        panel.add(btnSalir);
+        pnlAllContainer.add(btnSalir);
         
-        JPanel panel_1 = new JPanel();
-        panel_1.setLayout(null);
-        panel_1.setBounds(10, 189, 575, 131);
-        panel.add(panel_1);
+        //label for title 1
+        JLabel lblTitulo = new JLabel("Medallistas del Torneo:");
+        lblTitulo.setForeground(new Color(255, 255, 255));
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTitulo.setFont(new Font("Arial Black", Font.PLAIN, 20));
+        lblTitulo.setBounds(171, 5, 274, 29);
+        pnlAllContainer.add(lblTitulo);
         
-        table = new JTable();
-		table.setBounds(1, 1, 575, 0);
-		table.setBorder(null);
-		table.setAutoResizeMode(0);
-		table.getTableHeader().setResizingAllowed(false);
-		panel_1.add(table.getTableHeader(), BorderLayout.PAGE_START);
-		panel_1.add(table, BorderLayout.CENTER);
-		table.getTableHeader().setReorderingAllowed(false);
-		panel_1.setLayout(null);
+        //label for title 2
+        JLabel lblNombreTorneo = new JLabel("nombre del torneo");
+        lblNombreTorneo.setForeground(new Color(255, 255, 255));
+        lblNombreTorneo.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNombreTorneo.setFont(new Font("Arial Black", Font.PLAIN, 20));
+        lblNombreTorneo.setBounds(18, 36, 578, 29);
+        pnlAllContainer.add(lblNombreTorneo);
+
+        //Panel for medalist
+        JPanel pnlMedalist = new JPanel();
+        pnlMedalist.setBackground(new Color(52, 73, 94));
+        pnlMedalist.setBounds(18, 65, 575, 121);
+        pnlAllContainer.add(pnlMedalist);
+        pnlMedalist.setLayout(null);
         
-        JLabel lblBuscar = new JLabel("Buscar:");
-        lblBuscar.setFont(new Font("Arial", Font.PLAIN, 15));
-        lblBuscar.setBounds(10, 12, 57, 16);
-        panel_1.add(lblBuscar);
-        
-        tfBuscar = new JTextField();
-        tfBuscar.setColumns(10);
-        tfBuscar.setBounds(77, 11, 488, 20);
-        panel_1.add(tfBuscar);
-        
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setBounds(0, 36, 575, 95);
-        panel_1.add(scrollPane);
-        
-        JPanel panel_2 = new JPanel();
-        panel_2.setBounds(10, 65, 575, 121);
-        panel.add(panel_2);
-        panel_2.setLayout(null);
-        
+        //labels and text field for golr, silver, bronce 3 and bronce 4
         JLabel lblPrimerLugar = new JLabel("Primer Lugar:");
+        lblPrimerLugar.setForeground(new Color(255, 255, 255));
         lblPrimerLugar.setFont(new Font("Arial", Font.PLAIN, 15));
         lblPrimerLugar.setBounds(10, 12, 110, 16);
-        panel_2.add(lblPrimerLugar);
+        pnlMedalist.add(lblPrimerLugar);
         
         tfPrimerLugar = new JTextField();
         tfPrimerLugar.setEditable(false);
         tfPrimerLugar.setBackground(new Color(255, 215, 0));
         tfPrimerLugar.setColumns(10);
         tfPrimerLugar.setBounds(120, 11, 229, 20);
-        panel_2.add(tfPrimerLugar);
+        pnlMedalist.add(tfPrimerLugar);
         
         JLabel lblSegundoLugar = new JLabel("Segundo Lugar:");
+        lblSegundoLugar.setForeground(new Color(255, 255, 255));
         lblSegundoLugar.setFont(new Font("Arial", Font.PLAIN, 15));
         lblSegundoLugar.setBounds(10, 40, 110, 16);
-        panel_2.add(lblSegundoLugar);
+        pnlMedalist.add(lblSegundoLugar);
         
         tfSegundoLugar = new JTextField();
         tfSegundoLugar.setEditable(false);
         tfSegundoLugar.setBackground(new Color(192, 192, 192));
         tfSegundoLugar.setColumns(10);
         tfSegundoLugar.setBounds(120, 39, 229, 20);
-        panel_2.add(tfSegundoLugar);
+        pnlMedalist.add(tfSegundoLugar);
         
         JLabel lblTercerLugar = new JLabel("Tercer Lugar:");
+        lblTercerLugar.setForeground(new Color(255, 255, 255));
         lblTercerLugar.setFont(new Font("Arial", Font.PLAIN, 15));
         lblTercerLugar.setBounds(10, 68, 110, 16);
-        panel_2.add(lblTercerLugar);
+        pnlMedalist.add(lblTercerLugar);
         
         tfTercerLugar = new JTextField();
         tfTercerLugar.setEditable(false);
         tfTercerLugar.setBackground(new Color(205, 127, 50));
         tfTercerLugar.setColumns(10);
         tfTercerLugar.setBounds(120, 67, 229, 20);
-        panel_2.add(tfTercerLugar);
+        pnlMedalist.add(tfTercerLugar);
         
         JLabel lblCuartoLugar = new JLabel("Cuarto Lugar:");
+        lblCuartoLugar.setForeground(new Color(255, 255, 255));
         lblCuartoLugar.setFont(new Font("Arial", Font.PLAIN, 15));
         lblCuartoLugar.setBounds(10, 96, 110, 16);
-        panel_2.add(lblCuartoLugar);
+        pnlMedalist.add(lblCuartoLugar);
         
         tfCuartoLugar = new JTextField();
         tfCuartoLugar.setEditable(false);
         tfCuartoLugar.setBackground(new Color(205, 127, 50));
         tfCuartoLugar.setColumns(10);
         tfCuartoLugar.setBounds(120, 95, 229, 20);
-        panel_2.add(tfCuartoLugar);
+        pnlMedalist.add(tfCuartoLugar);
         
+        //Give medal buttons
         JButton btnOtorgarMedallaOro = new JButton("Otorgar Medalla");
+        btnOtorgarMedallaOro.setBackground(new Color(41, 128, 185));
+        btnOtorgarMedallaOro.setForeground(new Color(255, 255, 255));
         btnOtorgarMedallaOro.setFont(new Font("Arial", Font.PLAIN, 11));
         btnOtorgarMedallaOro.setBounds(349, 11, 110, 19);
-        panel_2.add(btnOtorgarMedallaOro);
+        pnlMedalist.add(btnOtorgarMedallaOro);
         
         JButton btnOtorgarMedallaPlata = new JButton("Otorgar Medalla");
+        btnOtorgarMedallaPlata.setBackground(new Color(41, 128, 185));
+        btnOtorgarMedallaPlata.setForeground(new Color(255, 255, 255));
         btnOtorgarMedallaPlata.setFont(new Font("Arial", Font.PLAIN, 11));
         btnOtorgarMedallaPlata.setBounds(349, 39, 110, 19);
-        panel_2.add(btnOtorgarMedallaPlata);
+        pnlMedalist.add(btnOtorgarMedallaPlata);
         
         JButton btnOtorgarMedallaBronce3 = new JButton("Otorgar Medalla");
+        btnOtorgarMedallaBronce3.setBackground(new Color(41, 128, 185));
+        btnOtorgarMedallaBronce3.setForeground(new Color(255, 255, 255));
         btnOtorgarMedallaBronce3.setFont(new Font("Arial", Font.PLAIN, 11));
         btnOtorgarMedallaBronce3.setBounds(349, 67, 110, 19);
-        panel_2.add(btnOtorgarMedallaBronce3);
+        pnlMedalist.add(btnOtorgarMedallaBronce3);
         
         JButton btnOtorgarMedallaBronce4 = new JButton("Otorgar Medalla");
+        btnOtorgarMedallaBronce4.setBackground(new Color(41, 128, 185));
+        btnOtorgarMedallaBronce4.setForeground(new Color(255, 255, 255));
         btnOtorgarMedallaBronce4.setFont(new Font("Arial", Font.PLAIN, 11));
         btnOtorgarMedallaBronce4.setBounds(349, 95, 110, 19);
-        panel_2.add(btnOtorgarMedallaBronce4);
+        pnlMedalist.add(btnOtorgarMedallaBronce4);
         
         ActionListener botonesOtorgar = new ActionListener() {
 
@@ -301,25 +292,34 @@ public class MedallasTorneo extends JFrame {
         btnOtorgarMedallaBronce3.addActionListener(botonesOtorgar);
         btnOtorgarMedallaBronce4.addActionListener(botonesOtorgar);
         
+        //Remove medal buttons
         JButton btnRetirarMedallaOro = new JButton("Retirar Medalla");
+        btnRetirarMedallaOro.setBackground(new Color(41, 128, 185));
+        btnRetirarMedallaOro.setForeground(new Color(255, 255, 255));
         btnRetirarMedallaOro.setFont(new Font("Arial", Font.PLAIN, 11));
         btnRetirarMedallaOro.setBounds(459, 11, 110, 19);
-        panel_2.add(btnRetirarMedallaOro);
+        pnlMedalist.add(btnRetirarMedallaOro);
         
         JButton btnRetirarMedallaPlata = new JButton("Retirar Medalla");
+        btnRetirarMedallaPlata.setBackground(new Color(41, 128, 185));
+        btnRetirarMedallaPlata.setForeground(new Color(255, 255, 255));
         btnRetirarMedallaPlata.setFont(new Font("Arial", Font.PLAIN, 11));
         btnRetirarMedallaPlata.setBounds(459, 39, 110, 19);
-        panel_2.add(btnRetirarMedallaPlata);
+        pnlMedalist.add(btnRetirarMedallaPlata);
         
         JButton btnRetirarMedallaBronce3 = new JButton("Retirar Medalla");
+        btnRetirarMedallaBronce3.setBackground(new Color(41, 128, 185));
+        btnRetirarMedallaBronce3.setForeground(new Color(255, 255, 255));
         btnRetirarMedallaBronce3.setFont(new Font("Arial", Font.PLAIN, 11));
         btnRetirarMedallaBronce3.setBounds(459, 67, 110, 19);
-        panel_2.add(btnRetirarMedallaBronce3);
+        pnlMedalist.add(btnRetirarMedallaBronce3);
         
         JButton btnRetirarMedallaBronce4 = new JButton("Retirar Medalla");
+        btnRetirarMedallaBronce4.setBackground(new Color(41, 128, 185));
+        btnRetirarMedallaBronce4.setForeground(new Color(255, 255, 255));
         btnRetirarMedallaBronce4.setFont(new Font("Arial", Font.PLAIN, 11));
         btnRetirarMedallaBronce4.setBounds(459, 95, 110, 19);
-        panel_2.add(btnRetirarMedallaBronce4);
+        pnlMedalist.add(btnRetirarMedallaBronce4);
         
         ActionListener botonesRetirar = new ActionListener() {
 
@@ -408,26 +408,78 @@ public class MedallasTorneo extends JFrame {
         btnRetirarMedallaBronce3.addActionListener(botonesRetirar);
         btnRetirarMedallaBronce4.addActionListener(botonesRetirar);
         
+        //Panel for search bar and table
+        JPanel pnlSearchBarTable = new JPanel();
+        pnlSearchBarTable.setBackground(new Color(52, 73, 94));
+        pnlSearchBarTable.setLayout(null);
+        pnlSearchBarTable.setBounds(18, 189, 575, 131);
+        pnlAllContainer.add(pnlSearchBarTable);
+        
+        //Label for search bar
+        JLabel lblBuscar = new JLabel("Buscar:");
+        lblBuscar.setForeground(new Color(255, 255, 255));
+        lblBuscar.setFont(new Font("Arial", Font.PLAIN, 15));
+        lblBuscar.setBounds(10, 12, 57, 16);
+        pnlSearchBarTable.add(lblBuscar);
+        
+        //label for search bar
+        tfBuscar = new JTextField();
+        tfBuscar.setForeground(new Color(255, 255, 255));
+        tfBuscar.setBackground(new Color(44, 62, 80));
+        tfBuscar.setColumns(10);
+        tfBuscar.setBounds(77, 11, 488, 20);
+        pnlSearchBarTable.add(tfBuscar);
+        
+        //table for signed athlete's
+        table = new JTable();
+		table.setBounds(1, 1, 575, 0);
+		table.setBorder(null);
+		table.setAutoResizeMode(0);
+		table.getTableHeader().setResizingAllowed(false);
+		pnlSearchBarTable.add(table.getTableHeader(), BorderLayout.PAGE_START);
+		pnlSearchBarTable.add(table, BorderLayout.CENTER);
+		table.getTableHeader().setReorderingAllowed(false);
+		pnlSearchBarTable.setLayout(null);
+        
+		//scrollbar for teble
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBounds(0, 36, 575, 95);
+        pnlSearchBarTable.add(scrollPane);
+        
+        //save button
         JButton btnGuardar = new JButton("Guardar");
+        btnGuardar.setForeground(new Color(255, 255, 255));
+        btnGuardar.setBackground(new Color(41, 128, 185));
         btnGuardar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		btnGuardarActionListener();
         	}
         });
         btnGuardar.setFont(new Font("Arial", Font.PLAIN, 16));
-        btnGuardar.setBounds(149, 331, 120, 35);
-        panel.add(btnGuardar);
+        btnGuardar.setBounds(157, 331, 120, 35);
+        pnlAllContainer.add(btnGuardar);
         
+        //cancel editing button
         JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.setForeground(new Color(255, 255, 255));
+        btnCancelar.setBackground(new Color(41, 128, 185));
         btnCancelar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		btnCancelarActionListener();
         	}
         });
         btnCancelar.setFont(new Font("Arial", Font.PLAIN, 16));
-        btnCancelar.setBounds(279, 331, 120, 35);
-        panel.add(btnCancelar);
+        btnCancelar.setBounds(286, 331, 120, 35);
+        pnlAllContainer.add(btnCancelar);
         
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(44, 62, 80));
+        panel.setBounds(0, 0, 611, 39);
+        getContentPane().add(panel);
+        
+        //search bar filter
         tfBuscar.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -445,9 +497,11 @@ public class MedallasTorneo extends JFrame {
             }
         });
         
+        //load medalist
         cargarMedallistas();
 	}
 	
+	//save
 	protected void btnGuardarActionListener() {
 		
 		if(ConexionMySQL.obtenerConexion() != null) {
@@ -471,6 +525,7 @@ public class MedallasTorneo extends JFrame {
 		
 	}
 
+	//back
 	protected void btnAtrasActionListener() {
 		
 		dispose();
@@ -480,6 +535,7 @@ public class MedallasTorneo extends JFrame {
 		
 	}
 
+	//cancel editing
 	protected void btnCancelarActionListener() {
 		
 		idMedallistaOro = tor.getIdGanadorOro();
@@ -491,6 +547,7 @@ public class MedallasTorneo extends JFrame {
 		
 	}
 
+	//load medalist
 	private void cargarMedallistas() {
 		
 		if(ConexionMySQL.obtenerConexion() != null) {
@@ -509,6 +566,7 @@ public class MedallasTorneo extends JFrame {
 		
 	}
 
+	//filter table
 	protected void filtrarTabla() {
 		
 		String textoBusqueda = tfBuscar.getText().toLowerCase();
@@ -533,6 +591,7 @@ public class MedallasTorneo extends JFrame {
 		
 	}
 
+	//load table
 	protected void cargarTabla() {
 		
 		DefaultTableModel tablaModelo = new DefaultTableModel() {

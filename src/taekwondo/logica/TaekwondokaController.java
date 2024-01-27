@@ -9,8 +9,9 @@ public class TaekwondokaController {
 	
 	private TaekwondokaDAO taekwondokaDAO = new TaekwondokaDAO();
 
+	//save athlete
     public boolean guardarNuevoTaekwondoka(Taekwondoka nuevoTaekwondoka) {
-    	// Realizar validaciones
+    	//Validations
         StringBuilder errores = new StringBuilder();
 
         if (nuevoTaekwondoka.getNombre().trim().isEmpty() || nuevoTaekwondoka.getNombre().matches("\\s+")) {
@@ -78,29 +79,29 @@ public class TaekwondokaController {
         if(nuevoTaekwondoka.getPunta() == "Desconocido") {
         	errores.append("Seleccione un color de punta.\n");
         }
-
-
-        // Agregar más validaciones según sea necesario
-
-        // Verificar si hubo errores
+        
+        //Were there errors?
         if (errores.length() > 0) {
-            // Mostrar mensaje de error en una ventana en lugar de imprimirlo en consola
+            //Error window
             Ventanas.mostrarError("ERROR:\n" + errores.toString());
             return false;
         } else {
-            // Si no hay errores, proceder con la persistencia
+            //Calls the DAO to save the athlete
             return taekwondokaDAO.insertarTaekwondoka(nuevoTaekwondoka);
         }
     }
 
+    //get athlete's
     public List<Taekwondoka> traerTaekwondokas() {
 		return taekwondokaDAO.traerTaekwondokas();
     }
     
+    //get an athlete by mail
     public Taekwondoka traerTaekwondokaByMail(String mail) {
 		return taekwondokaDAO.traerTaekwondokaByMail(mail);
     }
 
+    //Edit athlete
 	public boolean editarTaekwondoka(Taekwondoka taeEditado, String mail) {
 		StringBuilder errores = new StringBuilder();
 
@@ -184,22 +185,26 @@ public class TaekwondokaController {
         }
 	}
 
+	//delete athlete
 	public boolean eliminarTaekwondoka(int id) {
 		
 		return TaekwondokaDAO.eliminarTaekwondoka(id);
 		
 	}
 
+	//get an athlete by id
 	public Taekwondoka traerTaekwondokaById(int id) {
 		
 		return TaekwondokaDAO.traerTaekwondokaById(id);
 	}
 
+	//get signed athlete's by tournement id
 	public List<Taekwondoka> traerInscriptos(int idTor) {
 		
 		return TaekwondokaDAO.traerInscriptos(idTor);
 	}
 
+	//sign an athlete for a tournement
 	public boolean inscribirTaeTor(int idTae, int idTor) {
 		
 		return TaekwondokaDAO.inscribitTaeTor(idTae, idTor);

@@ -54,15 +54,19 @@ public class NuevoTaekwondoka extends JFrame {
         setBounds(100, 100, 611, 416);
         setResizable(false);
         getContentPane().setLayout(null);
+        setUndecorated(true);
 
         //Panel container of all components
         JPanel pnlAllContainer = new JPanel();
+        pnlAllContainer.setBackground(new Color(52, 73, 94));
         pnlAllContainer.setLayout(null);
-        pnlAllContainer.setBounds(0, 0, 595, 377);
+        pnlAllContainer.setBounds(0, 39, 611, 377);
         getContentPane().add(pnlAllContainer);
 
         //Exit
         JButton btnSalir = new JButton("Atras");
+        btnSalir.setBackground(new Color(41, 128, 185));
+        btnSalir.setForeground(new Color(255, 255, 255));
         btnSalir.setBounds(5, 5, 89, 23);
         pnlAllContainer.add(btnSalir);
         btnSalir.addActionListener(new ActionListener() {
@@ -74,91 +78,112 @@ public class NuevoTaekwondoka extends JFrame {
         
         //Label for title
         JLabel lblTitulo = new JLabel("Nuevo Taekwondoka");
+        lblTitulo.setForeground(new Color(255, 255, 255));
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Arial Black", Font.PLAIN, 20));
-        lblTitulo.setBounds(160, 5, 274, 29);
+        lblTitulo.setBounds(168, 5, 274, 29);
         pnlAllContainer.add(lblTitulo);
 
         //Panel for form components
         JPanel pnlFormContainer = new JPanel();
+        pnlFormContainer.setBackground(new Color(52, 73, 94));
         pnlFormContainer.setLayout(null);
-        pnlFormContainer.setBounds(10, 45, 575, 321);
+        pnlFormContainer.setBounds(18, 45, 575, 321);
         pnlAllContainer.add(pnlFormContainer);
 
         //Label for name
         JLabel lblNombre = new JLabel("Nombre:");
+        lblNombre.setForeground(new Color(255, 255, 255));
         lblNombre.setFont(new Font("Arial", Font.PLAIN, 15));
         lblNombre.setBounds(10, 10, 126, 16);
         pnlFormContainer.add(lblNombre);
 
         //Textield for name
         tfNombre = new JTextField();
+        tfNombre.setForeground(new Color(255, 255, 255));
+        tfNombre.setBackground(new Color(44, 62, 80));
         tfNombre.setBounds(146, 9, 419, 20);
         pnlFormContainer.add(tfNombre);
         tfNombre.setColumns(10);
         
         //Label for surname
         JLabel lblApellido = new JLabel("Apellido:");
+        lblApellido.setForeground(new Color(255, 255, 255));
         lblApellido.setFont(new Font("Arial", Font.PLAIN, 15));
         lblApellido.setBounds(10, 38, 126, 16);
         pnlFormContainer.add(lblApellido);
         
         //Textfield for surname
         tfApellido = new JTextField();
+        tfApellido.setForeground(new Color(255, 255, 255));
+        tfApellido.setBackground(new Color(44, 62, 80));
         tfApellido.setColumns(10);
         tfApellido.setBounds(146, 37, 419, 20);
         pnlFormContainer.add(tfApellido);
         
         //Label for age
         JLabel lblEdad = new JLabel("Edad:");
+        lblEdad.setForeground(new Color(255, 255, 255));
         lblEdad.setFont(new Font("Arial", Font.PLAIN, 15));
         lblEdad.setBounds(10, 69, 126, 16);
         pnlFormContainer.add(lblEdad);
         
         //Textfield for age
         tfEdad = new JTextField();
+        tfEdad.setForeground(new Color(255, 255, 255));
+        tfEdad.setBackground(new Color(44, 62, 80));
         tfEdad.setColumns(10);
         tfEdad.setBounds(146, 68, 419, 20);
         pnlFormContainer.add(tfEdad);
         
         //Label for address
         JLabel lblDireccion = new JLabel("Direccion:");
+        lblDireccion.setForeground(new Color(255, 255, 255));
         lblDireccion.setFont(new Font("Arial", Font.PLAIN, 15));
         lblDireccion.setBounds(10, 100, 126, 16);
         pnlFormContainer.add(lblDireccion);
         
         //Textfield for Address
         tfDireccion = new JTextField();
+        tfDireccion.setForeground(new Color(255, 255, 255));
+        tfDireccion.setBackground(new Color(44, 62, 80));
         tfDireccion.setColumns(10);
         tfDireccion.setBounds(146, 99, 419, 20);
         pnlFormContainer.add(tfDireccion);
         
         //Label for email
         JLabel lblEmail = new JLabel("E-mail:");
+        lblEmail.setForeground(new Color(255, 255, 255));
         lblEmail.setFont(new Font("Arial", Font.PLAIN, 15));
         lblEmail.setBounds(10, 131, 126, 16);
         pnlFormContainer.add(lblEmail);
         
         //Textfield fo email
         tfEmail = new JTextField();
+        tfEmail.setForeground(new Color(255, 255, 255));
+        tfEmail.setBackground(new Color(44, 62, 80));
         tfEmail.setColumns(10);
         tfEmail.setBounds(146, 130, 419, 20);
         pnlFormContainer.add(tfEmail);
 
         //Label for cellphone number
         JLabel lblCelular = new JLabel("Celular:");
+        lblCelular.setForeground(new Color(255, 255, 255));
         lblCelular.setFont(new Font("Arial", Font.PLAIN, 15));
         lblCelular.setBounds(10, 162, 126, 16);
         pnlFormContainer.add(lblCelular);
         
         //Textfield for cellphone number
         tfCelular = new JTextField();
+        tfCelular.setForeground(new Color(255, 255, 255));
+        tfCelular.setBackground(new Color(44, 62, 80));
         tfCelular.setColumns(10);
         tfCelular.setBounds(146, 161, 419, 20);
         pnlFormContainer.add(tfCelular);
         
         //Label for belt
         JLabel lblCinturon = new JLabel("Cinturon:");
+        lblCinturon.setForeground(new Color(255, 255, 255));
         lblCinturon.setFont(new Font("Arial", Font.PLAIN, 15));
         lblCinturon.setBounds(10, 193, 134, 16);
         pnlFormContainer.add(lblCinturon);
@@ -190,6 +215,7 @@ public class NuevoTaekwondoka extends JFrame {
         
         //Label for tip
         JLabel lblPunta = new JLabel("Punta:");
+        lblPunta.setForeground(new Color(255, 255, 255));
         lblPunta.setFont(new Font("Arial", Font.PLAIN, 15));
         lblPunta.setBounds(10, 224, 134, 16);
         pnlFormContainer.add(lblPunta);
@@ -217,6 +243,8 @@ public class NuevoTaekwondoka extends JFrame {
         
         //Button to save a new athlete
         JButton btnGuardar = new JButton("Guardar");
+        btnGuardar.setBackground(new Color(41, 128, 185));
+        btnGuardar.setForeground(new Color(255, 255, 255));
         btnGuardar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		btnGuardarActionListener();
@@ -228,6 +256,8 @@ public class NuevoTaekwondoka extends JFrame {
 
         //Button to clear the form
         JButton btnLimpiar = new JButton("Limpiar");
+        btnLimpiar.setBackground(new Color(41, 128, 185));
+        btnLimpiar.setForeground(new Color(255, 255, 255));
         btnLimpiar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 btnLimpiarActionListener();
@@ -245,6 +275,11 @@ public class NuevoTaekwondoka extends JFrame {
         
         //filter for email characters only
         FiltrosParaTextField.setupTextFieldDocumentFilterForEmail(tfEmail);
+        
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(44, 62, 80));
+        panel.setBounds(0, 0, 611, 42);
+        getContentPane().add(panel);
         
         
     }
@@ -266,8 +301,9 @@ public class NuevoTaekwondoka extends JFrame {
             Taekwondoka nuevoTaekwondoka = new Taekwondoka(-1, nombre, apellido, edad, direccion, email, celular,
     		cinturon, punta);
         	
-            //clear after succesful save
+            //Calls the controller to save the athlete
         	if(controller.guardarNuevoTaekwondoka(nuevoTaekwondoka)) {
+                //clear after succesful save
         		btnLimpiarActionListener();
         	}
 		} else {

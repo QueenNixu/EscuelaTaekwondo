@@ -6,10 +6,10 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
-import javax.swing.text.DocumentFilter.FilterBypass;
 
 public class FiltrosParaTextField {
 	
+	//only letter filter
 	public static void setupTextFieldDocumentFilter(JTextField textField) {
         Document doc = textField.getDocument();
         if (doc instanceof AbstractDocument) {
@@ -25,6 +25,7 @@ public class FiltrosParaTextField {
         }
     }
 	
+	//only number filter
 	public static void setupTextFieldDocumentFilterForNumbers(JTextField textField) {
         Document doc = textField.getDocument();
         if (doc instanceof AbstractDocument) {
@@ -39,7 +40,7 @@ public class FiltrosParaTextField {
             });
         }
     }
-	
+	//email filter
 	public static void setupTextFieldDocumentFilterForEmail(JTextField textField) {
         Document doc = textField.getDocument();
         if (doc instanceof AbstractDocument) {
@@ -57,11 +58,13 @@ public class FiltrosParaTextField {
         }
     }
 	
+	//email validation
 	private static boolean isValidEmailCharacter(String text) {
         // Utiliza una expresión regular para permitir caracteres válidos en un correo electrónico
         return text.matches("^[a-zA-Z0-9._@]*$");
     }
 
+	//tournement name filter
 	public static void setupTextFieldDocumentFilterTorneoNombre(JTextField tfNombre) {
 		Document doc = tfNombre.getDocument();
         if (doc instanceof AbstractDocument) {

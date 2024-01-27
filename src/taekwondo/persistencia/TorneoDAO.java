@@ -1,7 +1,6 @@
 package taekwondo.persistencia;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,12 +8,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import taekwondo.logica.Taekwondoka;
 import taekwondo.logica.Torneo;
 import taekwondo.util.Ventanas;
 
 public class TorneoDAO {
 
+	//save tournement
 	public static boolean guardarNuevoTorneo(Torneo torneo) {
 		
 		String query = "INSERT INTO torneo (nombre, fecha) VALUES (?, ?)";
@@ -36,6 +35,7 @@ public class TorneoDAO {
 		
 	}
 
+	//get tournements
 	public List<Torneo> traerTorneos() {
 		
 		List<Torneo> torneos = new ArrayList<>();
@@ -71,6 +71,7 @@ public class TorneoDAO {
 	    return torneos;
 	}
 
+	//get tournement by id
 	public static Torneo traerTorneoById(int idTor) {
 		
 		String query = "SELECT * FROM torneo WHERE id =?";
@@ -110,6 +111,7 @@ public class TorneoDAO {
         
 	}
 
+	//delete tournement
 	public static boolean eliminarTorneo(int id) {
 		
 		String sql = "DELETE FROM torneo_taekwondoka WHERE idTorneo = ?";
@@ -145,6 +147,7 @@ public class TorneoDAO {
 		
 	}
 	
+	//increase the number of participants
 	public static void incrementarParticipantes(int idTor) {
 		
 		String sql = "UPDATE torneo SET participantes=? WHERE id=?";
@@ -165,6 +168,7 @@ public class TorneoDAO {
 		
 	}
 
+	//delete athlete out of a tournement
 	public static boolean eliminarTaeTor(int idTor, int idTae) {
 		
 		String sql = "DELETE FROM torneo_taekwondoka WHERE idTorneo =? AND idTaekwondoka =?";
@@ -210,7 +214,7 @@ public class TorneoDAO {
 
 	}
 
-	
+	//decrease number of participants
 	public static void decrementarParticipantes(int idTor) {
 		
 		String sql = "UPDATE torneo SET participantes=? WHERE id=?";
@@ -231,6 +235,7 @@ public class TorneoDAO {
 		
 	}
 
+	//edit tournement
 	public static boolean editarTorneo(Torneo torneoEditado) {
 	    StringBuilder sqlBuilder = new StringBuilder("UPDATE torneo SET nombre=?, fecha=?");
 	    
@@ -286,6 +291,7 @@ public class TorneoDAO {
 	    }
 	}
 
+	//get the id of tournements an athlete is signed in
 	public static List<Integer> traerTorneosDelTaekwondokaByIdTae(int id) {
 		
 		String query = "SELECT idTorneo FROM torneo_taekwondoka WHERE idTaekwondoka =?";

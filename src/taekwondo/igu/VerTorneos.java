@@ -3,13 +3,6 @@ package taekwondo.igu;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
@@ -18,21 +11,32 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-
-import taekwondo.logica.Taekwondoka;
-import taekwondo.logica.TaekwondokaController;
-import taekwondo.logica.Torneo;
-import taekwondo.logica.TorneoController;
-import taekwondo.persistencia.ConexionMySQL;
-import taekwondo.util.Ventanas;
-
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import javax.swing.ScrollPaneConstants;
+
+import java.text.SimpleDateFormat;
+
+import java.util.List;
+
+import java.awt.event.ActionEvent;
+
+import taekwondo.logica.TaekwondokaController;
+import taekwondo.logica.Torneo;
+import taekwondo.logica.TorneoController;
+
+import taekwondo.persistencia.ConexionMySQL;
+
+import taekwondo.util.Ventanas;
+import java.awt.Color;
 
 public class VerTorneos extends JFrame {
 	
@@ -46,9 +50,12 @@ public class VerTorneos extends JFrame {
 
 	
 	public VerTorneos(Menu menu) {
-		
+		getContentPane().setBackground(new Color(52, 73, 94));
+
+		//Saves window to go back to
 		this.menu = menu;
 		
+		//load table at window opened
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
@@ -56,70 +63,91 @@ public class VerTorneos extends JFrame {
 			}
 		});
 		
+        //Default window for this app
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 611, 416);
         setResizable(false);
         getContentPane().setLayout(null);
+        setUndecorated(true);
         
-		JPanel panel_1 = new JPanel();
-        panel_1.setLayout(null);
-        panel_1.setBounds(7, 73, 580, 243);
-        getContentPane().add(panel_1);
-		
-		table = new JTable();
-		table.setBounds(1, 1, 575, 0);
-		table.setBorder(null);
-		table.getTableHeader().setResizingAllowed(false);
-		panel_1.add(table.getTableHeader(), BorderLayout.PAGE_START);
-		panel_1.add(table, BorderLayout.CENTER);
-		table.getTableHeader().setReorderingAllowed(false);
-		panel_1.setLayout(null);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-		// Agrega el JScrollPane envolviendo la tabla
-		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(0, 0, 580, 243);
-		panel_1.add(scrollPane);
-        
+        //back button
         JButton btnSalir = new JButton("Atras");
+        btnSalir.setBackground(new Color(41, 128, 185));
+        btnSalir.setForeground(new Color(255, 255, 255));
         btnSalir.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		btnAtrasActionListener();
         	}
         });
         btnSalir.setFont(new Font("Arial", Font.PLAIN, 13));
-        btnSalir.setBounds(5, 5, 89, 23);
+        btnSalir.setBounds(5, 54, 89, 23);
         getContentPane().add(btnSalir);
         
+        //Label titulo
         JLabel lblTitulo = new JLabel("Lista de Torneos");
+        lblTitulo.setForeground(new Color(255, 255, 255));
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Arial Black", Font.PLAIN, 20));
-        lblTitulo.setBounds(160, 5, 274, 29);
+        lblTitulo.setBounds(168, 54, 274, 29);
         getContentPane().add(lblTitulo);
         
+        //Panel for search bar
         JPanel pnlBuscador = new JPanel();
+        pnlBuscador.setBackground(new Color(52, 73, 94));
         pnlBuscador.setLayout(null);
-        pnlBuscador.setBounds(5, 38, 580, 24);
+        pnlBuscador.setBounds(18, 87, 580, 24);
         getContentPane().add(pnlBuscador);
         
+        //Label for search bar
         JLabel lblBuscar = new JLabel("Buscar:");
+        lblBuscar.setForeground(new Color(255, 255, 255));
         lblBuscar.setFont(new Font("Arial", Font.PLAIN, 15));
         lblBuscar.setBounds(10, 5, 57, 14);
         pnlBuscador.add(lblBuscar);
         
+        //Textfield for search bar
         tfBuscar = new JTextField();
+        tfBuscar.setBackground(new Color(44, 62, 80));
+        tfBuscar.setForeground(new Color(255, 255, 255));
         tfBuscar.setColumns(10);
         tfBuscar.setBounds(77, 3, 493, 18);
         pnlBuscador.add(tfBuscar);
         
+        //Panel table container
+        JPanel pnlTableContainer = new JPanel();
+        pnlTableContainer.setLayout(null);
+        pnlTableContainer.setBounds(18, 122, 580, 243);
+        getContentPane().add(pnlTableContainer);
+        
+        //table
+		table = new JTable();
+		table.setBounds(1, 1, 575, 0);
+		table.setBorder(null);
+		table.getTableHeader().setResizingAllowed(false);
+		pnlTableContainer.add(table.getTableHeader(), BorderLayout.PAGE_START);
+		pnlTableContainer.add(table, BorderLayout.CENTER);
+		table.getTableHeader().setReorderingAllowed(false);
+		pnlTableContainer.setLayout(null);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		//scrollbar for table
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.setBounds(0, 0, 580, 243);
+		pnlTableContainer.add(scrollPane);
+		
+		//Panel for buttons
         JPanel pnlBotones = new JPanel();
+        pnlBotones.setBackground(new Color(52, 73, 94));
         pnlBotones.setLayout(null);
-        pnlBotones.setBounds(143, 327, 313, 40);
+        pnlBotones.setBounds(138, 370, 313, 40);
         getContentPane().add(pnlBotones);
         
+        //see details buttons
         JButton btnVerDetalles = new JButton("Ver Detalles");
+        btnVerDetalles.setBackground(new Color(41, 128, 185));
+        btnVerDetalles.setForeground(new Color(255, 255, 255));
         btnVerDetalles.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		btnVerDeatellesActionListener();
@@ -129,7 +157,10 @@ public class VerTorneos extends JFrame {
         btnVerDetalles.setBounds(10, 5, 140, 30);
         pnlBotones.add(btnVerDetalles);
         
+        //Delete button
         JButton btnEliminar = new JButton("Eliminar");
+        btnEliminar.setBackground(new Color(41, 128, 185));
+        btnEliminar.setForeground(new Color(255, 255, 255));
         btnEliminar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		btnEliminarActionListener();
@@ -139,6 +170,12 @@ public class VerTorneos extends JFrame {
         btnEliminar.setBounds(160, 5, 140, 30);
         pnlBotones.add(btnEliminar);
         
+        JPanel panel_1 = new JPanel();
+        panel_1.setBackground(new Color(44, 62, 80));
+        panel_1.setBounds(0, 0, 611, 40);
+        getContentPane().add(panel_1);
+        
+        //filter for search bar
         tfBuscar.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -152,12 +189,12 @@ public class VerTorneos extends JFrame {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                // Este método es menos relevante para campos de texto simples
             }
         });
         
 	}
 	
+	//delete
 	protected void btnEliminarActionListener() {
 		
 		if (ConexionMySQL.obtenerConexion() != null) {
@@ -165,11 +202,9 @@ public class VerTorneos extends JFrame {
 			DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 			if(filaSeleccionada != -1) {
 				int idTor = (int) modelo.getValueAt(filaSeleccionada, 0);
-				
-				// buscar todos los datos del Taekwondoka (mail e id son unicos)
+
 				Torneo tor = torneoController.traerTorneoById(idTor);
 				if(tor != null) {
-					//elimianr taekwondoka
 					if(torneoController.eliminarTorneo(tor.getId())) {
 						Ventanas.mostrarExito("Taekwondoka eliminado con exito.");
 						cargarTabla();
@@ -186,6 +221,7 @@ public class VerTorneos extends JFrame {
 		
 	}
 
+	//see details
 	protected void btnVerDeatellesActionListener() {
 		
 		if (ConexionMySQL.obtenerConexion() != null) {
@@ -196,7 +232,6 @@ public class VerTorneos extends JFrame {
 				int torId = Integer.parseInt(modelo.getValueAt(filaSeleccionada, 0).toString());
 				System.out.println("id del tor: "+torId);
 				
-				// buscar todos los datos del Taekwondoka (mail e id son unicos)
 				Torneo tor = torneoController.traerTorneoById(torId);
 				if(tor != null) {
 					VerDetallesTorneo VVDT = new VerDetallesTorneo(this, tor);
@@ -215,11 +250,12 @@ public class VerTorneos extends JFrame {
 		
 	}
 
+	//filter table
 	protected void filtrarTabla() {
 		
 		String textoBusqueda = tfBuscar.getText().toLowerCase();
         DefaultTableModel modelo = (DefaultTableModel) table.getModel();
-        modelo.setRowCount(0); // Limpiar la tabla
+        modelo.setRowCount(0);
 
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy");
         for (Torneo tor : listaTorneos) {
@@ -228,7 +264,7 @@ public class VerTorneos extends JFrame {
         	String ganadorPlata = (tor.getIdGanadorPlata() != 0) ? taekwondokaController.traerTaekwondokaById(tor.getIdGanadorPlata()).getApellido() + " " + taekwondokaController.traerTaekwondokaById(tor.getIdGanadorPlata()).getNombre() : "-";
         	String ganadorBronce3 = (tor.getIdGanadorBronce3() != 0) ? taekwondokaController.traerTaekwondokaById(tor.getIdGanadorBronce3()).getApellido() + " " + taekwondokaController.traerTaekwondokaById(tor.getIdGanadorBronce3()).getNombre() : "-";
         	String ganadorBronce4 = (tor.getIdGanadorBronce4() != 0) ? taekwondokaController.traerTaekwondokaById(tor.getIdGanadorBronce4()).getApellido() + " " + taekwondokaController.traerTaekwondokaById(tor.getIdGanadorBronce4()).getNombre() : "-";
-            // Filtrar por nombre, apellido o email (puedes ajustar según tus necesidades)
+        	
             if (tor.getNombre().toLowerCase().contains(textoBusqueda) ||
             	ganadorOro.toLowerCase().contains(textoBusqueda) ||
             	ganadorPlata.toLowerCase().contains(textoBusqueda) ||
@@ -253,6 +289,7 @@ public class VerTorneos extends JFrame {
 		
 	}
 	
+	//load table
 	public void cargarTabla() {
 		DefaultTableModel tablaModelo = new DefaultTableModel() {
 			@Override
@@ -295,13 +332,9 @@ public class VerTorneos extends JFrame {
 			table.setModel(tablaModelo);
 		}
 
-		
-
-		// Obtén el modelo de columna de la tabla
 		TableColumnModel columnModel = table.getColumnModel();
 
-		// Ajusta el ancho predeterminado de las columnas
-		int[] anchos = { 0, 60, 54, 64, 100, 100, 100, 100}; // Puedes ajustar los valores según tus necesidades
+		int[] anchos = { 0, 60, 54, 64, 100, 100, 100, 100};
 
 		for (int i = 0; i < columnModel.getColumnCount() && i < anchos.length; i++) {
 			TableColumn column = columnModel.getColumn(i);
@@ -315,21 +348,20 @@ public class VerTorneos extends JFrame {
 
 	}
 	
+	//cell renderer to set the allignement of the signed athlete's to the right
 	private class DerechaTableCellRenderer extends DefaultTableCellRenderer {
 	    @Override
 	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 	        Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-	        // Verifica si la columna es la columna de "Inscritos"
-	        if (column == 3) { // Ajusta el índice de la columna según tu modelo
-	            setHorizontalAlignment(RIGHT); // Alinea el contenido a la derecha
-	        }
-
+	        setHorizontalAlignment(RIGHT);
+	        
 	        return component;
 	    }
 	}
 
 
+	//back
 	protected void btnAtrasActionListener() {
 
 		dispose();

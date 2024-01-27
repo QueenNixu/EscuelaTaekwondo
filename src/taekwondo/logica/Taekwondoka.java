@@ -13,10 +13,7 @@ public class Taekwondoka {
 	private String punta;
 	
 	public Taekwondoka() {
-		
 	}
-	
-	
 
 	public Taekwondoka(int id, String nombre, String apellido, String edad, String direccion, String email, String celular,
 			String cinturon, String punta) {

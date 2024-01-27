@@ -54,21 +54,25 @@ public class InscribirTaekwondokaTorneo extends JFrame implements VentanaGeneric
 		setBounds(100, 100, 611, 416);
 		setResizable(false);
 		getContentPane().setLayout(null);
+		setUndecorated(true);
 
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 595, 377);
+		panel.setBackground(new Color(52, 73, 94));
+		panel.setBounds(0, 39, 611, 377);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 
 		JLabel lblListaDeTaekwondokas = new JLabel("<html><div style='text-align: center;'>Lista de Taekwondokas<br>no inscriptos<div><html>");
+		lblListaDeTaekwondokas.setBackground(new Color(52, 73, 94));
+		lblListaDeTaekwondokas.setForeground(new Color(255, 255, 255));
 		lblListaDeTaekwondokas.setVerticalAlignment(SwingConstants.TOP);
 		lblListaDeTaekwondokas.setHorizontalAlignment(SwingConstants.CENTER);
 		lblListaDeTaekwondokas.setFont(new Font("Arial Black", Font.PLAIN, 20));
-		lblListaDeTaekwondokas.setBounds(104, 5, 367, 60);
+		lblListaDeTaekwondokas.setBounds(122, 5, 367, 60);
 		panel.add(lblListaDeTaekwondokas);
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(7, 111, 580, 206);
+		panel_1.setBounds(15, 111, 580, 206);
 		panel.add(panel_1);
 
 		tablaTaekwondokas = new JTable();
@@ -89,11 +93,14 @@ public class InscribirTaekwondokaTorneo extends JFrame implements VentanaGeneric
 		panel_1.add(scrollPane);
 
 		JPanel pnlBotones = new JPanel();
-		pnlBotones.setBounds(141, 326, 313, 40);
+		pnlBotones.setBackground(new Color(52, 73, 94));
+		pnlBotones.setBounds(149, 326, 313, 40);
 		panel.add(pnlBotones);
 		pnlBotones.setLayout(null);
 
 		JButton btnVerDetalles = new JButton("Ver Detalles");
+		btnVerDetalles.setForeground(new Color(255, 255, 255));
+		btnVerDetalles.setBackground(new Color(41, 128, 185));
 		btnVerDetalles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnVerDetallesActionListener();
@@ -104,6 +111,8 @@ public class InscribirTaekwondokaTorneo extends JFrame implements VentanaGeneric
 		pnlBotones.add(btnVerDetalles);
 		
 		JButton btnInscribir = new JButton("Inscribir");
+		btnInscribir.setForeground(new Color(255, 255, 255));
+		btnInscribir.setBackground(new Color(41, 128, 185));
 		btnInscribir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnInscribirActionListener();
@@ -114,6 +123,8 @@ public class InscribirTaekwondokaTorneo extends JFrame implements VentanaGeneric
 		pnlBotones.add(btnInscribir);
 
 		JButton btnAtras = new JButton("Atras");
+		btnAtras.setForeground(new Color(255, 255, 255));
+		btnAtras.setBackground(new Color(41, 128, 185));
 		btnAtras.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnAtrasActionListener();
@@ -124,19 +135,28 @@ public class InscribirTaekwondokaTorneo extends JFrame implements VentanaGeneric
 		panel.add(btnAtras);
 		
 		JPanel pnlBuscador = new JPanel();
-		pnlBuscador.setBounds(7, 76, 580, 24);
+		pnlBuscador.setBackground(new Color(52, 73, 94));
+		pnlBuscador.setBounds(15, 76, 580, 24);
 		panel.add(pnlBuscador);
 		pnlBuscador.setLayout(null);
 		
 		JLabel lblBuscar = new JLabel("Buscar:");
+		lblBuscar.setForeground(new Color(255, 255, 255));
 		lblBuscar.setFont(new Font("Arial", Font.PLAIN, 15));
 		lblBuscar.setBounds(10, 5, 57, 14);
 		pnlBuscador.add(lblBuscar);
 		
 		tfBuscar = new JTextField();
+		tfBuscar.setForeground(new Color(255, 255, 255));
+		tfBuscar.setBackground(new Color(44, 62, 80));
 		tfBuscar.setBounds(77, 3, 493, 18);
 		pnlBuscador.add(tfBuscar);
 		tfBuscar.setColumns(10);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(new Color(44, 62, 80));
+		panel_2.setBounds(0, 0, 611, 40);
+		getContentPane().add(panel_2);
 		
 		// Agregar un DocumentListener al JTextField para manejar cambios en el texto
         tfBuscar.getDocument().addDocumentListener(new DocumentListener() {
@@ -336,6 +356,4 @@ public class InscribirTaekwondokaTorneo extends JFrame implements VentanaGeneric
             Ventanas.mostrarError("Ocurrió un error inesperado. Por favor, contacte al soporte técnico.");
         }
 	}
-	
-	
 }

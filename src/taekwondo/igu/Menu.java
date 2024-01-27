@@ -26,29 +26,33 @@ public class Menu extends JFrame {
 		setBounds(100, 100, 611, 416);
 		setResizable(false);
 		getContentPane().setLayout(null);
+		setUndecorated(true);
 		
 		//Panel container of all components
 		JPanel pnlAllContainer = new JPanel();
-		pnlAllContainer.setBounds(0, 0, 595, 377);
+		pnlAllContainer.setBackground(new Color(52, 73, 94));
+		pnlAllContainer.setBounds(0, 39, 611, 377);
 		getContentPane().add(pnlAllContainer);
 		pnlAllContainer.setLayout(null);
 		
 		//Label for title
 		JLabel lblTitulo = new JLabel("Escuela de Taekwondo");
-		lblTitulo.setBounds(159, 11, 274, 51);
+		lblTitulo.setForeground(new Color(255, 255, 255));
+		lblTitulo.setBounds(167, 11, 274, 51);
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitulo.setFont(new Font("Arial Black", Font.PLAIN, 20));
 		pnlAllContainer.add(lblTitulo);
 		
 		//Panel for all buttons
 		JPanel pnlBotones = new JPanel();
-		pnlBotones.setBounds(10, 64, 203, 302);
+		pnlBotones.setBackground(new Color(52, 73, 94));
+		pnlBotones.setBounds(18, 64, 203, 302);
 		pnlAllContainer.add(pnlBotones);
 		pnlBotones.setLayout(null);
 		
 		//Label for image
 		JLabel lblImagen = new JLabel("");
-		lblImagen.setBounds(223, 64, 362, 302);
+		lblImagen.setBounds(239, 64, 362, 302);
 		lblImagen.setIcon(new ImageIcon("D:\\eclipse workspace 01\\escuelataekwondo\\images\\taekwondo-1.1.png"));
 		lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
 		pnlAllContainer.add(lblImagen);
@@ -57,6 +61,8 @@ public class Menu extends JFrame {
 		
 		//New Taekwondo athlete
 		JButton btnNuevoTaekwondoka = new JButton("Nuevo Taekwondoka");
+		btnNuevoTaekwondoka.setForeground(new Color(255, 255, 255));
+		btnNuevoTaekwondoka.setBackground(new Color(41, 128, 185));
 		btnNuevoTaekwondoka.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnNuevoTaekwondokaActionListener();
@@ -68,6 +74,8 @@ public class Menu extends JFrame {
 		
 		//List Taekwondo athletes
 		JButton btnVerTaekwondokas = new JButton("Ver Taekwondokas");
+		btnVerTaekwondokas.setBackground(new Color(41, 128, 185));
+		btnVerTaekwondokas.setForeground(new Color(255, 255, 255));
 		btnVerTaekwondokas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnVerTaekwondokaActionListener();
@@ -79,6 +87,8 @@ public class Menu extends JFrame {
 		
 		//New Tournement
 		JButton btnNuevoTorneo = new JButton("Nuevo Torneo");
+		btnNuevoTorneo.setForeground(new Color(255, 255, 255));
+		btnNuevoTorneo.setBackground(new Color(41, 128, 185));
 		btnNuevoTorneo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnNuevoTorneoActionListener();
@@ -90,6 +100,8 @@ public class Menu extends JFrame {
 		
 		//List Tournements
 		JButton btnVerTorneos = new JButton("Ver Torneos");
+		btnVerTorneos.setBackground(new Color(41, 128, 185));
+		btnVerTorneos.setForeground(new Color(255, 255, 255));
 		btnVerTorneos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnVerTorneosActionListener();
@@ -101,14 +113,21 @@ public class Menu extends JFrame {
         
         //Exit
         JButton btnSalir = new JButton("Salir");
+        btnSalir.setForeground(new Color(255, 255, 255));
+        btnSalir.setBackground(new Color(41, 128, 185));
   		btnSalir.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
   				System.exit(0);
   			}
   		});
   		btnSalir.setFont(new Font("Arial", Font.PLAIN, 16));
-  		btnSalir.setBounds(10, 211, 180, 35);
+  		btnSalir.setBounds(21, 211, 161, 35);
   		pnlBotones.add(btnSalir);
+  		
+  		JPanel panel = new JPanel();
+  		panel.setBackground(new Color(44, 62, 80));
+  		panel.setBounds(0, 0, 611, 39);
+  		getContentPane().add(panel);
 	}
 	
 	//New Taekwondo athlete

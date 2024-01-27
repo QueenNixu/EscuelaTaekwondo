@@ -3,26 +3,27 @@ package taekwondo.igu;
 import javax.swing.JFrame;
 
 import taekwondo.logica.Taekwondoka;
+
 import taekwondo.persistencia.ConexionMySQL;
-import taekwondo.persistencia.TaekwondokaDAO;
+
 import taekwondo.util.FiltrosParaTextField;
 import taekwondo.util.PintarPanel;
 import taekwondo.util.VentanaGenerica;
 import taekwondo.util.Ventanas;
+
 import taekwondo.logica.TaekwondokaController;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTextField;
-import java.awt.Color;
-import java.awt.Component;
+import javax.swing.ImageIcon;
+
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
-import javax.swing.ImageIcon;
+import java.awt.Color;
 
 
 public class VerDetallesTaekwondoka extends JFrame {
@@ -43,38 +44,41 @@ public class VerDetallesTaekwondoka extends JFrame {
 	private JButton btnArrowUp;
 	
 	private JPanel pnlCinturonPunta;
-	private JPanel panel_1;
+	private JPanel pnlDetailsButtons;
 	
 	private TaekwondokaController controller = new TaekwondokaController();
 	
 	private String nuevoColorPunta;
 	private String nuevoColorCinturon;
+	private JPanel panel;
 	
 	public VerDetallesTaekwondoka(VentanaGenerica ventanaOrigen, Taekwondoka tae) {
 
+		//Saves window to go back to
 		this.ventanaOrigen = ventanaOrigen;
 		this.tae = tae;
 		
 		nuevoColorCinturon = tae.getCinturon();
 		nuevoColorPunta = tae.getPunta();
 		
+        //Default window for this app
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 611, 416);
 		setResizable(false);
 		getContentPane().setLayout(null);
+		setUndecorated(true);
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 595, 377);
-		getContentPane().add(panel);
-		panel.setLayout(null);
+		//pnl container of all components
+		JPanel pnlAllContainer = new JPanel();
+		pnlAllContainer.setBackground(new Color(52, 73, 94));
+		pnlAllContainer.setBounds(0, 39, 611, 377);
+		getContentPane().add(pnlAllContainer);
+		pnlAllContainer.setLayout(null);
 		
-		JLabel lblDetallesDe = new JLabel("Detalles de ");
-		lblDetallesDe.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDetallesDe.setFont(new Font("Arial Black", Font.PLAIN, 20));
-		lblDetallesDe.setBounds(160, 5, 274, 29);
-		panel.add(lblDetallesDe);
-		
+		//back button
 		JButton btnAtras = new JButton("Atras");
+		btnAtras.setBackground(new Color(41, 128, 185));
+		btnAtras.setForeground(new Color(255, 255, 255));
 		btnAtras.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnAtrasActionListener();
@@ -82,124 +86,143 @@ public class VerDetallesTaekwondoka extends JFrame {
 		});
 		btnAtras.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnAtras.setBounds(7, 5, 89, 23);
-		panel.add(btnAtras);
+		pnlAllContainer.add(btnAtras);
 		
-		panel_1 = new JPanel();
-		panel_1.setLayout(null);
-		panel_1.setBounds(10, 76, 575, 177);
-		panel.add(panel_1);
+		//label for title 1
+		JLabel lblDetallesDe = new JLabel("Detalles de ");
+		lblDetallesDe.setForeground(new Color(255, 255, 255));
+		lblDetallesDe.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDetallesDe.setFont(new Font("Arial Black", Font.PLAIN, 20));
+		lblDetallesDe.setBounds(168, 5, 274, 29);
+		pnlAllContainer.add(lblDetallesDe);
 		
-		btnGuardar = new JButton("Guardar");
-		btnGuardar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnGuardarActionListener();
-			}
-		});
-		btnGuardar.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnGuardar.setBounds(110, 127, 170, 35);
-		btnGuardar.setVisible(false);
-		panel_1.add(btnGuardar);
+		//label for title 2
+		JLabel lblApellidoNombre = new JLabel(tae.getApellido()+" "+tae.getNombre());
+		lblApellidoNombre.setForeground(new Color(255, 255, 255));
+		lblApellidoNombre.setHorizontalAlignment(SwingConstants.CENTER);
+		lblApellidoNombre.setFont(new Font("Arial Black", Font.PLAIN, 20));
+		lblApellidoNombre.setBounds(15, 36, 578, 29);
+		pnlAllContainer.add(lblApellidoNombre);
 		
-		btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnCancelarActionListener();
-			}
-		});
-		btnCancelar.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnCancelar.setBounds(290, 127, 170, 35);
-		btnCancelar.setVisible(false);
-		panel_1.add(btnCancelar);
+		//panel container of details and buttons
+		pnlDetailsButtons = new JPanel();
+		pnlDetailsButtons.setBackground(new Color(52, 73, 94));
+		pnlDetailsButtons.setLayout(null);
+		pnlDetailsButtons.setBounds(18, 76, 575, 177);
+		pnlAllContainer.add(pnlDetailsButtons);
 		
-		
-		btnEditar = new JButton("Editar");
-		btnEditar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-					btnEditarActionListener();
-			}
-		});
-		btnEditar.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnEditar.setBounds(200, 127, 170, 35);
-		panel_1.add(btnEditar);
-		
+		//label for name
 		JLabel lblNombre = new JLabel("Nombre:");
+		lblNombre.setForeground(new Color(255, 255, 255));
 		lblNombre.setFont(new Font("Arial", Font.PLAIN, 15));
 		lblNombre.setBounds(10, 10, 77, 16);
-		panel_1.add(lblNombre);
+		pnlDetailsButtons.add(lblNombre);
 		
+		//textfield for name
 		tfNombre = new JTextField(tae.getNombre());
+		tfNombre.setBackground(new Color(44, 62, 80));
+		tfNombre.setForeground(new Color(255, 255, 255));
 		tfNombre.setEditable(false);
 		tfNombre.setColumns(10);
 		tfNombre.setBounds(97, 9, 170, 20);
-		panel_1.add(tfNombre);
+		pnlDetailsButtons.add(tfNombre);
 		
+		//label for surname
+		JLabel lblApellido = new JLabel("Apellido:");
+		lblApellido.setForeground(new Color(255, 255, 255));
+		lblApellido.setFont(new Font("Arial", Font.PLAIN, 15));
+		lblApellido.setBounds(10, 38, 77, 16);
+		pnlDetailsButtons.add(lblApellido);
+		
+		//textfield for surname
 		tfApellido = new JTextField(tae.getApellido());
+		tfApellido.setBackground(new Color(44, 62, 80));
+		tfApellido.setForeground(new Color(255, 255, 255));
 		tfApellido.setEditable(false);
 		tfApellido.setColumns(10);
 		tfApellido.setBounds(97, 37, 170, 20);
-		panel_1.add(tfApellido);
+		pnlDetailsButtons.add(tfApellido);
 		
-		JLabel lblApellido = new JLabel("Apellido:");
-		lblApellido.setFont(new Font("Arial", Font.PLAIN, 15));
-		lblApellido.setBounds(10, 38, 77, 16);
-		panel_1.add(lblApellido);
+		//label for age
+		JLabel lblEdad = new JLabel("Edad:");
+		lblEdad.setForeground(new Color(255, 255, 255));
+		lblEdad.setFont(new Font("Arial", Font.PLAIN, 15));
+		lblEdad.setBounds(10, 69, 77, 16);
+		pnlDetailsButtons.add(lblEdad);
 		
+		//textfield for age
 		tfEdad = new JTextField(tae.getEdad());
+		tfEdad.setBackground(new Color(44, 62, 80));
+		tfEdad.setForeground(new Color(255, 255, 255));
 		tfEdad.setEditable(false);
 		tfEdad.setColumns(10);
 		tfEdad.setBounds(97, 68, 170, 20);
-		panel_1.add(tfEdad);
+		pnlDetailsButtons.add(tfEdad);
 		
-		JLabel lblEdad = new JLabel("Edad:");
-		lblEdad.setFont(new Font("Arial", Font.PLAIN, 15));
-		lblEdad.setBounds(10, 69, 77, 16);
-		panel_1.add(lblEdad);
-		
-		JLabel lblCinturonPunta = new JLabel("Cinturon/Punta:");
-		lblCinturonPunta.setFont(new Font("Arial", Font.PLAIN, 15));
-		lblCinturonPunta.setBounds(30, 100, 126, 16);
-		panel_1.add(lblCinturonPunta);
-		
+		//label for address
 		JLabel lblDireccion = new JLabel("Direccion:");
+		lblDireccion.setForeground(new Color(255, 255, 255));
 		lblDireccion.setFont(new Font("Arial", Font.PLAIN, 15));
 		lblDireccion.setBounds(308, 11, 77, 16);
-		panel_1.add(lblDireccion);
+		pnlDetailsButtons.add(lblDireccion);
 		
+		//textfield for address
 		tfDireccion = new JTextField(tae.getDireccion());
+		tfDireccion.setBackground(new Color(44, 62, 80));
+		tfDireccion.setForeground(new Color(255, 255, 255));
 		tfDireccion.setEditable(false);
 		tfDireccion.setColumns(10);
 		tfDireccion.setBounds(395, 10, 170, 20);
-		panel_1.add(tfDireccion);
+		pnlDetailsButtons.add(tfDireccion);
 		
+		//label for email
 		JLabel lblEmail = new JLabel("E-mail:");
+		lblEmail.setForeground(new Color(255, 255, 255));
 		lblEmail.setFont(new Font("Arial", Font.PLAIN, 15));
 		lblEmail.setBounds(308, 42, 77, 16);
-		panel_1.add(lblEmail);
+		pnlDetailsButtons.add(lblEmail);
 		
+		//textfield for email
 		tfEmail = new JTextField(tae.getEmail());
+		tfEmail.setBackground(new Color(44, 62, 80));
+		tfEmail.setForeground(new Color(255, 255, 255));
 		tfEmail.setEditable(false);
 		tfEmail.setColumns(10);
 		tfEmail.setBounds(395, 41, 170, 20);
-		panel_1.add(tfEmail);
+		pnlDetailsButtons.add(tfEmail);
 		
+		//label for cellphone
 		JLabel lblCelular = new JLabel("Celular:");
+		lblCelular.setForeground(new Color(255, 255, 255));
 		lblCelular.setToolTipText("asd");
 		lblCelular.setFont(new Font("Arial", Font.PLAIN, 15));
 		lblCelular.setBounds(308, 73, 77, 16);
-		panel_1.add(lblCelular);
+		pnlDetailsButtons.add(lblCelular);
 		
+		//textfield for cellphone
 		tfCelular = new JTextField(tae.getCelular());
+		tfCelular.setBackground(new Color(44, 62, 80));
+		tfCelular.setForeground(new Color(255, 255, 255));
 		tfCelular.setEditable(false);
 		tfCelular.setColumns(10);
 		tfCelular.setBounds(395, 72, 170, 20);
-		panel_1.add(tfCelular);
+		pnlDetailsButtons.add(tfCelular);
 		
+		//label for belt/tip
+		JLabel lblCinturonPunta = new JLabel("Cinturon/Punta:");
+		lblCinturonPunta.setForeground(new Color(255, 255, 255));
+		lblCinturonPunta.setFont(new Font("Arial", Font.PLAIN, 15));
+		lblCinturonPunta.setBounds(30, 100, 126, 16);
+		pnlDetailsButtons.add(lblCinturonPunta);
+		
+		//panel to represent belt and tip colors
 		pnlCinturonPunta = PintarPanel.crearColorPanel(tae.getCinturon(), tae.getPunta(), 285, 95);
 		pnlCinturonPunta.setBounds(150, 100, 380, 16);
-		panel_1.add(pnlCinturonPunta);
+		pnlDetailsButtons.add(pnlCinturonPunta);
 		
-		
+		//button to rank up the athlete
 		btnArrowUp = new JButton("");
+		btnArrowUp.setBackground(new Color(41, 128, 185));
 		btnArrowUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnLevelUpActionListener();
@@ -209,185 +232,201 @@ public class VerDetallesTaekwondoka extends JFrame {
 		btnArrowUp.setIcon(new ImageIcon("D:\\eclipse workspace 01\\escuelataekwondo\\images\\arrow up 1.png"));
 		btnArrowUp.setEnabled(false);
 		btnArrowUp.setBounds(530, 100, 16, 16);
-		panel_1.add(btnArrowUp);
+		pnlDetailsButtons.add(btnArrowUp);
 		
-	    
-		JLabel lblApellidoNombre = new JLabel(tae.getApellido()+" "+tae.getNombre());
-		lblApellidoNombre.setHorizontalAlignment(SwingConstants.CENTER);
-		lblApellidoNombre.setFont(new Font("Arial Black", Font.PLAIN, 20));
-		lblApellidoNombre.setBounds(7, 36, 578, 29);
-		panel.add(lblApellidoNombre);
+		//edit button
+		btnEditar = new JButton("Editar");
+		btnEditar.setBackground(new Color(41, 128, 185));
+		btnEditar.setForeground(new Color(255, 255, 255));
+		btnEditar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					btnEditarActionListener();
+			}
+		});
+		btnEditar.setFont(new Font("Arial", Font.PLAIN, 16));
+		btnEditar.setBounds(200, 127, 170, 35);
+		pnlDetailsButtons.add(btnEditar);
 		
+		//save button
+		btnGuardar = new JButton("Guardar");
+		btnGuardar.setBackground(new Color(41, 128, 185));
+		btnGuardar.setForeground(new Color(255, 255, 255));
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnGuardarActionListener();
+			}
+		});
+		btnGuardar.setFont(new Font("Arial", Font.PLAIN, 16));
+		btnGuardar.setBounds(110, 127, 170, 35);
+		btnGuardar.setVisible(false);
+		pnlDetailsButtons.add(btnGuardar);
+		
+		//cancel editing button
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setBackground(new Color(41, 128, 185));
+		btnCancelar.setForeground(new Color(255, 255, 255));
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnCancelarActionListener();
+			}
+		});
+		btnCancelar.setFont(new Font("Arial", Font.PLAIN, 16));
+		btnCancelar.setBounds(290, 127, 170, 35);
+		btnCancelar.setVisible(false);
+		pnlDetailsButtons.add(btnCancelar);
+		
+		
+		//filter for only number or letters
 		FiltrosParaTextField.setupTextFieldDocumentFilter(tfNombre);
 		FiltrosParaTextField.setupTextFieldDocumentFilter(tfApellido);
 		FiltrosParaTextField.setupTextFieldDocumentFilter(tfEdad);
 		FiltrosParaTextField.setupTextFieldDocumentFilterForNumbers(tfCelular);
 		FiltrosParaTextField.setupTextFieldDocumentFilterForNumbers(tfEdad);
+		//filter for email
 		FiltrosParaTextField.setupTextFieldDocumentFilterForEmail(tfEmail);
+		
+		panel = new JPanel();
+		panel.setBackground(new Color(44, 62, 80));
+		panel.setBounds(0, 0, 611, 40);
+		getContentPane().add(panel);
 	}
 
+	//rank up
 	private void btnLevelUpActionListener() {
 
 	        levelUp(tae.getCinturon(), tae.getPunta());
 	        
-	        // Elimina el antiguo pnlCinturonPunta del panel_1
-	        panel_1.remove(pnlCinturonPunta);
+	        pnlDetailsButtons.remove(pnlCinturonPunta);
 
-	        // Crea un nuevo pnlCinturonPunta con los nuevos colores y posición
 	        pnlCinturonPunta = PintarPanel.crearColorPanel(nuevoColorCinturon, nuevoColorPunta, 285, 95);
 	        pnlCinturonPunta.setBounds(150, 100, 380, 16);
 
-	        // Añade el nuevo pnlCinturonPunta al panel_1
-	        panel_1.add(pnlCinturonPunta);
+	        pnlDetailsButtons.add(pnlCinturonPunta);
 
-	        // Revalida y repinta el panel para que los cambios sean visibles
-	        panel_1.revalidate();
-	        panel_1.repaint();
+	        pnlDetailsButtons.revalidate();
+	        pnlDetailsButtons.repaint();
 	        
 	}
 
+	//color selection according to the cuurent rank
 	private void levelUp(String colorCinturon, String colorPunta) {
 		
 		switch (colorCinturon.toLowerCase()) {
 	    case "blanco":
-	        // Código para el caso "Rojo"
 	    	switch (colorPunta.toLowerCase()) {
 		    case "blanco":
-		        // Código para el caso "Rojo"
 		        System.out.println("Cinturon blanco");
 
 				nuevoColorCinturon = "blanco";
 				nuevoColorPunta = "amarillo";
 		        break;
 		    case "amarillo":
-		        // Código para el caso "Azul"
 		        System.out.println("Cinturon blanco punta amarilla");
 
 				nuevoColorCinturon = "amarillo";
 				nuevoColorPunta = "amarillo";
 		        break;
 		    default:
-		        // Código para el caso por defecto si no coincide con ningún caso anterior
 		        System.out.println("Hubo un problema al reconocer los colores del cinturon");
 		        break;
 	    	}
 	        
 	        break;
 	    case "amarillo":
-	        // Código para el caso "Azul"
 	    	switch (colorPunta.toLowerCase()) {
 		    case "amarillo":
-		        // Código para el caso "Rojo"
 		        System.out.println("Cinturon amarillo");
 
 				nuevoColorCinturon = "amarillo";
 				nuevoColorPunta = "verde";
 		        break;
 		    case "verde":
-		        // Código para el caso "Azul"
 		        System.out.println("Cinturon amarillo punta verde");
 
 				nuevoColorCinturon = "verde";
 				nuevoColorPunta = "verde";
 		        break;
 		    default:
-		        // Código para el caso por defecto si no coincide con ningún caso anterior
 		        System.out.println("Color de la punta no reconocido");
 		        break;
 	    	}
 	    	
 	        break;
 	    case "verde":
-	        // Código para el caso "Verde"
 	    	switch (colorPunta.toLowerCase()) {
 		    case "verde":
-		        // Código para el caso "Rojo"
 		        System.out.println("Cinturon verde");
 
 				nuevoColorCinturon = "verde";
 				nuevoColorPunta = "azul";
 		        break;
 		    case "azul":
-		        // Código para el caso "Azul"
 		        System.out.println("Cinturon verde punta azul");
 
 				nuevoColorCinturon = "azul";
 				nuevoColorPunta = "azul";
 		        break;
 		    default:
-		        // Código para el caso por defecto si no coincide con ningún caso anterior
 		        System.out.println("Color de la punta no reconocido");
 		        break;
 	    	}
 
 	        break;
 	    case "azul":
-	        // Código para el caso "Verde"
 	    	switch (colorPunta.toLowerCase()) {
 		    case "azul":
-		        // Código para el caso "Rojo"
 		        System.out.println("Cinturon azul");
 
 				nuevoColorCinturon = "azul";
 				nuevoColorPunta = "rojo";
 		        break;
 		    case "rojo":
-		        // Código para el caso "Azul"
 		        System.out.println("Cinturon azul punta roja");
 		        
 				nuevoColorCinturon = "rojo";
 				nuevoColorPunta = "rojo";
 		        break;
 		    default:
-		        // Código para el caso por defecto si no coincide con ningún caso anterior
 		        System.out.println("Color de la punta no reconocido");
 		        break;
 	    	}
 
 	        break;
 	    case "rojo":
-	        // Código para el caso "Verde"
 	    	switch (colorPunta.toLowerCase()) {
 		    case "rojo":
-		        // Código para el caso "Rojo"
 		        System.out.println("Cinturon rojo");
 
 				nuevoColorCinturon = "rojo";
 				nuevoColorPunta = "negro";
 		        break;
 		    case "negro":
-		        // Código para el caso "Azul"
 		        System.out.println("Cinturon rojo punta negra");
 				nuevoColorCinturon = "negro";
 				nuevoColorPunta = "negro";
 		        break;
 		    default:
-		        // Código para el caso por defecto si no coincide con ningún caso anterior
 		        System.out.println("Color de la punta no reconocido");
 		        break;
 	    	}
 
 	        break;
 	    case "negro":
-	        // Código para el caso "Verde"
 	    	System.out.println("Cinturon negro.\nProximamente se agregaran los Dan.");
 	        break;
 	    default:
-	        // Código para el caso por defecto si no coincide con ningún caso anterior
 	        System.out.println("Color de la punta no reconocido");
 	        break;
 	}
-		//codigo despues de levelup
-		System.out.println("UWU");
 	}
 
+	//save
 	private void btnGuardarActionListener() {
 		
 		if(ConexionMySQL.obtenerConexion() != null) {
 			
 			nuevoTae = new Taekwondoka();
-        	
-        	// Obtén los datos de la interfaz gráfica y crea un objeto Taekwondoka
+
 			nuevoTae.setId(tae.getId());
         	nuevoTae.setNombre(tfNombre.getText());
 			nuevoTae.setApellido(tfApellido.getText());
@@ -432,6 +471,7 @@ public class VerDetallesTaekwondoka extends JFrame {
 		
 	}
 	
+	//edit
 	private void btnEditarActionListener() {
 		
 		
@@ -449,6 +489,7 @@ public class VerDetallesTaekwondoka extends JFrame {
 		btnCancelar.setVisible(true);
 	}
 	
+	//cancel editing
 	private void btnCancelarActionListener() {
 		
 		tfNombre.setText(tae.getNombre());
@@ -461,18 +502,12 @@ public class VerDetallesTaekwondoka extends JFrame {
 		System.out.println(tae.getCinturon().toString());
 		System.out.println(tae.getPunta().toString());
 
-		panel_1.remove(pnlCinturonPunta);
+		pnlDetailsButtons.remove(pnlCinturonPunta);
 
-        // Crea un nuevo pnlCinturonPunta con los nuevos colores y posición
         pnlCinturonPunta = PintarPanel.crearColorPanel(tae.getCinturon(), tae.getPunta(), 285, 95);
         pnlCinturonPunta.setBounds(150, 100, 380, 16);
 
-        // Añade el nuevo pnlCinturonPunta al panel_1
-        panel_1.add(pnlCinturonPunta);
-
-        // Revalida y repinta el panel para que los cambios sean visibles
-        //panel_1.revalidate();
-        //panel_1.repaint();
+        pnlDetailsButtons.add(pnlCinturonPunta);
         
 		tfNombre.setEditable(false);
 		tfApellido.setEditable(false);
@@ -491,6 +526,7 @@ public class VerDetallesTaekwondoka extends JFrame {
 		
 	}
 
+	//back
 	private void btnAtrasActionListener() {
 		dispose();
 		if (ventanaOrigen instanceof VerTaekwondokas) {

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 import taekwondo.persistencia.ConexionMySQL;
@@ -15,6 +14,7 @@ public class TorneoController {
 	
 	private TorneoDAO torneoDAO = new TorneoDAO();
 
+	//save tournement
 	public boolean guardarNuevoTorneo(Torneo torneo) {
 		if(torneo.getNombre().isEmpty()) {
 			Ventanas.mostrarError("Ingrese un nombre.");
@@ -23,10 +23,12 @@ public class TorneoController {
 		return TorneoDAO.guardarNuevoTorneo(torneo);
 	}
 
+	//get tournements
 	public List<Torneo> traerTorneos() {
 		return torneoDAO.traerTorneos();
 	}
 
+	//get tournement by id
 	public Torneo traerTorneoById(int id) {
 		
 		String query = "SELECT * FROM torneo WHERE id =?";
@@ -65,15 +67,18 @@ public class TorneoController {
 		return null;
 	}
 
+	//delete tournement
 	public boolean eliminarTorneo(int id) {
 		return TorneoDAO.eliminarTorneo(id);
 	}
 
+	//delete athlete out of a tournement
 	public boolean eliminarTaeTor(int idTor, int idTae) {
 		
 		return TorneoDAO.eliminarTaeTor(idTor, idTae);
 	}
 
+	//edit tournement
 	public boolean editarTorneo(Torneo torneoEditado) {
 		
 		return TorneoDAO.editarTorneo(torneoEditado);

@@ -14,6 +14,7 @@ import taekwondo.util.Ventanas;
 
 public class TaekwondokaDAO {
 	
+	//Saves the athlete
 	public boolean insertarTaekwondoka(Taekwondoka taekwondoka) {
 	    String query = "INSERT INTO taekwondoka (nombre, apellido, edad, direccion, email, celular, cinturon, punta) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -40,6 +41,7 @@ public class TaekwondokaDAO {
 	}
 
 
+	//get athletes
 	public List<Taekwondoka> traerTaekwondokas() {
 	    List<Taekwondoka> taekwondokas = new ArrayList<>();
 	    String query = "SELECT * FROM taekwondoka";
@@ -76,6 +78,7 @@ public class TaekwondokaDAO {
 	}
 
 
+	//get athlete by mail
 	public Taekwondoka traerTaekwondokaByMail(String mail) {
 	    Taekwondoka tae = null;
 	    String query = "SELECT * FROM taekwondoka WHERE email = ?";
@@ -112,6 +115,7 @@ public class TaekwondokaDAO {
 	}
 
 
+	//validates uniqueness of an email
 	public boolean isMailUnique(String mail) {
 		
 		String query = "SELECT * FROM taekwondoka WHERE email = ?";
@@ -140,6 +144,7 @@ public class TaekwondokaDAO {
 	}
 
 
+	//edit athlete
 	public boolean editarTaekwondoka(Taekwondoka taeEditado) {
         // Query para actualizar el registro en la base de datos
         String sql = "UPDATE taekwondoka SET nombre=?, apellido=?, edad=?, direccion=?, email=?, celular=?, cinturon=?, punta=? WHERE id=?";
@@ -168,7 +173,8 @@ public class TaekwondokaDAO {
             return false;
         }
     }
-	
+
+	//validates uniqueness of an email
 	public boolean isMailUnique(String mail, int id) {
 		
 		String query = "SELECT * FROM taekwondoka WHERE email = ? AND id !=?";
@@ -199,6 +205,7 @@ public class TaekwondokaDAO {
 	}
 
 
+	//delete athlete
 	public static boolean eliminarTaekwondoka(int id) {
 		
 		// obtener torneos del taekwondoka
@@ -229,6 +236,7 @@ public class TaekwondokaDAO {
 	}
 
 
+	//get athlete by id
 	public static Taekwondoka traerTaekwondokaById(int id) {
 		
 		String query = "SELECT * FROM taekwondoka WHERE id =?";
@@ -269,6 +277,7 @@ public class TaekwondokaDAO {
 	}
 
 
+	//get signed athletes
 	public static List<Taekwondoka> traerInscriptos(int idTor) {
 		
 		List<Taekwondoka> inscriptos = new ArrayList<>();
@@ -298,6 +307,7 @@ public class TaekwondokaDAO {
 	}
 
 
+	//sign in an athlete for a tournement
 	public static boolean inscribitTaeTor(int idTae, int idTor) {
 		
 		String query = "INSERT INTO torneo_taekwondoka (idTorneo, idTaekwondoka) VALUES (?, ?)";

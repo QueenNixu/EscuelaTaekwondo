@@ -7,23 +7,23 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 import java.util.List;
 import java.util.Vector;
 
 import taekwondo.logica.Taekwondoka;
 import taekwondo.logica.TaekwondokaController;
 import taekwondo.persistencia.ConexionMySQL;
+
 import taekwondo.util.PintarPanel;
 import taekwondo.util.VentanaGenerica;
 import taekwondo.util.Ventanas;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 
@@ -35,10 +35,12 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 
 	public VerTaekwondokas(Menu menu) {
 
+		//Saves window menu to go back
 		this.menu = menu;
 
 		taekwondokaController = new TaekwondokaController();
-
+		
+		//on window opened load table
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
@@ -46,49 +48,97 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 			}
 		});
 
+        //Default window for this app
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 611, 416);
 		setResizable(false);
 		getContentPane().setLayout(null);
-
+		setUndecorated(true);
+		
+		//Panel all container
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 595, 377);
+		panel.setBackground(new Color(52, 73, 94));
+		panel.setBounds(0, 39, 611, 377);
 		getContentPane().add(panel);
 		panel.setLayout(null);
+		
+		//Back button
+		JButton btnAtras = new JButton("Atras");
+		btnAtras.setBackground(new Color(41, 128, 185));
+		btnAtras.setForeground(new Color(255, 255, 255));
+		btnAtras.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnAtrasActionListener();
+			}
+		});
+		btnAtras.setFont(new Font("Arial", Font.PLAIN, 13));
+		btnAtras.setBounds(5, 5, 89, 23);
+		panel.add(btnAtras);
 
+		//label for title
 		JLabel lblListaDeTaekwondokas = new JLabel("Lista de Taekwondokas");
+		lblListaDeTaekwondokas.setForeground(new Color(255, 255, 255));
 		lblListaDeTaekwondokas.setHorizontalAlignment(SwingConstants.CENTER);
 		lblListaDeTaekwondokas.setFont(new Font("Arial Black", Font.PLAIN, 20));
-		lblListaDeTaekwondokas.setBounds(160, 5, 274, 29);
+		lblListaDeTaekwondokas.setBounds(168, 5, 274, 29);
 		panel.add(lblListaDeTaekwondokas);
+		
+		//panel for search bar
+		JPanel pnlBuscador = new JPanel();
+		pnlBuscador.setBackground(new Color(52, 73, 94));
+		pnlBuscador.setBounds(15, 39, 580, 24);
+		panel.add(pnlBuscador);
+		pnlBuscador.setLayout(null);
+		
+		//label for searh bar
+		JLabel lblBuscar = new JLabel("Buscar:");
+		lblBuscar.setForeground(new Color(255, 255, 255));
+		lblBuscar.setFont(new Font("Arial", Font.PLAIN, 15));
+		lblBuscar.setBounds(10, 5, 57, 14);
+		pnlBuscador.add(lblBuscar);
+		
+		//textfield for search bar
+		tfBuscar = new JTextField();
+		tfBuscar.setBackground(new Color(44, 62, 80));
+		tfBuscar.setForeground(new Color(255, 255, 255));
+		tfBuscar.setBounds(77, 3, 493, 18);
+		pnlBuscador.add(tfBuscar);
+		tfBuscar.setColumns(10);
 
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(7, 74, 580, 243);
-		panel.add(panel_1);
+		//panel for table
+		JPanel pnlTable = new JPanel();
+		pnlTable.setBounds(15, 74, 580, 243);
+		panel.add(pnlTable);
 
+		//table for athletes
 		tablaTaekwondokas = new JTable();
 		tablaTaekwondokas.setBounds(1, 1, 575, 0);
 		tablaTaekwondokas.setBorder(null);
 		tablaTaekwondokas.getTableHeader().setResizingAllowed(false);
-		panel_1.add(tablaTaekwondokas.getTableHeader(), BorderLayout.PAGE_START);
-		panel_1.add(tablaTaekwondokas, BorderLayout.CENTER);
+		pnlTable.add(tablaTaekwondokas.getTableHeader(), BorderLayout.PAGE_START);
+		pnlTable.add(tablaTaekwondokas, BorderLayout.CENTER);
 		tablaTaekwondokas.getTableHeader().setReorderingAllowed(false);
-		panel_1.setLayout(null);
+		pnlTable.setLayout(null);
 		tablaTaekwondokas.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-		// Agrega el JScrollPane envolviendo la tabla
+		//scrollbar for table
 		JScrollPane scrollPane = new JScrollPane(tablaTaekwondokas);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.setBounds(0, 0, 580, 243);
-		panel_1.add(scrollPane);
-
+		pnlTable.add(scrollPane);
+		
+		//panel for buttons
 		JPanel pnlBotones = new JPanel();
-		pnlBotones.setBounds(141, 326, 313, 40);
+		pnlBotones.setBackground(new Color(52, 73, 94));
+		pnlBotones.setBounds(149, 326, 313, 40);
 		panel.add(pnlBotones);
 		pnlBotones.setLayout(null);
 
+		//button to see details of the selected athlete
 		JButton btnVerDetalles = new JButton("Ver Detalles");
+		btnVerDetalles.setBackground(new Color(41, 128, 185));
+		btnVerDetalles.setForeground(new Color(255, 255, 255));
 		btnVerDetalles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnVerDetallesActionListener();
@@ -98,7 +148,10 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 		btnVerDetalles.setBounds(10, 5, 140, 30);
 		pnlBotones.add(btnVerDetalles);
 
+		//Button to delete selected athlete
 		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.setBackground(new Color(41, 128, 185));
+		btnEliminar.setForeground(new Color(255, 255, 255));
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnEliminarActinListener();
@@ -107,33 +160,13 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 		btnEliminar.setFont(new Font("Arial", Font.PLAIN, 16));
 		btnEliminar.setBounds(160, 5, 140, 30);
 		pnlBotones.add(btnEliminar);
-
-		JButton btnAtras = new JButton("Atras");
-		btnAtras.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnAtrasActionListener();
-			}
-		});
-		btnAtras.setFont(new Font("Arial", Font.PLAIN, 13));
-		btnAtras.setBounds(5, 5, 89, 23);
-		panel.add(btnAtras);
 		
-		JPanel pnlBuscador = new JPanel();
-		pnlBuscador.setBounds(7, 39, 580, 24);
-		panel.add(pnlBuscador);
-		pnlBuscador.setLayout(null);
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(44, 62, 80));
+		panel_1.setBounds(0, 0, 611, 40);
+		getContentPane().add(panel_1);
 		
-		JLabel lblBuscar = new JLabel("Buscar:");
-		lblBuscar.setFont(new Font("Arial", Font.PLAIN, 15));
-		lblBuscar.setBounds(10, 5, 57, 14);
-		pnlBuscador.add(lblBuscar);
-		
-		tfBuscar = new JTextField();
-		tfBuscar.setBounds(77, 3, 493, 18);
-		pnlBuscador.add(tfBuscar);
-		tfBuscar.setColumns(10);
-		
-		// Agregar un DocumentListener al JTextField para manejar cambios en el texto
+		//table filter
         tfBuscar.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -147,12 +180,12 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                // Este método es menos relevante para campos de texto simples
             }
         });
 
 	}
 
+	//delete athlete
 	protected void btnEliminarActinListener() {
 		
 		if (ConexionMySQL.obtenerConexion() != null) {
@@ -162,10 +195,8 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 				int idTae = (int) modelo.getValueAt(filaSeleccionada, 0);
 				System.out.println(idTae);
 				
-				// buscar todos los datos del Taekwondoka (mail e id son unicos)
 				Taekwondoka tae = taekwondokaController.traerTaekwondokaById(idTae);
 				if(tae != null) {
-					//elimianr taekwondoka
 					if(taekwondokaController.eliminarTaekwondoka(tae.getId())) {
 						Ventanas.mostrarExito("Taekwondoka eliminado con exito.");
 						cargarTabla();
@@ -182,14 +213,14 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 		
 	}
 
+	//filter for search bar
 	protected void filtrarTabla() {
 		
 		String textoBusqueda = tfBuscar.getText().toLowerCase();
         DefaultTableModel modelo = (DefaultTableModel) tablaTaekwondokas.getModel();
-        modelo.setRowCount(0); // Limpiar la tabla
+        modelo.setRowCount(0);
 
         for (Taekwondoka tae : listaTaekwondokas) {
-            // Filtrar por nombre, apellido o email (puedes ajustar según tus necesidades)
             if (tae.getNombre().toLowerCase().contains(textoBusqueda) ||
                 tae.getApellido().toLowerCase().contains(textoBusqueda) ||
                 tae.getEmail().toLowerCase().contains(textoBusqueda) ||
@@ -203,6 +234,7 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 		
 	}
 
+	//load table
 	@Override
 	public void cargarTabla() {
 		DefaultTableModel tablaModelo = new DefaultTableModel() {
@@ -232,12 +264,9 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 
 		
 
-		// Obtén el modelo de columna de la tabla
 		TableColumnModel columnModel = tablaTaekwondokas.getColumnModel();
 
-		// Ajusta el ancho predeterminado de las columnas
-		int[] anchos = { 0, 150, 150, 180, 98 }; // Puedes ajustar los valores según tus necesidades
-
+		int[] anchos = { 0, 150, 150, 180, 98 };
 		for (int i = 0; i < columnModel.getColumnCount() && i < anchos.length; i++) {
 			TableColumn column = columnModel.getColumn(i);
 			column.setPreferredWidth(anchos[i]);
@@ -251,6 +280,7 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 
 	}
 
+	//cell renderer to see the actual colors of the belt and tip
 	private class ColorCellRenderer extends DefaultTableCellRenderer {
 
 		@Override
@@ -260,22 +290,17 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 			Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
 					column);
 
-			// Solo aplica la personalización a la última columna
 			if (column == table.getColumnCount() - 1 && value instanceof String) {
 				String[] colores = ((String) value).split(",");
 
 				if (colores.length == 2) {
 
-					// Obtén el modelo de la tabla
 					DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-					// Obtén los datos específicos de la fila actual
 					Vector<Object> rowDataVector = (Vector<Object>) model.getDataVector().elementAt(row);
-
-					// Convierte el vector de datos a un array de objetos
+					
 					Object[] rowData = rowDataVector.toArray();
-
-					// Suponiendo que los colores están en la última columna de tu modelo
+					
 					String[] colors = rowData[model.getColumnCount() - 1].toString().split(",");
 
 					
@@ -283,20 +308,20 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 					return PintarPanel.crearColorPanel(colors[0], colors[1], 80, 18);
 				}
 			}
-
-			// Si no es la última columna o no hay dos colores, devuelve la representación
-			// por defecto
+			
 			return cellComponent;
 		}
 
 	}
 
+	//back button
 	private void btnAtrasActionListener() {
 		dispose();
 		menu.setLocation(this.getX(), this.getY());
 		menu.setVisible(true);
 	}
 	
+	//see details button
 	private void btnVerDetallesActionListener() {
 		if (ConexionMySQL.obtenerConexion() != null) {
 			
@@ -306,7 +331,6 @@ public class VerTaekwondokas extends JFrame implements VentanaGenerica {
 				int taeId = Integer.parseInt(modelo.getValueAt(filaSeleccionada, 0).toString());
 				System.out.println("id del tae: "+taeId);
 				
-				// buscar todos los datos del Taekwondoka (mail e id son unicos)
 				Taekwondoka tae = taekwondokaController.traerTaekwondokaById(taeId);
 				if(tae != null) {
 					VerDetallesTaekwondoka VVDT = new VerDetallesTaekwondoka(this, tae);

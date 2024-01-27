@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 public class PintarPanel {
 	
+	//creates a 2 color panel for belt and tip
 	public static JPanel crearColorPanel(String cinturon, String punta, int anchoPrimero, int anchoSegundo) {
         JPanel colorPanel = new JPanel();
         colorPanel.setLayout(new BorderLayout());
@@ -32,29 +33,8 @@ public class PintarPanel {
 
         return colorPanel;
     }
-	/*
-	public static JPanel crearColorPanel(Color cinturon, Color punta, int anchoPrimero, int anchoSegundo) {
-        JPanel colorPanel = new JPanel();
-        colorPanel.setLayout(new BorderLayout());
 
-        // Crea un rectángulo para el primer color
-        JPanel firstColorPanel = new JPanel();
-        firstColorPanel.setBackground(cinturon);
-        firstColorPanel.setPreferredSize(new Dimension(anchoPrimero, anchoSegundo));
-
-        // Crea un rectángulo para el segundo color
-        JPanel secondColorPanel = new JPanel();
-        secondColorPanel.setBackground(punta);
-        secondColorPanel.setPreferredSize(new Dimension(anchoPrimero, anchoSegundo));
-
-        // Agrega los rectángulos al panel principal
-        colorPanel.add(firstColorPanel, BorderLayout.WEST);
-        colorPanel.add(secondColorPanel, BorderLayout.EAST);
-
-        return colorPanel;
-    }
-    */
-
+	//color mapping
     private static Color mapColor(String colorName) {
         switch (colorName.toLowerCase()) {
             case "blanco":
