@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import taekwondo.logica.Taekwondoka;
+import taekwondo.logica.Torneo;
 import taekwondo.util.Ventanas;
 
 public class TaekwondokaDAO {
@@ -200,22 +201,31 @@ public class TaekwondokaDAO {
 
 	public static boolean eliminarTaekwondoka(int id) {
 		
-		String sql = "DELETE FROM taekwondoka WHERE id = ?";
+		// obtener torneos del taekwondoka
+		// eliminarlo de esos torneos
+		// eliminar relacion
+		// eliminar taekwondoka
+		
+		List<Integer> listaTorneosTae = TorneoDAO.traerTorneosDelTaekwondokaByIdTae(id);
+		
+		for(int idTor : listaTorneosTae) {
+			TorneoDAO.eliminarTaeTor(idTor, id);
+		}
+		
+		String sql = "DELETE FROM taekwondoka WHERE id =?";
 		
 		Connection con = ConexionMySQL.obtenerConexion();
 		
 		try (PreparedStatement statement = con.prepareStatement(sql)) {
-            // Establecer los parámetros en la consulta
 			statement.setInt(1, id);
-
-            // Ejecutar la actualización
 			statement.executeUpdate();
-            return true;
-        } catch (SQLException e) {
+			
+			return true;
+			
+		}  catch (SQLException e) {
             e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
             return false;
         }
-		
 	}
 
 

@@ -209,6 +209,7 @@ public class TorneoDAO {
         }
 
 	}
+
 	
 	public static void decrementarParticipantes(int idTor) {
 		
@@ -283,6 +284,37 @@ public class TorneoDAO {
 	        e.printStackTrace(); // Manejar la excepción apropiadamente en tu aplicación
 	        return false;
 	    }
+	}
+
+	public static List<Integer> traerTorneosDelTaekwondokaByIdTae(int id) {
+		
+		String query = "SELECT idTorneo FROM torneo_taekwondoka WHERE idTaekwondoka =?";
+		
+		Connection conexion = ConexionMySQL.obtenerConexion();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    
+	    try {
+	        pstmt = conexion.prepareStatement(query);
+	        pstmt.setInt(1, id); // Establecer el valor del parámetro
+	        rs = pstmt.executeQuery();
+	        
+	        List<Integer> idTorneos = new ArrayList<>();
+
+	        while (rs.next()) {
+	        	
+	        	idTorneos.add(rs.getInt("idTorneo"));
+	        	
+	        }
+	        
+	        return idTorneos;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        // Manejar la excepción de alguna manera adecuada
+	    }
+		
+		return null;
 	}
 
 
