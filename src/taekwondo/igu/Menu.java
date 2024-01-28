@@ -16,8 +16,15 @@ import java.awt.event.ActionEvent;
 
 import taekwondo.persistencia.ConexionMySQL;
 import taekwondo.util.Ventanas;
+import taekwondo.util.XButtonOnTopBarListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 public class Menu extends JFrame {
+	
+	private int xMouse = 0;
+	private int yMouse = 0;
 	
 	public Menu() {
 		
@@ -124,12 +131,61 @@ public class Menu extends JFrame {
   		btnSalir.setBounds(21, 211, 161, 35);
   		pnlBotones.add(btnSalir);
   		
-  		JPanel panel = new JPanel();
-  		panel.setBackground(new Color(44, 62, 80));
-  		panel.setBounds(0, 0, 611, 39);
-  		getContentPane().add(panel);
+  		JPanel topBar = new JPanel();
+  		topBar.addMouseMotionListener(new MouseMotionAdapter() {
+  			@Override
+  			public void mouseDragged(MouseEvent e) {
+  				mouseMovement(e);
+  				}
+  		});
+  		topBar.addMouseListener(new MouseAdapter() {
+  			@Override
+  			public void mousePressed(MouseEvent e) {
+  				updateCoordenates(e);
+  			}
+  		});
+  		topBar.setBackground(new Color(44, 62, 80));
+  		topBar.setBounds(0, 0, 611, 39);
+  		getContentPane().add(topBar);
+  		topBar.setLayout(null);
+  		
+  		JLabel closeButton = new JLabel("X");
+  		closeButton.setForeground(new Color(0, 0, 0));
+  		closeButton.addMouseListener(new MouseAdapter() {
+  			@Override
+  			public void mouseClicked(MouseEvent e) {
+  				XButtonOnTopBarListener.cerrarApp();
+  			}
+  			@Override
+  			public void mouseEntered(MouseEvent e) {
+  				XButtonOnTopBarListener.mouseOnButton(closeButton);
+  			}
+  			@Override
+  			public void mouseExited(MouseEvent e) {
+  				XButtonOnTopBarListener.mouseNotOnButton(closeButton);
+  			}
+  			@Override
+  			public void mousePressed(MouseEvent e) {
+  				XButtonOnTopBarListener.buttonPressed(closeButton);
+  			}
+  		});
+  		closeButton.setHorizontalAlignment(SwingConstants.CENTER);
+  		closeButton.setFont(new Font("Tahoma", Font.PLAIN, 30));
+  		closeButton.setBounds(565, 0, 46, 40);
+  		topBar.add(closeButton);
 	}
 	
+	protected void updateCoordenates(MouseEvent e) {
+		xMouse = e.getX();
+		yMouse = e.getY();
+		//System.out.println("x: "+xMouse+", y: "+yMouse);
+	}
+
+	protected void mouseMovement(MouseEvent e) {
+		this.setLocation(e.getXOnScreen() - xMouse, e.getYOnScreen() - yMouse);
+		//System.out.println("x: "+e.getXOnScreen()+", y: "+e.getYOnScreen());
+	}
+
 	//New Taekwondo athlete
 	private void btnNuevoTaekwondokaActionListener() {
 		if(ConexionMySQL.obtenerConexion() != null) {

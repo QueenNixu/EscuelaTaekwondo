@@ -18,6 +18,9 @@ import javax.swing.ScrollPaneConstants;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.BorderLayout;
@@ -34,7 +37,7 @@ import taekwondo.logica.Torneo;
 import taekwondo.logica.TorneoController;
 
 import taekwondo.persistencia.ConexionMySQL;
-
+import taekwondo.util.XButtonOnTopBarListener;
 import taekwondo.util.Ventanas;
 import java.awt.Color;
 
@@ -47,6 +50,8 @@ public class VerTorneos extends JFrame {
 	private List<Torneo> listaTorneos;
 	private TaekwondokaController taekwondokaController = new TaekwondokaController();
 	private TorneoController torneoController = new TorneoController();
+	private int xMouse;
+	private int yMouse;
 
 	
 	public VerTorneos(Menu menu) {
@@ -107,6 +112,7 @@ public class VerTorneos extends JFrame {
         
         //Textfield for search bar
         tfBuscar = new JTextField();
+        tfBuscar.setBorder(null);
         tfBuscar.setBackground(new Color(44, 62, 80));
         tfBuscar.setForeground(new Color(255, 255, 255));
         tfBuscar.setColumns(10);
@@ -170,10 +176,48 @@ public class VerTorneos extends JFrame {
         btnEliminar.setBounds(160, 5, 140, 30);
         pnlBotones.add(btnEliminar);
         
-        JPanel panel_1 = new JPanel();
-        panel_1.setBackground(new Color(44, 62, 80));
-        panel_1.setBounds(0, 0, 611, 40);
-        getContentPane().add(panel_1);
+        JPanel topBar = new JPanel();
+        topBar.setBackground(new Color(44, 62, 80));
+        topBar.setBounds(0, 0, 611, 40);
+        getContentPane().add(topBar);
+        topBar.setLayout(null);
+        topBar.addMouseMotionListener(new MouseMotionAdapter() {
+  			@Override
+  			public void mouseDragged(MouseEvent e) {
+  				mouseMovement(e);
+  				}
+  		});
+        topBar.addMouseListener(new MouseAdapter() {
+  			@Override
+  			public void mousePressed(MouseEvent e) {
+  				updateCoordenates(e);
+  			}
+  		});
+        
+        JLabel closeButton = new JLabel("X");
+        closeButton.setForeground(new Color(0, 0, 0));
+        closeButton.setHorizontalAlignment(SwingConstants.CENTER);
+        closeButton.setFont(new Font("Tahoma", Font.PLAIN, 30));
+        closeButton.setBounds(565, 0, 46, 40);
+        closeButton.addMouseListener(new MouseAdapter() {
+  			@Override
+  			public void mouseClicked(MouseEvent e) {
+  				XButtonOnTopBarListener.cerrarApp();
+  			}
+  			@Override
+  			public void mouseEntered(MouseEvent e) {
+  				XButtonOnTopBarListener.mouseOnButton(closeButton);
+  			}
+  			@Override
+  			public void mouseExited(MouseEvent e) {
+  				XButtonOnTopBarListener.mouseNotOnButton(closeButton);
+  			}
+  			@Override
+  			public void mousePressed(MouseEvent e) {
+  				XButtonOnTopBarListener.buttonPressed(closeButton);
+  			}
+  		});
+        topBar.add(closeButton);
         
         //filter for search bar
         tfBuscar.getDocument().addDocumentListener(new DocumentListener() {
@@ -194,6 +238,16 @@ public class VerTorneos extends JFrame {
         
 	}
 	
+	protected void updateCoordenates(MouseEvent e) {
+		xMouse = e.getX();
+		yMouse = e.getY();
+		//System.out.println("x: "+xMouse+", y: "+yMouse);
+	}
+
+	protected void mouseMovement(MouseEvent e) {
+		this.setLocation(e.getXOnScreen() - xMouse, e.getYOnScreen() - yMouse);
+		//System.out.println("x: "+e.getXOnScreen()+", y: "+e.getYOnScreen());
+	}
 	//delete
 	protected void btnEliminarActionListener() {
 		

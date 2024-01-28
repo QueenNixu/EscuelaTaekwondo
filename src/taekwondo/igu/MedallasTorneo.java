@@ -21,7 +21,7 @@ import taekwondo.logica.Torneo;
 import taekwondo.logica.TorneoController;
 
 import taekwondo.persistencia.ConexionMySQL;
-
+import taekwondo.util.XButtonOnTopBarListener;
 import taekwondo.util.Ventanas;
 
 import java.awt.Font;
@@ -30,6 +30,9 @@ import java.awt.event.WindowEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.ActionEvent;
 
 import java.util.List;
@@ -52,6 +55,8 @@ public class MedallasTorneo extends JFrame {
 	private int idMedallistaPlata;
 	private int idMedallistaBronce3;
 	private int idMedallistaBronce4;
+	private int xMouse;
+	private int yMouse;
 
 	
 	public MedallasTorneo(VerDetallesTorneo verDetallesTorneo, List<Taekwondoka> listaInscriptos, Torneo tor) {
@@ -132,6 +137,7 @@ public class MedallasTorneo extends JFrame {
         pnlMedalist.add(lblPrimerLugar);
         
         tfPrimerLugar = new JTextField();
+        tfPrimerLugar.setBorder(null);
         tfPrimerLugar.setEditable(false);
         tfPrimerLugar.setBackground(new Color(255, 215, 0));
         tfPrimerLugar.setColumns(10);
@@ -145,6 +151,7 @@ public class MedallasTorneo extends JFrame {
         pnlMedalist.add(lblSegundoLugar);
         
         tfSegundoLugar = new JTextField();
+        tfSegundoLugar.setBorder(null);
         tfSegundoLugar.setEditable(false);
         tfSegundoLugar.setBackground(new Color(192, 192, 192));
         tfSegundoLugar.setColumns(10);
@@ -158,6 +165,7 @@ public class MedallasTorneo extends JFrame {
         pnlMedalist.add(lblTercerLugar);
         
         tfTercerLugar = new JTextField();
+        tfTercerLugar.setBorder(null);
         tfTercerLugar.setEditable(false);
         tfTercerLugar.setBackground(new Color(205, 127, 50));
         tfTercerLugar.setColumns(10);
@@ -171,6 +179,7 @@ public class MedallasTorneo extends JFrame {
         pnlMedalist.add(lblCuartoLugar);
         
         tfCuartoLugar = new JTextField();
+        tfCuartoLugar.setBorder(null);
         tfCuartoLugar.setEditable(false);
         tfCuartoLugar.setBackground(new Color(205, 127, 50));
         tfCuartoLugar.setColumns(10);
@@ -424,6 +433,7 @@ public class MedallasTorneo extends JFrame {
         
         //label for search bar
         tfBuscar = new JTextField();
+        tfBuscar.setBorder(null);
         tfBuscar.setForeground(new Color(255, 255, 255));
         tfBuscar.setBackground(new Color(44, 62, 80));
         tfBuscar.setColumns(10);
@@ -474,10 +484,48 @@ public class MedallasTorneo extends JFrame {
         btnCancelar.setBounds(286, 331, 120, 35);
         pnlAllContainer.add(btnCancelar);
         
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(44, 62, 80));
-        panel.setBounds(0, 0, 611, 39);
-        getContentPane().add(panel);
+        JPanel topBar = new JPanel();
+        topBar.setBackground(new Color(44, 62, 80));
+        topBar.setBounds(0, 0, 611, 39);
+        getContentPane().add(topBar);
+        topBar.setLayout(null);
+        topBar.addMouseMotionListener(new MouseMotionAdapter() {
+  			@Override
+  			public void mouseDragged(MouseEvent e) {
+  				mouseMovement(e);
+  				}
+  		});
+  		topBar.addMouseListener(new MouseAdapter() {
+  			@Override
+  			public void mousePressed(MouseEvent e) {
+  				updateCoordenates(e);
+  			}
+  		});
+        
+        JLabel closeButton = new JLabel("X");
+        closeButton.setForeground(new Color(0, 0, 0));
+        closeButton.setHorizontalAlignment(SwingConstants.CENTER);
+        closeButton.setFont(new Font("Tahoma", Font.PLAIN, 30));
+        closeButton.setBounds(565, 0, 46, 40);
+        closeButton.addMouseListener(new MouseAdapter() {
+  			@Override
+  			public void mouseClicked(MouseEvent e) {
+  				XButtonOnTopBarListener.cerrarApp();
+  			}
+  			@Override
+  			public void mouseEntered(MouseEvent e) {
+  				XButtonOnTopBarListener.mouseOnButton(closeButton);
+  			}
+  			@Override
+  			public void mouseExited(MouseEvent e) {
+  				XButtonOnTopBarListener.mouseNotOnButton(closeButton);
+  			}
+  			@Override
+  			public void mousePressed(MouseEvent e) {
+  				XButtonOnTopBarListener.buttonPressed(closeButton);
+  			}
+  		});
+        topBar.add(closeButton);
         
         //search bar filter
         tfBuscar.getDocument().addDocumentListener(new DocumentListener() {
@@ -501,6 +549,16 @@ public class MedallasTorneo extends JFrame {
         cargarMedallistas();
 	}
 	
+	protected void updateCoordenates(MouseEvent e) {
+		xMouse = e.getX();
+		yMouse = e.getY();
+		//System.out.println("x: "+xMouse+", y: "+yMouse);
+	}
+
+	protected void mouseMovement(MouseEvent e) {
+		this.setLocation(e.getXOnScreen() - xMouse, e.getYOnScreen() - yMouse);
+		//System.out.println("x: "+e.getXOnScreen()+", y: "+e.getYOnScreen());
+	}
 	//save
 	protected void btnGuardarActionListener() {
 		

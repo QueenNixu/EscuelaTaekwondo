@@ -10,8 +10,6 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -21,10 +19,14 @@ import taekwondo.logica.TaekwondokaController;
 import taekwondo.logica.Torneo;
 import taekwondo.persistencia.ConexionMySQL;
 import taekwondo.util.PintarPanel;
+import taekwondo.util.XButtonOnTopBarListener;
 import taekwondo.util.VentanaGenerica;
 import taekwondo.util.Ventanas;
 
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.ActionEvent;
 
 public class InscribirTaekwondokaTorneo extends JFrame implements VentanaGenerica {
@@ -35,6 +37,8 @@ public class InscribirTaekwondokaTorneo extends JFrame implements VentanaGeneric
 	private JTextField tfBuscar;
 	private List<Taekwondoka> listaTaekwondokas;
 	private Torneo tor;
+	private int xMouse;
+	private int yMouse;
 
 	public InscribirTaekwondokaTorneo(VerDetallesTorneo vvdt, Torneo tor) {
 
@@ -147,16 +151,55 @@ public class InscribirTaekwondokaTorneo extends JFrame implements VentanaGeneric
 		pnlBuscador.add(lblBuscar);
 		
 		tfBuscar = new JTextField();
+		tfBuscar.setBorder(null);
 		tfBuscar.setForeground(new Color(255, 255, 255));
 		tfBuscar.setBackground(new Color(44, 62, 80));
 		tfBuscar.setBounds(77, 3, 493, 18);
 		pnlBuscador.add(tfBuscar);
 		tfBuscar.setColumns(10);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBackground(new Color(44, 62, 80));
-		panel_2.setBounds(0, 0, 611, 40);
-		getContentPane().add(panel_2);
+		JPanel topBar = new JPanel();
+		topBar.addMouseMotionListener(new MouseMotionAdapter() {
+  			@Override
+  			public void mouseDragged(MouseEvent e) {
+  				mouseMovement(e);
+  				}
+  		});
+		topBar.addMouseListener(new MouseAdapter() {
+  			@Override
+  			public void mousePressed(MouseEvent e) {
+  				updateCoordenates(e);
+  			}
+  		});
+		topBar.setBackground(new Color(44, 62, 80));
+		topBar.setBounds(0, 0, 611, 40);
+		getContentPane().add(topBar);
+		topBar.setLayout(null);
+		
+		JLabel closeButton = new JLabel("X");
+		closeButton.setForeground(new Color(0, 0, 0));
+		closeButton.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		closeButton.setHorizontalAlignment(SwingConstants.CENTER);
+		closeButton.setBounds(565, 0, 46, 40);
+		closeButton.addMouseListener(new MouseAdapter() {
+  			@Override
+  			public void mouseClicked(MouseEvent e) {
+  				XButtonOnTopBarListener.cerrarApp();
+  			}
+  			@Override
+  			public void mouseEntered(MouseEvent e) {
+  				XButtonOnTopBarListener.mouseOnButton(closeButton);
+  			}
+  			@Override
+  			public void mouseExited(MouseEvent e) {
+  				XButtonOnTopBarListener.mouseNotOnButton(closeButton);
+  			}
+  			@Override
+  			public void mousePressed(MouseEvent e) {
+  				XButtonOnTopBarListener.buttonPressed(closeButton);
+  			}
+  		});
+		topBar.add(closeButton);
 		
 		// Agregar un DocumentListener al JTextField para manejar cambios en el texto
         tfBuscar.getDocument().addDocumentListener(new DocumentListener() {
@@ -178,6 +221,17 @@ public class InscribirTaekwondokaTorneo extends JFrame implements VentanaGeneric
 
 	}
 
+	protected void updateCoordenates(MouseEvent e) {
+		xMouse = e.getX();
+		yMouse = e.getY();
+		//System.out.println("x: "+xMouse+", y: "+yMouse);
+	}
+
+	protected void mouseMovement(MouseEvent e) {
+		this.setLocation(e.getXOnScreen() - xMouse, e.getYOnScreen() - yMouse);
+		//System.out.println("x: "+e.getXOnScreen()+", y: "+e.getYOnScreen());
+	}
+	
 	protected void btnInscribirActionListener() {
 		
 		if (ConexionMySQL.obtenerConexion() != null) {

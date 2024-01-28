@@ -14,11 +14,15 @@ import taekwondo.logica.TorneoController;
 import taekwondo.persistencia.ConexionMySQL;
 
 import taekwondo.util.FiltrosParaTextField;
+import taekwondo.util.XButtonOnTopBarListener;
 import taekwondo.util.Ventanas;
 
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.ActionEvent;
 
 import java.util.Calendar;
@@ -36,6 +40,8 @@ public class NuevoTorneo extends JFrame {
 	private JCalendar calendar;
 	
 	private TorneoController controller = new TorneoController();
+	private int xMouse;
+	private int yMouse;
 	
 	public NuevoTorneo(Menu menu) {
 		
@@ -94,6 +100,7 @@ public class NuevoTorneo extends JFrame {
         
         //textfield for name
         tfNombre = new JTextField();
+        tfNombre.setBorder(null);
         tfNombre.setForeground(new Color(255, 255, 255));
         tfNombre.setBackground(new Color(44, 62, 80));
         tfNombre.setColumns(10);
@@ -145,20 +152,68 @@ public class NuevoTorneo extends JFrame {
         FiltrosParaTextField.setupTextFieldDocumentFilterTorneoNombre(tfNombre);
         
         //label for image
-        JLabel lblNewLabel = new JLabel("");
-        lblNewLabel.setIcon(new ImageIcon("D:\\eclipse workspace 01\\escuelataekwondo\\images\\taekwondo-2.1.png"));
-        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel.setBounds(290, 0, 290, 327);
-        pnl_1.add(lblNewLabel);
+        JLabel lblImage = new JLabel("");
+        lblImage.setIcon(new ImageIcon("D:\\eclipse workspace 01\\escuelataekwondo\\images\\taekwondo-2.1.png"));
+        lblImage.setHorizontalAlignment(SwingConstants.CENTER);
+        lblImage.setBounds(290, 0, 290, 327);
+        pnl_1.add(lblImage);
         
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(44, 62, 80));
-        panel.setBounds(0, 0, 611, 39);
-        getContentPane().add(panel);
+        JPanel topBar = new JPanel();
+        topBar.setBackground(new Color(44, 62, 80));
+        topBar.setBounds(0, 0, 611, 39);
+        getContentPane().add(topBar);
+        topBar.setLayout(null);
+        topBar.addMouseMotionListener(new MouseMotionAdapter() {
+  			@Override
+  			public void mouseDragged(MouseEvent e) {
+  				mouseMovement(e);
+  				}
+  		});
+  		topBar.addMouseListener(new MouseAdapter() {
+  			@Override
+  			public void mousePressed(MouseEvent e) {
+  				updateCoordenates(e);
+  			}
+  		});
+        
+        JLabel closeButton = new JLabel("X");
+        closeButton.setForeground(new Color(0, 0, 0));
+        closeButton.setHorizontalAlignment(SwingConstants.CENTER);
+        closeButton.setFont(new Font("Tahoma", Font.PLAIN, 30));
+        closeButton.setBounds(565, 0, 46, 40);
+        closeButton.addMouseListener(new MouseAdapter() {
+  			@Override
+  			public void mouseClicked(MouseEvent e) {
+  				XButtonOnTopBarListener.cerrarApp();
+  			}
+  			@Override
+  			public void mouseEntered(MouseEvent e) {
+  				XButtonOnTopBarListener.mouseOnButton(closeButton);
+  			}
+  			@Override
+  			public void mouseExited(MouseEvent e) {
+  				XButtonOnTopBarListener.mouseNotOnButton(closeButton);
+  			}
+  			@Override
+  			public void mousePressed(MouseEvent e) {
+  				XButtonOnTopBarListener.buttonPressed(closeButton);
+  			}
+  		});
+        topBar.add(closeButton);
 
         
 	}
 
+	protected void updateCoordenates(MouseEvent e) {
+		xMouse = e.getX();
+		yMouse = e.getY();
+		//System.out.println("x: "+xMouse+", y: "+yMouse);
+	}
+
+	protected void mouseMovement(MouseEvent e) {
+		this.setLocation(e.getXOnScreen() - xMouse, e.getYOnScreen() - yMouse);
+		//System.out.println("x: "+e.getXOnScreen()+", y: "+e.getYOnScreen());
+	}
 	//save
 	protected void btnGuardarActionListener(String nombre, Date fecha) {
 		

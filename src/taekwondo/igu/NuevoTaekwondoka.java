@@ -18,11 +18,15 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import taekwondo.logica.Taekwondoka;
 import taekwondo.logica.TaekwondokaController;
 import taekwondo.persistencia.ConexionMySQL;
 import taekwondo.util.FiltrosParaTextField;
+import taekwondo.util.XButtonOnTopBarListener;
 import taekwondo.util.Ventanas;
 
 
@@ -43,6 +47,8 @@ public class NuevoTaekwondoka extends JFrame {
     private Menu menu;
     
     private TaekwondokaController controller = new TaekwondokaController();
+	private int xMouse;
+	private int yMouse;
 
     public NuevoTaekwondoka(Menu menu) {
     	
@@ -100,6 +106,7 @@ public class NuevoTaekwondoka extends JFrame {
 
         //Textield for name
         tfNombre = new JTextField();
+        tfNombre.setBorder(null);
         tfNombre.setForeground(new Color(255, 255, 255));
         tfNombre.setBackground(new Color(44, 62, 80));
         tfNombre.setBounds(146, 9, 419, 20);
@@ -115,6 +122,7 @@ public class NuevoTaekwondoka extends JFrame {
         
         //Textfield for surname
         tfApellido = new JTextField();
+        tfApellido.setBorder(null);
         tfApellido.setForeground(new Color(255, 255, 255));
         tfApellido.setBackground(new Color(44, 62, 80));
         tfApellido.setColumns(10);
@@ -130,6 +138,7 @@ public class NuevoTaekwondoka extends JFrame {
         
         //Textfield for age
         tfEdad = new JTextField();
+        tfEdad.setBorder(null);
         tfEdad.setForeground(new Color(255, 255, 255));
         tfEdad.setBackground(new Color(44, 62, 80));
         tfEdad.setColumns(10);
@@ -145,6 +154,7 @@ public class NuevoTaekwondoka extends JFrame {
         
         //Textfield for Address
         tfDireccion = new JTextField();
+        tfDireccion.setBorder(null);
         tfDireccion.setForeground(new Color(255, 255, 255));
         tfDireccion.setBackground(new Color(44, 62, 80));
         tfDireccion.setColumns(10);
@@ -160,6 +170,7 @@ public class NuevoTaekwondoka extends JFrame {
         
         //Textfield fo email
         tfEmail = new JTextField();
+        tfEmail.setBorder(null);
         tfEmail.setForeground(new Color(255, 255, 255));
         tfEmail.setBackground(new Color(44, 62, 80));
         tfEmail.setColumns(10);
@@ -175,6 +186,7 @@ public class NuevoTaekwondoka extends JFrame {
         
         //Textfield for cellphone number
         tfCelular = new JTextField();
+        tfCelular.setBorder(null);
         tfCelular.setForeground(new Color(255, 255, 255));
         tfCelular.setBackground(new Color(44, 62, 80));
         tfCelular.setColumns(10);
@@ -276,14 +288,62 @@ public class NuevoTaekwondoka extends JFrame {
         //filter for email characters only
         FiltrosParaTextField.setupTextFieldDocumentFilterForEmail(tfEmail);
         
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(44, 62, 80));
-        panel.setBounds(0, 0, 611, 42);
-        getContentPane().add(panel);
+        JPanel topBar = new JPanel();
+        topBar.setBackground(new Color(44, 62, 80));
+        topBar.setBounds(0, 0, 611, 40);
+        getContentPane().add(topBar);
+        topBar.setLayout(null);
+        topBar.addMouseMotionListener(new MouseMotionAdapter() {
+  			@Override
+  			public void mouseDragged(MouseEvent e) {
+  				mouseMovement(e);
+  				}
+  		});
+  		topBar.addMouseListener(new MouseAdapter() {
+  			@Override
+  			public void mousePressed(MouseEvent e) {
+  				updateCoordenates(e);
+  			}
+  		});
+        
+        JLabel closeButton = new JLabel("X");
+        closeButton.setForeground(new Color(0, 0, 0));
+        closeButton.setHorizontalAlignment(SwingConstants.CENTER);
+        closeButton.setFont(new Font("Tahoma", Font.PLAIN, 30));
+        closeButton.setBounds(565, 0, 46, 40);
+        closeButton.addMouseListener(new MouseAdapter() {
+  			@Override
+  			public void mouseClicked(MouseEvent e) {
+  				XButtonOnTopBarListener.cerrarApp();
+  			}
+  			@Override
+  			public void mouseEntered(MouseEvent e) {
+  				XButtonOnTopBarListener.mouseOnButton(closeButton);
+  			}
+  			@Override
+  			public void mouseExited(MouseEvent e) {
+  				XButtonOnTopBarListener.mouseNotOnButton(closeButton);
+  			}
+  			@Override
+  			public void mousePressed(MouseEvent e) {
+  				XButtonOnTopBarListener.buttonPressed(closeButton);
+  			}
+  		});
+        topBar.add(closeButton);
         
         
     }
     
+    protected void updateCoordenates(MouseEvent e) {
+		xMouse = e.getX();
+		yMouse = e.getY();
+		//System.out.println("x: "+xMouse+", y: "+yMouse);
+	}
+
+	protected void mouseMovement(MouseEvent e) {
+		this.setLocation(e.getXOnScreen() - xMouse, e.getYOnScreen() - yMouse);
+		//System.out.println("x: "+e.getXOnScreen()+", y: "+e.getYOnScreen());
+	}
     //save
     private void btnGuardarActionListener() {
 
